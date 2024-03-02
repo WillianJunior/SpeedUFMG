@@ -3,7 +3,7 @@ Este é o cluster de alta performance do laboratório SPEED do DCC/UFMG. Nele te
 
 Também temos um FAQ com material recente. Favor ler as dúvidas existentes caso tenha problemas.
 
- - [Como funciona?](link)
+ - [Como funciona?](user/como-funciona.md)
  - [Acessando o cluster](link)
  - [Prioridade de fila](link)
  - [Como submeter jobs](link)
