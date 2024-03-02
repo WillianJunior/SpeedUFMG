@@ -128,7 +128,7 @@ No script acima temos que para se conectar à phocus4 com para um usuário usern
 ```console
 user@host:~$ ssh phocus4
 Last login: Sat Mar  2 06:37:21 2024 from 192.168.99.100
-user@phocus4:~# 
+user@phocus4:~$
 ```
 
 Dado que são feitas 3 conexões ssh, é possível que o tempo de login seja um pouco maior (alguns segundos). Quando for usar scp para copiar arquivos para o storage do cluster, isso pode ser feito diretamente via os hostnames descritos em conf. Por fim, é possível fazer esse processo de configuração para várias máquinas (caso você tenha mais de um computador), bastando apenas colocar todas as chaves públicas em authorized_keys. Porém é importante ter cuidado ao permitir várias máquinas fazerem login pela sua conta via chave pública. Qualquer um com acesso à uma chave privada poderá se logar pelo seu usuário. Como acessos e comandos executados são armazenados, estes podem ser auditados para encontrar responsaveis de possíveis abusos ou mal usos do cluster.
