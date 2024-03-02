@@ -58,7 +58,7 @@ username@phocus4:~$
 
 Na phocus4 você poderá usar o cluster normalmente. Para fechar a conexão remota basta usar o comando exit, ou pelo atalho Ctrl+D.
 
-## Tunneling
+## Login por chave pública e tunneling
 
 Como você pode ter percebido, precisar passar por 3 logins é um processo chato. Porém é possível fazer o loging direto com apenas 1 comando ssh e sem precisar colocar senha. Existem duas forma de se logar em uma máquina remota via ssh: (i) verificação de senha, ou (ii) verificação de chaves. O ssh usa um modelo de comunicação criptografada asimétrica. Nele existem duas chaves, uma publica e uma privada. Entregando sua chave publica para alguém, é possivel que essa pessoa verifique que você realmente é quem diz ao submeter sua chave privada em seguida. Em termos práticos, se dermos nossa chave pública para um nó como a mica, basta o ssh enviar secretamente a sua chave privada, sendo possível verificar que você é o dono da sua chave pública anteriormente enviada. 
 
@@ -88,10 +88,23 @@ The key's randomart image is:
 +----[SHA256]-----+
 ```
 
-Agora foram gerados 2 aqruivos em /home/user/.ssh: id_rsa e id_rsa.pub, sendo o segundo a sua chave pública.
+Agora foram gerados 2 aqruivos em /home/user/.ssh: id_rsa e id_rsa.pub, sendo o segundo a sua chave pública. Para fazer o acesso via chave pública, basta colocar o conteudo inteiro de id_rsa.pub em um arquivo authorize_keys na máquina remota:
 
+```console
+user@host:~$ cat ~/.ssh/id_rsa.pub
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABagQCTubTA8bEGNHvP4zPevSPHbYkYnCMX5dO6xYvd4Eyr8e8/O2KVEJIuNNzzsVkxW+A4sSEBvSz2wbezT7YcZ5zRy/jEBurnC4D2qUBCsJ5nyKeaIAE9dqwJoemgfu+1P0Ddv2qYZTECGsu0aA8I1TqFcAqFWbktWqV872/62vncO5VWxLulzGgFg16qNxuUKTuJpD3BMi5DN/7Mxgcgpu9BAOUksxVEbY9KcAvSWVmzGmySKno3USRwXmJQNi9dSo1zHaoPTSLgtzYEh9cm87VdZNVMvLDqoGXT7Jq9gj0thIrYR2gLEY19Xrvdy9aDHsX6JiNSDsWikcyt1XNLYHm5BMubNn/+2Kjsl6/PY/VPJa71++FTWnQyvXE6QKXcuPoRywDpBJ8qDNAowTngfV1hkVi+axQBTxRfB7b7jH78FQnu42qjRejgl7ot0H+mriktu13çmRMJC7BGek1QJlaUzxKGVcg++VPgbnBT4CBA9bsWE6+gEcztk= user@host
+user@host:~$ ssh username@login.dcc.ufmg.br
+(username@login.dcc.ufmg.br) Password:
+FreeBSD 11.2-RELEASE-p14 (GENERIC) #0: Mon Aug 19 22:38:50 UTC 2019 ....
+[username@mica ~]$ mkdir ~/.ssh
+[username@mica ~]$ vim ~/.ssh/authorized_keys
+... colar a chave pública, :wq
+[username@mica ~]$
+```
 
+Para testar se o login com chave pública está funcionado basta desconectar da máquina remota e tentar a conexão novamente. Desta vez, não será pedida senha. Isso deve ser feito em todas as máquinas (mica, cerberus e phocus4).
 
+Porém, isso só resolve a parte de pedir senha. Ainda são necessários 3 comandos de ssh para acessar a máquina de login (phocus4). Esse processo pode ser automatizado por um tunneling ssh. Existe a possibilidade de criar um arquivo de configuração que descreve como deve ser feita a conexão com uma máquina remota via ssh. Coisas como o ip ou hostname, usuário de login, local da chave pública, porta a ser usada, entre outras. 
 
 
 
