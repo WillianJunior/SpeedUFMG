@@ -104,11 +104,36 @@ FreeBSD 11.2-RELEASE-p14 (GENERIC) #0: Mon Aug 19 22:38:50 UTC 2019 ....
 
 Para testar se o login com chave pública está funcionado basta desconectar da máquina remota e tentar a conexão novamente. Desta vez, não será pedida senha. Isso deve ser feito em todas as máquinas (mica, cerberus e phocus4).
 
-Porém, isso só resolve a parte de pedir senha. Ainda são necessários 3 comandos de ssh para acessar a máquina de login (phocus4). Esse processo pode ser automatizado por um tunneling ssh. Existe a possibilidade de criar um arquivo de configuração que descreve como deve ser feita a conexão com uma máquina remota via ssh. Coisas como o ip ou hostname, usuário de login, local da chave pública, porta a ser usada, entre outras. 
+Porém, isso só resolve a parte de pedir senha. Ainda são necessários 3 comandos de ssh para acessar a máquina de login (phocus4). Esse processo pode ser automatizado por um tunneling ssh. Existe a possibilidade de criar um arquivo de configuração que descreve como deve ser feita a conexão com uma máquina remota via ssh. Coisas como o ip ou hostname, usuário de login, local da chave pública, porta a ser usada, entre outras. Esse arquivo se encontra em ~/.ssh/config, podendo não existir inicialmente. Se for o caso, basta criá-lo para o usar, não sendo necessário nenhum outro tipo de configuração. Abaixo vem um exemplo de um arquivo config de ssh para acessar todas as máquinas remotas já mencionadas:
 
+```
+Host mica
+  Hostname login.dcc.ufmg.br
+  User username
 
+Host cerberus
+  Hostname cerberus.speed.dcc.ufmg.br
+  User username
+  ProxyCommand ssh mica -W %h:%p
+  IdentityFile ~/.ssh/id_rsa
+  PubkeyAcceptedKeyTypes +ssh-rsa
 
+Host phocus4
+  ProxyCommand ssh cerberus -W %h:%p
+  User username
+```
 
+No script acima temos que para se conectar à phocus4 com para um usuário username é necessário fazer um tunelamento via cerberus. Para se conectar à cerberus é necessário o tunelamento via mica. E a conexão via vica é feita simplesmente por username. O script acima deve estar presente na sua máquina pessoal, não sendo necessário colocá-lo em outra máquinas. Abaixo o resultado após a criação do arquivo de conf:
+
+```console
+user@host:~$ ssh phocus4
+Last login: Sat Mar  2 06:37:21 2024 from 192.168.99.100
+user@phocus4:~# 
+```
+
+Dado que são feitas 3 conexões ssh, é possível que o tempo de login seja um pouco maior (alguns segundos). Quando for usar scp para copiar arquivos para o storage do cluster, isso pode ser feito diretamente via os hostnames descritos em conf. Por fim, é possível fazer esse processo de configuração para várias máquinas (caso você tenha mais de um computador), bastando apenas colocar todas as chaves públicas em authorized_keys. Porém é importante ter cuidado ao permitir várias máquinas fazerem login pela sua conta via chave pública. Qualquer um com acesso à uma chave privada poderá se logar pelo seu usuário. Como acessos e comandos executados são armazenados, estes podem ser auditados para encontrar responsaveis de possíveis abusos ou mal usos do cluster.
+
+## TLDR
 
 
 
