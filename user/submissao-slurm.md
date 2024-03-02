@@ -103,6 +103,8 @@ Ao usar ‘#SBATCH’ no seu script, você estará passando parâmetros ao sbatc
 
 Existe outra vantagem de usar o sbatch: os logs de saída. Todo job submetido via sbatch gera um arquivo ‘slurm-1707.out’ (sendo 1707 o ID do job) com o stdout e stderr do script executado. Esse arquivo .out é gerado no mesmo local de onde o comando sbatch foi invocado. Uma dica é usar o comando ‘set -x’ em seus scripts. Esse comando faz com que todos os comandos executados saiam no stdout. Exemplo, a primeira linha de ‘slurm-1707.out’ do script exemplo será ‘+ cd /path/of/my/code’.
 
+No script é carregado um python de versão específica usando environment modules, visto em detalhes em [Dependências](gerencia-de-deps.md).
+
 ## Gerenciando jobs
 
 É possível acompanhar seus jobs submetidos por meio do comando squeue:
