@@ -1,0 +1,101 @@
+# Acessando o cluster
+
+O cluster está em uma rede interna da UFMG sem acesso direto à internet. Para ser acessado, é necessaŕio passar pela máquina com acesso externo do CRC. Para ganhar acesso a ela é preciso uma conta pelo CRC, que pode ser feito enviando um email do seu orientador para eles, solicitando acesso.
+
+Acesso ao cluster é somente feito via ssh. Recomenda-se usar o sistema Linux para acessar o mesmo por facilidade de uso. Para ter acesso ao cluster é necessário primeiro logar na máquina externa mica ([login.dcc.ufmg.br]()). Em seguida é possível logar na máquina interna do Speed cerberus ([cerberus.speed.dcc.ufmg.br]()). A cerberus é somente acessível via mica. Na máquina cerberus não existe nenhum serviço para usuários. Por fim, deve-se logar em um nó de login (phocus4). Existem DNSs nas máquinas que reconhecem os hostnames mencionados.
+
+## Usando ssh pela primeira vez
+
+Por meio do protocolo ssh é possível abrir uma conexão segura com uma máquina externa, retornando um terminal de comandos. Para usuários de Linux, a grande maioria de dists Linux já são disponibilizadas com um cliente ssh, porém se não for o seu caso, basta instalar qualquer cliente ssh (recomenda-se openssh-client). Para acessar uma máquina remota basta o comando:
+
+```console
+user@host:~$ ssh username@login.dcc.ufmg.br
+(username@login.dcc.ufmg.br) Password:
+FreeBSD 11.2-RELEASE-p14 (GENERIC) #0: Mon Aug 19 22:38:50 UTC 2019
+
+Welcome to LOGIN.dcc.ufmg.br!
+
+################################################  
+#                                              #
+#    UNIVERSIDADE  FEDERAL  DE  MINAS  GERAIS  #
+#     Departamento de Ciencia da Computacao    #
+#                                              #
+################################################
+
+### OBS: Utilizar o diretorio /var/tmp para  ###
+###      armazenamento temporario.           ###
+
+Bem vindo!
+
+[username@mica ~]$
+```
+Ao fazer isso será pedida a senha do seu usuário CRC (username). Na primeira vez que você loga em uma maquina nova, o ssh poderá te perguntar se a máquina que está logando realmente é a que você quer:
+
+```console
+The authenticity of host 'node (192.164.99.99)' can't be established.
+ECDSA key fingerprint is 00:11:22:33:44:55:66:77:88:99:aa:bb:cc:dd:ee:ff.
+Are you sure you want to continue connecting (yes/no)? 
+```
+
+Ao aceitar logar em node, a chave deste é salva. Caso o ssh tente se conectar em node e a chave for diferente, isso significa que você está logando em uma máquina diferente da que havia logado inicialmente, o que pode ser um problema de segurança. É necessário aceitar uma chave para concluir o login. A partir da mica, deve-se logar na cerberus:
+
+```console
+[username@mica ~]$ ssh cerberus.speed.dcc.ufmg.br
+username@cerberus.speed.dcc.ufmg.br's password: 
+Welcome to Ubuntu ....
+username@cerberus:~$ 
+```
+
+Por meio do sistema LDAP todos os logins em máquinas do Speed, seja mica, cerberus ou phocus4, usam as mesmas credenciais do CRC. Assim, quando pedida a senha, basta usar a mesma usada no login mica. Diferentemente da mica, não é necessário especificar seu username já estando na mica. Ele sera inferido como o username usado para logar na mica. Não tem diferença colocar ou omitir seu username a partir daqui.
+
+O último passo é logar na phocus4:
+
+```console
+username@cerberus:~$ ssh phocus4
+username@phocus4's password: 
+username@phocus4:~$ 
+```
+
+Na phocus4 você poderá usar o cluster normalmente. Para fechar a conexão remota basta usar o comando exit, ou pelo atalho Ctrl+D.
+
+## Tunneling
+
+Como você pode ter percebido, precisar passar por 3 logins é um processo chato. Porém é possível fazer o loging direto com apenas 1 comando ssh e sem precisar colocar senha. Existem duas forma de se logar em uma máquina remota via ssh: (i) verificação de senha, ou (ii) verificação de chaves. O ssh usa um modelo de comunicação criptografada asimétrica. Nele existem duas chaves, uma publica e uma privada. Entregando sua chave publica para alguém, é possivel que essa pessoa verifique que você realmente é quem diz ao submeter sua chave privada em seguida. Em termos práticos, se dermos nossa chave pública para um nó como a mica, basta o ssh enviar secretamente a sua chave privada, sendo possível verificar que você é o dono da sua chave pública anteriormente enviada. 
+
+Caso seja sua primeira vez enviando sua chave pública, é necessário antes a geração dessas de sua máquina privada. Não é preciso usar configurações especiais, apenas apertando enter nos pedidos de input:
+
+```console
+user@host:~$ ssh-keygen 
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/user/.ssh/id_rsa):
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /home/user/.ssh/id_rsa
+Your public key has been saved in /home/user/.ssh/id_rsa.pub
+The key fingerprint is:
+SHA256:80ifYuToRzC+gjJ70zgtHPT30uaCUILnNhjUmtm2ffQ user@host
+The key's randomart image is:
++---[RSA 3072]----+
+|  .              |
+| . =  .          |
+|..=              |
+|o+0o. o.         |
+| *.+o..oS        |
+|. *.a.o*.E .     |
+| o.O oo== +      |
+|o   =.+.=.       |
+|.=   ..*.        |
++----[SHA256]-----+
+```
+
+Agora foram gerados 2 aqruivos em /home/user/.ssh: id_rsa e id_rsa.pub, sendo o segundo a sua chave pública.
+
+
+
+
+
+
+
+
+
+
