@@ -4,13 +4,13 @@ Este é o cluster de alta performance do laboratório SPEED do DCC/UFMG. Nele te
 Também temos um FAQ com material recente. Favor ler as dúvidas existentes caso tenha problemas.
 
  - [Como funciona?](user/como-funciona.md)
- - [Acessando o cluster](link)
- - [Prioridade de fila](link)
- - [Como submeter jobs](link)
- - [Referência de filas](link)
- - [Storage](link)
- - [Gerenciando dependências](link)
- - [FAQ](link)
+ - [Acessando o cluster](user/acesso.md)
+ - [Como submeter jobs](user/submissao-slurm.md)
+ - [Storage](user/storage.md)
+ - [Gerenciando dependências](user/gerencia-de-deps.md)
+ - [Prioridade de fila](user/prioridade-de-fila.md)
+ - [Referência de filas](user/filas-atual.md)
+ - [FAQ](user/faq.md)
 
 
 # Management
