@@ -10,6 +10,7 @@ Também temos um FAQ com material recente. Favor ler as dúvidas existentes caso
  - [Gerenciando dependências](user/gerencia-de-deps.md)
  - [Prioridade de fila](user/prioridade-de-fila.md)
  - [Referência de filas](user/filas-atual.md)
+ - [Referência de máquinas](user/nodes.md)
  - [FAQ](user/faq.md)
 
 
