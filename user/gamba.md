@@ -24,4 +24,11 @@ Embora o slurm permita a configuração do Linux PAM para permitir acesso às ma
 ### Problema 2.1. Copiar dados para as gorgonas
 Se não é possível acessar uma gorgona via ssh diretamente, também não é possível realizar um 'scp' direto a elas. Porém, tendo elas acesso à home_cerberus é possível abrir uma sessão interativa em uma gorgona e realizar o 'cp' da home_cerberus para seu storage local. Infelizmente não é tão fácil fazer um 'scp' a partir de uma gorgona para uma máquina externa (fica como exercício ao leitor, ou não...), então para passar dados externos diretamente para uma gorgona é necessário antes passa-lo pela home_cerberus, seja via o nó cerberus ou phocus4. Para transferências muito grandes, que podem ser interrompidas por uma queda de conexão, recomenda-se usar os comandos 'screen' ou 'rsync' em um último caso (ambos com documentação via 'man').
 
+## 3. Uso exclusivo de máquinas
+Caso você tenha preparado seu ambiente de testes em uma máquina específica (ver problema 1. acima) e não queira ficar esperando na fila (mesmo não tendo sido visto uma fila de jobs), basta alocar o nó! Sim, não existe limite de tempo de alocações. Você pode pedir o tempo que for necessário, como mais de 1000 hrs (~1 mês e meio), ou até mais. Se houverem vários jobs que você precise submeter, basta submetê-los! Sim, o slurm vai rodar cada um dos seus jobs na ordem que você os submeteu. No pior dos casos vai haver alguem que, assim como você, só consegue usar um nó. Neste caso, fica a dica de deixar mais de um nó preparado para os seus experimentos. É possível passar uma lista de nós que você precisa que o seu job use (parâmetro -w tanto para 'srun' como para 'sbatch').
+
+
+
+
+
 
