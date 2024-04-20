@@ -13,6 +13,6 @@ A montagem deve ter alguns argumentos importantes:
 
 É possível configurar as máquinas do cluster para montar automaticamente a home_cerberus. Basta adicionar a linha abaixo em /etc/fstab:
 ```command
-cerberus:/home /home_cerberus fuse.sshfs x-systemd.automount,_netdev,users,IdentityFile=/root/.ssh/id_rsa,allow_other,reconnect,ServerAliveInterval=15,ServerAliveCountMax=3,follow_symlinks 0 0
+cerberus:/home /home_cerberus fuse.sshfs x-systemd.automount,_netdev,users,exec,IdentityFile=/root/.ssh/id_rsa,allow_other,reconnect,ServerAliveInterval=15,ServerAliveCountMax=3,follow_symlinks 0 0
 ```
 O método acima é de auto-mount on-demand, ou seja, a home_cerberus será montada assim que o primeiro acesso a ela for realizado. Isso permite que a cerberus realize seu boot antes de qualquer job entrar em execução, dado que para submeter um job é necessario passar pela cerberus/phocus4.
