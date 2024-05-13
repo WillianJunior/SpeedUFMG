@@ -9,9 +9,11 @@ Atualmente não existe uma solução de DFS disponível no cluster. Ela será o 
 A home_cerberus está em um drive de 1TB, o que não é muita coisa para vários usuários com dados grandes e 8 máquinas disponíveis para execução. Para mitigar problemas de espaço (já tivemos 100% da home_cerberus ocupada, atualmente nunca caindo de 70%) é possível manter seus dados maiores em um outro drive no nó cerberus. Ele conta com mais dois drives de 4TB cada: cerberus:/dev/sdb1 montado em  cerberus:/home/disk2 e cerberus:/dev/sdc1 montado em cerberus:/home/disk3, na cerberus. Pede-se então que usem os drives de 4TB para armazenamento de dados maiores, já que eles também são acessiveis via phocus4:/home_cerberus/disk2 e phocus4:/home_cerberus/disk3 (phcous4 ou gorgonas). Isso foi feito permitindo symlinks serem seguidos via 'sshfs'. Também é pedido que a quantidade de dados em phocus4:/home_cerberus/speed/username seja mínima (tentem não exceder 10GB). Para padronizar a localização dos arquivos, é possível gerar um symlink de um disco de 4TB para phocus4:home_cerberus/speed:
 
 ```command
-username@phocus4:~$ mkdir /home/disk3/username2
-username@phocus4:~$ ln -s /home/disk3/username2 /home/speed/username/username2
+username@phocus4:~$ mkdir /home/disk3/speed/username2
+username@phocus4:~$ ln -s /home/disk3/speed/username2 /home/speed/username/username2
 ```
+
+Em ambos cerberus:/home/disk2 e cerberus:/home/disk3 existem um diretório speed, onde todos usuários tem permissão de criação de diretórios.
 
 ### Problema 1.2. Ownership
 Já é um problema recorrente, e ainda aberto, a perda de acesso a arquivos devida à uma leitura erronea de ownership. O problema se apresenta quando um arquivo seu, embora acessível (você pode ler e editar) em um nó, como a phocus4, não é mais acessível em outro nó (uma gorgona por exemplo). Isso é bem incomodo quando é necessário fazer o carregamento de um venv e aparentemente você não consegue executar o source.
