@@ -17,23 +17,21 @@ Atualmente o DFS não é distribuído, sendo um diretório da máquina cerberus 
 Uma consequência infeliz do Slurm foi ao aumentar o alcance dos recursos para os alunos agora temos muito mais usuários, e como todos precisam armazenar dados de experimentos isso colocou uma pressão nos recursos de armazenamento. Além disso, o local onde o DFS está montado atualmente (nó crberus) é um nó antigo e com armazenamento limitado para a necessidade de armazenamento do cluster. Na cerberus existem 3 discos fisicos: /home (sda onde está a home_cerberus), /home/disk2 (sdb) e /home/disk3 (sdc):
 
 ```console
-cerberus:~# df -h
+username@phocus4:/home_cerberus# df -h .
 Filesystem      Size  Used Avail Use% Mounted on
-/dev/sda1        46G  8.5G   36G  20% /
-udev            7.9G  4.0K  7.9G   1% /dev
-tmpfs           1.6G  300K  1.6G   1% /run
-none            5.0M     0  5.0M   0% /run/lock
-none            7.9G     0  7.9G   0% /run/shm
-/dev/sda4       826G  771G   14G  99% /home
-/dev/sdc1       3.6T  2.0T  1.5T  59% /home/disk3
-/dev/sdb1       3.6T  2.9T  542G  85% /home/disk2
-/dev/sda3        32G  3.0G   27G  10% /var
+cerberus:/home  826G  775G  8,6G  99% /home_cerberus
+username@phocus4:/home_cerberus# df -h disk2
+Filesystem      Size  Used Avail Use% Mounted on
+cerberus:/home  3,6T  2,9T  542G  85% /home_cerberus
+username@phocus4:/home_cerberus# df -h disk3
+Filesystem      Size  Used Avail Use% Mounted on
+cerberus:/home  3,6T  2,0T  1,5T  59% /home_cerberus
 ```
 
 Um problema atual é que do disco 1 também é usado pelo SO da cerberus. Dessa forma, caso alguém gaste todo o espaço em cerberus:/dev/sda o SO pode travar. Como a cerberus é o nó de entrada para o cluster, é possível que **apenas 1 usuário trave o laboratório inteiro travando a cerberus, e bloqueando o acesso às outras máquinas!!!**. Isso foi algo que já aconteceu, travando o acesso ssh pois não havia espaço para o deamon rodar. Já está sendo implementada uma solução permanente, com um sistema DFS Lustre, mas no meio tempo pedimos a ajuda daqueles que usam o sistema para evitar tais problemas.
 
 Como pode-se observar, os discos 2 e 3 são montados dentro da cerberus:/home (phocus4:/home_cerberus), assim são acessíveis pela home_cerberus de qualquer nó no cluster. Dessa forma, eles são trivialmente acessíveis para aqueles que já usam a home_cerberus. Pedimos que ao copiar dados para o ambiente do cluster sejam tomados os seguintes cuidados:
- 1. Preste atenção na quantidade de dados que você está movendo. Verifique se tem espaço no cluster antes (o comando 'df -h' é usável por qualquer usuário).
+ 1. Preste atenção na quantidade de dados que você está movendo. Verifique se tem espaço no cluster antes (o comando 'df -h PATH' é usável por qualquer usuário).
  2. Priorize usar os discos 2 e 3. Temos documentação de como fazer isso [aqui](https://github.com/WillianJunior/SpeedUFMG/blob/main/user/gamba.md#problema-11-espa%C3%A7o).
  3. Façam tudo na phocus4, não é para ficar mexendo da cerberus!!! As configurações de acesso são testadas todas na phocus4.
  4. PRESTE MUITA ATENÇÃO NOS SEUS DADOS!!! Vamos tentar evitar problemas...
