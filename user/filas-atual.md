@@ -1,13 +1,13 @@
 # Filas
 
+# OBS: FILAS AINDA NÃO IMPLEMENTADAS. TODOS OS NÓS ESTÃO NA FILA gorgonas
+
 O cluster foi pensado para atender algumas demandas específicas como:
  - Preciso poder treinar meus modelos por vários dias, senão semanas.
  - Quero poder ter uma sessão interativa rapidamente para pequenos testes no meu código.
  - Não quero ter que esperar uma semana na fila porque alguém já alocou todas as máquinas e vai passar 15 dias treinando modelos
 
 Para atender a todas as demandas acima o cluster é dividido em diferentes filas, cada uma com regras diferentes. No Slurm, uma fila é um conjunto de nós que obedecem a certas regras. Por exemplo, qual é o limite de tempo de alocação de um job para nós nessa fila. Assim, filas diferentes têm objetivos diferentes. É possível submeter um job em várias filas, sendo ele executado apenas uma vez, com os recursos da primeira fila disponível. Abaixo temos uma lista com todas as filas, seus recursos, suas regras e suas finalidades. Neste domumento não tem informações das configurações das máquinas. Para isso, ver [referencia de nós](user/nodes.md).
-
-# OBS: FILAS AINDA NÃO IMPLEMENTADAS. TODOS OS NÓS ESTÃO NA FILA gorgonas
 
 ## Fila gorg-long
 Recursos:
