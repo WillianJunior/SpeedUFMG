@@ -13,7 +13,7 @@ username@phocus4:~$ mkdir /home/disk3/speed/username2
 username@phocus4:~$ ln -s /home/disk3/speed/username2 /home/speed/username/username2
 ```
 
-Em ambos cerberus:/home/disk2 e cerberus:/home/disk3 existem um diretório speed, onde todos usuários tem permissão de criação de diretórios.
+Em ambos cerberus:/home/disk2 e cerberus:/home/disk3 existem um diretório speed, onde todos usuários tem permissão de criação de diretórios. **IMPORTANTE: não se deve usar a cerberus para nada além de acessar a phocus4!!! Criar diretórios, copiar arquivos, compilar códigos e submeter experimentos devem ser feitos da phocus4.**
 
 ### Problema 1.2. Ownership
 Já é um problema recorrente, e ainda aberto, a perda de acesso a arquivos devida à uma leitura erronea de ownership. O problema se apresenta quando um arquivo seu, embora acessível (você pode ler e editar) em um nó, como a phocus4, não é mais acessível em outro nó (uma gorgona por exemplo). Isso é bem incomodo quando é necessário fazer o carregamento de um venv e aparentemente você não consegue executar o source.
