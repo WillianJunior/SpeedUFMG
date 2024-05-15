@@ -35,7 +35,8 @@ Um problema atual é que do disco 1 também é usado pelo SO da cerberus. Dessa 
 Como pode-se observar, os discos 2 e 3 são montados dentro da cerberus:/home (phocus4:/home_cerberus), assim são acessíveis pela home_cerberus de qualquer nó no cluster. Dessa forma, eles são trivialmente acessíveis para aqueles que já usam a home_cerberus. Pedimos que ao copiar dados para o ambiente do cluster sejam tomados os seguintes cuidados:
  1. Preste atenção na quantidade de dados que você está movendo. Verifique se tem espaço no cluster antes (o comando 'df -h' é usável por qualquer usuário).
  2. Priorize usar os discos 2 e 3. Temos documentação de como fazer isso [aqui](https://github.com/WillianJunior/SpeedUFMG/blob/main/user/gamba.md#problema-11-espa%C3%A7o).
- 3. PRESTE MUITA ATENÇÃO NOS SEUS DADOS!!! Vamos tentar evitar problemas...
+ 3. Façam tudo na phocus4, não é para ficar mexendo da cerberus!!! As configurações de acesso são testadas todas na phocus4.
+ 4. PRESTE MUITA ATENÇÃO NOS SEUS DADOS!!! Vamos tentar evitar problemas...
 
 ## Performance
 
