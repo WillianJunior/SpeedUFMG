@@ -5,6 +5,8 @@ Também temos um FAQ com material recente. Favor ler as dúvidas existentes caso
 
 Por fim, temos uma sessão com soluções paliativas para auxiliar o uso imediato do cluster, mesmo ele ainda não estando em sua forma final.
 
+Um último detalhe importante é o uso do nó phocus4 vs cerberus. **SOMENTE deve ser usado o nó phocus4 para toda e qualquer operação no cluster. O nó cerberus deve apenas ser usado para acessar a phocus4!!!**
+
  - [Como funciona?](user/como-funciona.md)
  - [Acessando o cluster](user/acesso.md)
  - [Como submeter jobs](user/submissao-slurm.md)
