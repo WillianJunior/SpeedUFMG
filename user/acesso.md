@@ -4,6 +4,8 @@ O cluster está em uma rede interna da UFMG sem acesso direto à internet. Para 
 
 Acesso ao cluster é somente feito via ssh. Recomenda-se usar o sistema Linux para acessar o mesmo por facilidade de uso. Para ter acesso ao cluster é necessário primeiro logar na máquina externa mica ([login.dcc.ufmg.br]()). Em seguida é possível logar na máquina interna do Speed cerberus ([cerberus.speed.dcc.ufmg.br]()). A cerberus é somente acessível via mica. Na máquina cerberus não existe nenhum serviço para usuários. Por fim, deve-se logar em um nó de login (phocus4). Existem DNSs nas máquinas que reconhecem os hostnames mencionados.
 
+**SEMPRE use a phocus4!!! NÃO se deve trabalhar da cerberus, apenas usá-la para acessar a phocus4!!!**
+
 ## Usando ssh pela primeira vez
 
 Por meio do protocolo ssh é possível abrir uma conexão segura com uma máquina externa, retornando um terminal de comandos. Para usuários de Linux, a grande maioria de dists Linux já são disponibilizadas com um cliente ssh, porém se não for o seu caso, basta instalar qualquer cliente ssh (recomenda-se openssh-client). Para acessar uma máquina remota basta o comando:
@@ -138,6 +140,6 @@ Dado que são feitas 3 conexões ssh, é possível que o tempo de login seja um 
  - Mais fácil em sistemas Linux
  - Necessária conta do CRC
  - A máquina inicial do cluster é a phocus4, acessivel via mica->cerberus->phocus4
- - Veja acima como usar chave pública e tunneling para acesso mais fácil ao cluster
+ - Use chave pública e tunneling para acesso mais fácil ao cluster, é algo que não é complicado, usado pela grande maioria, se não todos usuários e torna muito menos chata a tarefa de se conectar no cluster.
 
 
