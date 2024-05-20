@@ -95,6 +95,8 @@ slurmstepd: error: Cannot write to cgroup.procs for (null)
 slurmstepd: error: Unable to move pid 351386 to init root cgroup (null)
 ```
 
+As últimas 3 linhas do output acima são "normais". Isso significa: elas vão aparecer e não tem com o que se preocupar.
+
 Ao usar ‘#SBATCH’ no seu script, você estará passando parâmetros ao sbatch. Esses parâmetros são iguais aos de srun, podendo ser passados diretamente para sbatch. Alguns parâmetros interessantes de se conchecer são:
  - **time**: tempo máximo do job.
  - **N**: número de nós a serem alocados.
