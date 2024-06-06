@@ -8,6 +8,7 @@
    - colocar DNS
    - adicionar à infra do CRC (acesso via mica)
    - incorporar LDAP
+ - adicionar novo nó login (com LDAP)
 
 ## Nó de storage sshfs (tmp)
  - formatar nó tmp
@@ -40,7 +41,6 @@
 
 ## Migrar slurm
  - montar slurm HEAD em cerberus2
- - adicionar novo nó login (com LDAP)
  - mover uma gorgona para a nova rede
    - configurar ips e hostnames
    - configurar ldap
