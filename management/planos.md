@@ -5,7 +5,9 @@
  - formatar máquina HEAD (cerberus2)
    - enteprise linux (rocky8) (necessário para o head do lustre dps)
    - colocar DHCP
-   - colocar DNS
+   - ~~colocar DNS~~
+     - muito complicado para pouco benefício
+     - vamos apenas manter um /etc/hosts consistente em nós
    - adicionar à infra do CRC (acesso via mica)
    - incorporar LDAP
  - adicionar novo nó login (com LDAP)
