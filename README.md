@@ -3,7 +3,7 @@ Este é o cluster de alta performance do laboratório SPEED do DCC/UFMG. Nele te
 
 Também temos um FAQ com material recente. Favor ler as dúvidas existentes caso tenha problemas. Naturalmente, por mais que tentemos, haverão gaps de informações nesta documentação, assim como possíveis problemas não recorrentes. Neste caso, pode-se pedir ajuda no grupo do Telegram, tentando se atentar a algumas [recomendações de etiqueta de perguntas](user/perguntas.md)
 
-Por fim, temos uma sessão com soluções paliativas para auxiliar o uso imediato do cluster, mesmo ele ainda não estando em sua forma final.
+Por fim, temos uma seção com soluções paliativas para auxiliar o uso imediato do cluster, mesmo ele ainda não estando em sua forma final.
 
 Um último detalhe importante é o uso do nó phocus4 vs cerberus. **SOMENTE deve ser usado o nó phocus4 para toda e qualquer operação no cluster. O nó cerberus deve apenas ser usado para acessar a phocus4!!!**
 
