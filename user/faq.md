@@ -61,7 +61,7 @@ As gorgonas foram formatadas e preparadas em momentos diferentes, então por mai
 
 Uma dessas diferenças encontradas foi o path da home '~'. As vezes este é localizado em /home/vip/username e às vezes /home/pos/username. A única forma atual de resolver problemas dos seus scripts é nos seus scripts. Infelizmente é necessário encontrar alguma solução programatica para isso (e.g., fazer um if path exists no batch script).
 
-## [1] Submeti um job mas não aconteceu nada, nem saiu um arquivo slurm-id.out.
+## [2] Submeti um job mas não aconteceu nada, nem saiu um arquivo slurm-id.out.
 Você não rodou da home_cerberus...
 Apenas arquivos na home_cerberus são globalmente acessíveis pelo cluster. Se você submete um job de phocus4:/home/username/meu_exp o nó de computação alocado para execução (e.g., uma gorgona) não tem como escrever um arquivo diretamente na phocus4. Porém, ao fazer isso da home_cerberus um arquivo phocus4:/home_cerberus/speed/username/slurm-id.out é o mesmo de gorgona1:/home_cerberus/speed/username/slurm-id.out. Isso significa que a gorgona1 está escrevendo em um "disco global", o qual pode ser lido da phocus4.
 
