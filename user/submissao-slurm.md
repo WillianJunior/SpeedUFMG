@@ -146,6 +146,7 @@ username@phocus4:/home_cerberus/speed/username$
  - Batch job: sbatch job.sh
  - Usar alocações interativas para preparar os experimentos e depois montar scripts para automatizar os experimentos com batch jobs.
  - Usar exemplo de batch job acima.
+ - Batch jobs sempre deixam um log da execução em um arquivo slurm-ID.out no local de onde foi submetido.
  - Usar squeue para verificar o status dos jobs submetidos.
  - Não esquecer de encerrar alocações interativas.
  - Usar scancel para cancelar jobs.
