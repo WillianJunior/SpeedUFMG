@@ -26,6 +26,7 @@ Essa é a parte de gerenciamento do cluster. Nela estão as etapas necessárias 
 
  - [Arquitetura (que tipo de nós tem)](link)
  - [Adição de recursos (comandos para colocar uma máquina nova)](link)
+ - [Estatísticas de uso](management/stats.md)
 
 ## Ferramentas
  - [Ansible (gerenciando deps)](link)
