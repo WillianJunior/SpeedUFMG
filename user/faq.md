@@ -31,27 +31,27 @@ Python 3.12.1
  - Esse problema normalmente aparece como o seguinte erro: "Error: [Errno 5] Input/output error: 'lib' -> '/home_cerberus/speed/usename/venv/lib64'"
  - Arquivos ainda estão acessíveis na home_cerberus, porém foram identificados problemas ao gerar (ou mover) venv’s para ela.
  - Quando você tiver problemas relacionados à cerberus, busque soluções para usar ela o mínimo possível.
+ - Todas gorgonas tem um diretório no path /home/all_home, onde você deve criar um diretório /home/all_home/username na primeira vez.
  - Exemplo, crie seu venv na gorgona que você quiser usar:
 
 ```command
 username@phocus4:/root$ srun -w gorgona7 --time 10:00:00 --pty bash
-username@gorgona7:/root$ cd ~
-username@gorgona7:~$ pwd
-/home/pos/username
-username@gorgona7:~$ ls
-username@gorgona7:~$ module avail
+username@gorgona7:/root$ cd /home/all_home/username
+username@gorgona7:/home/all_home# pwd
+/home/all_home/username
+username@gorgona7:/home/all_home/username# module avail
 ---------------------- /opt/Modules/modulefiles ----------------------
 anaconda3.2023.09-0  module-git   modules  python3.12.1  
 dot                  module-info  null     use.own       
 
 Key:
 modulepath  
-username@gorgona7:~$ module load python3.12.1
-username@gorgona7:~$ python3 --version
+username@gorgona7:/home/all_home/username# module load python3.12.1
+username@gorgona7:/home/all_home/username# python3 --version
 Python 3.12.1
-username@gorgona7:~$ python3 -m venv g7venv
-username@gorgona7:~$ source g7venv/bin/activate
-(g7venv) username@gorgona7:~$ python3 --version
+username@gorgona7:/home/all_home/username# python3 -m venv g7venv
+username@gorgona7:/home/all_home/username# source g7venv/bin/activate
+(g7venv) username@gorgona7:/home/all_home/username# python3 --version
 Python 3.12.1
 ```
  - Uma desvantágem dessa solução é que você deverá usar apenas uma gorgona para seus testes por venv. Alternativamente, você pode criar um venv local em cada gorgona que usar.
@@ -59,7 +59,7 @@ Python 3.12.1
 ## [1] A minha home não existe em algumas gorgonas.
 As gorgonas foram formatadas e preparadas em momentos diferentes, então por mais que a gente tente mantê-las consistentes entre si, não tem como fazer isso de forma mais definitiva até uma formatação completa delas. Essa formatação é algo a ser feito mais a frente.
 
-Uma dessas diferenças encontradas foi o path da home '~'. As vezes este é localizado em /home/vip/username e às vezes /home/pos/username. A única forma atual de resolver problemas dos seus scripts é nos seus scripts. Infelizmente é necessário encontrar alguma solução programatica para isso (e.g., fazer um if path exists no batch script).
+Uma dessas diferenças encontradas foi o path da home '~'. As vezes este é localizado em /home/vip/username e às vezes /home/pos/username. Todas as gorgonas tem um diretório no path /home/all_home, onde você deve criar um diretório /home/all_home/username na primeira vez.
 
 ## [2] Submeti um job mas não aconteceu nada, nem saiu um arquivo slurm-id.out.
 Você não rodou da home_cerberus...
