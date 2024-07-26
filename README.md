@@ -22,7 +22,7 @@ Um segundo último detalhe igualmente importante: **NÃO RODEM JOBS NA PHOCUS4.*
  - [Soluções paliativas](user/gamba.md)
 
 # Management
-Essa é a parte de gerenciamento do cluster. Nela estão as etapas necessárias para montar o cluster do zero, ou fazer manutneção no mesmo.
+Essa é a parte de gerenciamento do cluster. Nela estão as etapas necessárias para montar o cluster do zero, ou fazer manutneção no mesmo. Se você não está prestando manutenção no cluster, não precisa ler nada daqui para baixo.
 
  - [Arquitetura (que tipo de nós tem)](link)
  - [Adição de recursos (comandos para colocar uma máquina nova)](link)
