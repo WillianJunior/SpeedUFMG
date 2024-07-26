@@ -1,17 +1,18 @@
 # Dependências
 
-Todos os nós, sejam eles de login ou de computação possuem as mesmas versões de dependências basicas (e.g., vim, htop, git, ...). Para dependências mais complexas com dependência de drivers ou muito utilizadas, como uma versão específica de Python, CUDA ou MPI, o sistema environment modules (modules) do Linux é usado. Para dependências simples fora do ambiente Python, como uma versão específica do gcc, recomenda-se o uso da ferramenta Anaconda (disponível em modules). Para dependências mais simples no ambiente Python se recomenda o uso de venv.
+Todos os nós, sejam eles de login ou de computação, possuem as mesmas versões de dependências basicas (e.g., vim, htop, git, ...). Para dependências mais complexas com dependência de drivers ou muito utilizadas, como uma versão específica de Python, CUDA ou MPI, o sistema environment modules (modules) do Linux é usado. Para dependências simples fora do ambiente Python, como uma versão específica do gcc, recomenda-se o uso da ferramenta Anaconda (disponível em modules). Para dependências mais simples no ambiente Python se recomenda o uso de venv.
 
 ## Environment modules
 
-Por padrão, os nós do cluster são disponibilizados com o mínimo necessário de pacotes para seu uso. Ao usar uma ferramenta como CUDA ou Python é necessário baixar, compilar/instalar e configurar variáveis de ambiente para o seu uso. Por meio de modules isso pode ser feito de maneira simples e rápida:
+Por padrão, os nós do cluster são disponibilizados com o mínimo necessário de pacotes para seu uso. Ao usar uma ferramenta como CUDA ou Python é necessário baixar, compilar/instalar e configurar variáveis de ambiente para o seu uso. Por meio de modules podemos disponibilizar versões específicas dessas ferramentas que podem ser carregadas por qualquer usuário de maneira simples e rápida:
 
 ```comand
 username@phocus4:~$ module list
 No Modulefiles Currently Loaded.
 username@phocus4:~$ module avail python
 ------------------------------------- /opt/Modules/modulefiles --------------------------------------
-python3.12.1  
+anaconda3.2023.09-0  modules      python3.10.12  
+module-info          python3.7.6  python3.12.1  
 
 Key:
 modulepath  
@@ -22,13 +23,34 @@ username@phocus4:~$ python3 --version
 Python 3.12.1
 ```
 
-Por meio dos comandos acima vemos que não existia nenhum modulo carregado, que existia um modulo Python disponível, e que conseguimos carrega-lo. É possível que mais de uma versão de um módulo exista. Nesse caso módulos conflitantes são descarregados antes de se realizar o carregamento do módulo pedido. Também é possível que um módulo tenha outros módulos como dependências. Nesse caso, esses módulos de dependências são carregados automaticamente.
+Por meio dos comandos acima vemos que não existia nenhum modulo carregado, que existia um modulo Python disponível, e que conseguimos carrega-lo. É possível que mais de uma versão de um módulo exista, ficando à escolha do usuário qual versão é desejada. Ao carregar um módulo conflitante (e.g., carregar uma versão 3.12 do python tendo a versão 3.10 já carregada) os módulos conflitantes são descarregados antes de se realizar o carregamento do módulo pedido. Também é possível que um módulo tenha outros módulos como dependências. Nesse caso, esses módulos de dependências são carregados automaticamente.
 
 Ao realizar o login em qualquer nó, este começara sem nenhum módulo carregado. Isso também vale para nós de computação assim como os nós de login. Ao acessar interativamente, será necessário carregar manualmente os módulos requeridos. Isso pode ser automatizado colocando os carregamentos de módulos em batch scripts a serem usados em batch jobs.
 
 ## Anaconda
 
-Ainda indisponível...
+A primeira etapa de usar o anaconda (conda) é o carregamento do mesmo:
+
+```comand
+username@phocus4:~$ module load anaconda3.2023.09-0 
+username@phocus4:~$ conda --version
+conda 23.7.4
+```
+
+Em seguida, podemos criar um conda env. Porém, por padrão o conda cria seus envs em ~/, que podem estar em paths estranhos (caso da phocus4) ou podem não existir inicialmente (caso das gorgonas). Neste caso deve ser usado um prefixo de instalação diferente. Outro detalhe, é recomendado criar o conda env a partir de uma gorgona. Por questões da falta de um DFS no cluster, não é certo que criar o conda env a partir da phocus4 e usá-lo nas gorgonas funcione, mesmo sendo esse o padrão de uso da phocus4. Abaixo temos um exemplo de como criar um conda env em um prefixo na home_cerberus.
+
+```comand
+username@phocus4:~$ srun --time 10:00:00 --pty bash
+username@gorgona5:~$ module load anaconda3.2023.09-0 
+username@gorgona5:~$ conda --version
+conda 23.7.4
+username@gorgona5:~$ conda create --prefix /home_cerberus/disk3/username
+[...]
+username@gorgona5:~$ conda activate /home_cerberus/disk3/username
+(/home_cerberus/disk3/username) username@gorgona5:~$
+```
+
+Normalmente não é recomendado criar envs na home_cerberus (python venv dá problema), porém foi testada com sucesso a criação em uma gorgona e a ativação em outra. Isso facilita muito o processo de experimentação já que é necessário criar o conda env apenas uma vez para todas as gorgonas. Caso sejam encontrados problemas, perguntar no grupo do telegram.
 
 ## Python venv
 
