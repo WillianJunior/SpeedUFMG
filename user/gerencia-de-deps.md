@@ -52,6 +52,66 @@ username@gorgona5:~$ conda activate /home_cerberus/disk3/username
 
 Normalmente não é recomendado criar envs na home_cerberus (python venv dá problema), porém foi testada com sucesso a criação em uma gorgona e a ativação em outra. Isso facilita muito o processo de experimentação já que é necessário criar o conda env apenas uma vez para todas as gorgonas. Caso sejam encontrados problemas, perguntar no grupo do telegram.
 
+### OK, mas como isso me ajuda?
+Tendo um ambiente conda você terá basicamente um 'apt install' de todo e qualquer pacote disponível no mundo conda (>25k no momento de escrita desse texto). Exemplo: preciso compilar meu código com o gcc-10.3, então preciso deste exato compilador. Basta ativar seu ambiente conda (ver acima) e instalar esses pacotes. Quando em dúvida, buscar "conda install <nome_do_pacote>" no google normalmente resolve. Se buscar no conda-forge (maior repositório de pacotes conda) a página ainda mostra o comando que deve ser usado para instalar o pacote (exemplo: https://anaconda.org/conda-forge/gcc).
+
+Para instalar um pacote (ainda usando o exemplo do gcc) basta carregar o seu ambiente conda e rodar o comando de instalação (note que existe uma forma de instalar versões específicas de pacotes):
+```comand
+username@gorgona5:~$ conda activate /home_cerberus/disk3/username
+(/home_cerberus/disk3/username) username@gorgona5:~$ conda list gcc
+Loading channels: done
+# Name                       Version           Build  Channel             
+[...]      
+gcc                            9.5.0     h1fea6ba_13  conda-forge         
+gcc                           10.3.0      he2824d0_1  conda-forge         
+gcc                           10.3.0     he2824d0_10  conda-forge         
+gcc                           10.3.0      he2824d0_2  conda-forge         
+gcc                           10.3.0      he2824d0_3  conda-forge         
+gcc                           10.3.0      he2824d0_4  conda-forge         
+gcc                           10.3.0      he2824d0_5  conda-forge         
+gcc                           10.3.0      he2824d0_6  conda-forge         
+gcc                           10.3.0      he2824d0_7  conda-forge         
+gcc                           10.3.0      he2824d0_8  conda-forge         
+gcc                           10.3.0      he2824d0_9  conda-forge         
+gcc                           10.4.0     hb92f740_10  conda-forge         
+gcc                           10.4.0     hb92f740_11  conda-forge         
+gcc                           10.4.0     hb92f740_12  conda-forge         
+gcc                           10.4.0     hb92f740_13  conda-forge         
+gcc                           11.1.0      hee54495_1  conda-forge
+[...]   
+gcc                           13.2.0      hd6cf55c_2  conda-forge         
+gcc                           13.2.0      hd6cf55c_3  conda-forge         
+gcc                           13.3.0      h9576a4e_0  conda-forge         
+gcc                           14.1.0      h6f9ffa1_0  conda-forge 
+(/home_cerberus/disk3/username) username@gorgona5:~$ conda install gcc=10.3
+Channels:
+ - conda-forge
+Platform: linux-64
+Collecting package metadata (repodata.json): done
+Solving environment: done
+
+## Package Plan ##
+
+  environment location: /home_cerberus/disk3/willianjunior2
+
+  added / updated specs:
+    - gcc=10.3
+
+
+The following packages will be downloaded:
+
+    package                    |            build
+    ---------------------------|-----------------
+    binutils_impl_linux-64-2.36.1|       h193b22a_2        10.4 MB  conda-forge
+[...]
+(/home_cerberus/disk3/username) username@gorgona5:~$ gcc --version
+gcc (conda-forge gcc 10.3.0-0) 10.3.0
+Copyright (C) 2020 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+```
+
+
 ## Python venv
 
 Como os usuários não possuem acesso root, não é possível instalar pacotes Python diretamente via pip. Para isso, é necessária a criação de um venv:
