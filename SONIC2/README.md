@@ -31,8 +31,8 @@
    - [ ] Instalar lustre data server em alexandria1
    - [ ] Instalar lustre client em gibraltar1
  - [ ] Configurar LDAP
-   - [ ] Pingar LDAP do DCC
-   - [ ] Configurar LDAP na cerberus2
+   - [x] Pingar LDAP do DCC
+   - [x] Configurar LDAP na cerberus2
    - [ ] Configurar LDAP na gibraltar1
    - [ ] **Necessário configurar LDAP na alexandria1? Lustre precisa disso?**
 
