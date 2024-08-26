@@ -17,15 +17,18 @@
  - Mudar SO padrão para rocky linux
  - Montar rede NAT privada para facilitar controle do cluster
  - Implementar DFS lustre
+ - Implementar nó login separado do nó HEAD
+ - Bloquear acesso de usuários em cerberus2, exceto para ssh para nó de login
  - Migrar máquinas para nova subrede
 
 ## Progresso
  - [ ] Montagem da subrede NAT privada
    - [x] Formatar cerberus2 com rocky8
-   - [ ] Adicionar cerberus2 ao DNS da rede do DCC (fora da NAT privada)
-   - [ ] Montar DHCP em cerberus2
+   - [x] Adicionar cerberus2 ao DNS da rede do DCC (fora da NAT privada)
+   - [x] Montar DHCP em cerberus2
    - [ ] Formatar gibraltar1 (nó de login) com rocky8
-   - [ ] Formatar alexandria1 (nó de armazenamento lustre) com rocky8
+   - [x] Formatar alexandria1 (nó de armazenamento lustre) com rocky8
+   - [ ] Bloquear acesso à cerberus2, exceto root, permitindo apenas tunelamento ssh
  - [ ] Implementar lustre DFS
    - [ ] Instalar lustre head server em cerberus2
    - [ ] Instalar lustre data server em alexandria1
