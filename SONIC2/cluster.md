@@ -16,7 +16,7 @@ Nós responsáveis por manter a rede e os serviços nela. Nós não acessíveis 
 Nós onde usuários devem acessar e fazer o staging dos experimentos. Permite interface com slurm. Idealmente deve ter 1 nó com GPU para preparação de experimentos com GPU.
 
 ## gibraltar1
- - ip: 169.254.10.21
+ - ip: 169.254.231.21
  - Serviços:
    - [ ] LDAP client
    - [ ] DHCP client
