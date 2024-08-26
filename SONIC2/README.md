@@ -28,6 +28,7 @@
    - [x] Montar DHCP em cerberus2
    - [ ] Formatar gibraltar1 (nó de login) com rocky8
    - [x] Formatar alexandria1 (nó de armazenamento lustre) com rocky8
+   - [ ] Adicionar acesso à internet de alexandria1 via cerberus2->mica->internet
    - [ ] Bloquear acesso à cerberus2, exceto root, permitindo apenas tunelamento ssh
  - [ ] Implementar lustre DFS
    - [ ] Instalar lustre head server em cerberus2
