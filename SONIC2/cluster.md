@@ -1,6 +1,4 @@
-Lista de nós:
-
-# Controle
+# Nós de Controle
 Nós responsáveis por manter a rede e os serviços nela. Nós não acessíveis aos usuários
 
 ## cerberus2
@@ -14,7 +12,7 @@ Nós responsáveis por manter a rede e os serviços nela. Nós não acessíveis 
    - [ ] Luste head
    - [ ] Lustre MDS 
   
-# Login
+# Nós de Login
 Nós onde usuários devem acessar e fazer o staging dos experimentos. Permite interface com slurm. Idealmente deve ter 1 nó com GPU para preparação de experimentos com GPU.
 
 ## gibraltar1
@@ -26,7 +24,7 @@ Nós onde usuários devem acessar e fazer o staging dos experimentos. Permite in
    - [ ] Slurm client
    - [ ] Lustre client
   
-# Lustre
+# Nós DFS Lustre
 Nós responsáveis pelo DFS. Existem 2 tipos diferentes para o sistema lustre: nós de metadados (MDS) e nós de dados (OSS). Serviço head reside em cerberus2. Nó inacessível a usuários.
 
 ## alexandria1
