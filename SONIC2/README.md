@@ -37,9 +37,9 @@
    - [ ] Conseguir montar s2common de alexandria1 em cerberus2
    - [ ] Instalar lustre client em gibraltar1
  - [ ] Configuração de startup
-   - [ ] Configuração de ip estático da cerberus2
-   - [ ] Startup DHCP da cerberus2
-   - [ ] Configuração de ip de DHCP da alexandria1
+   - [x] Configuração de ip estático da cerberus2
+   - [x] Startup DHCP da cerberus2
+   - [x] Configuração de ip de DHCP da alexandria1
    - [ ] Startup lustre da alexandria1
    - [ ] Startup LNet da alexandria1
    - [ ] Startup LNet da cerberus2
