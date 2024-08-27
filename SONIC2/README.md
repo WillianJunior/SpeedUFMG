@@ -29,15 +29,25 @@
    - [ ] Formatar gibraltar1 (nó de login) com rocky8
    - [x] Formatar alexandria1 (nó de armazenamento lustre) com rocky8
    - [ ] Adicionar acesso à internet de alexandria1 via cerberus2->mica->internet
+   - [ ] Remover alexandria1 da rede dcc 
    - [ ] Bloquear acesso à cerberus2, exceto root, permitindo apenas tunelamento ssh
  - [ ] Implementar lustre DFS
-   - [ ] Instalar lustre head server em cerberus2
-   - [ ] Instalar lustre data server em alexandria1
+   - [x] Instalar lustre em alexandria1
+   - [x] Instalar lustre client em cerberus2
+   - [ ] Conseguir montar s2common de alexandria1 em cerberus2
    - [ ] Instalar lustre client em gibraltar1
+ - [ ] Configuração de startup
+   - [ ] Configuração de ip estático da cerberus2
+   - [ ] Startup DHCP da cerberus2
+   - [ ] Configuração de ip de DHCP da alexandria1
+   - [ ] Startup lustre da alexandria1
+   - [ ] Startup LNet da alexandria1
+   - [ ] Startup LNet da cerberus2
+   - [ ] Montagem s2common em cerberus2
  - [ ] Configurar LDAP
    - [x] Pingar LDAP do DCC
    - [x] Configurar LDAP na cerberus2
    - [ ] Configurar LDAP na gibraltar1
-   - [ ] **Necessário configurar LDAP na alexandria1? Lustre precisa disso?**
+   - [ ] **Necessário configurar LDAP na alexandria1? Lustre precisa disso? Parece q sim, mas precisa testar...**
 
 
