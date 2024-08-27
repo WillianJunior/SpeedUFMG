@@ -34,7 +34,7 @@
  - [ ] Implementar lustre DFS
    - [x] Instalar lustre em alexandria1
    - [x] Instalar lustre client em cerberus2
-   - [ ] Conseguir montar s2common de alexandria1 em cerberus2
+   - [x] Conseguir montar s2common de alexandria1 em cerberus2
    - [ ] Instalar lustre client em gibraltar1
  - [ ] Configuração de startup
    - [x] Configuração de ip estático da cerberus2
