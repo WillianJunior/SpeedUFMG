@@ -18,6 +18,8 @@
  - Montar rede NAT privada para facilitar controle do cluster
  - Implementar DFS lustre
  - Implementar nó login separado do nó HEAD
+ - Arrumar avisos slurm por email
+ - Arrumar slurm PAM para nós compute
  - Bloquear acesso de usuários em cerberus2, exceto para ssh para nó de login
  - Migrar máquinas para nova subrede
 
