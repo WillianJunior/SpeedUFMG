@@ -5,7 +5,7 @@
  - Storage: sshfs
  - Gestão de dependencias:
    - Linux modules
-   - Anadonda
+   - Anaconda
    - Ansible para aplicar alterações em todos nós
   
 ## Demandas
