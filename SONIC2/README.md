@@ -21,7 +21,11 @@
  - Bloquear acesso de usuários em cerberus2, exceto para ssh para nó de login
  - Migrar máquinas para nova subrede
 
-## Progresso
+## Lições até agora...
+ - Todos nós precisam do ldap para genrenciar usuários, até mesmo alexandria
+ - Remover acesso ssh de usuários para nós lustre
+
+## Progresso Sprint 1
  - [ ] Montagem da subrede NAT privada
    - [x] Formatar cerberus2 com rocky8
    - [x] Adicionar cerberus2 ao DNS da rede do DCC (fora da NAT privada)
@@ -41,13 +45,20 @@
    - [x] Startup DHCP da cerberus2
    - [x] Configuração de ip de DHCP da alexandria1
    - [ ] Startup lustre da alexandria1
-   - [ ] Startup LNet da alexandria1
-   - [ ] Startup LNet da cerberus2
+   - [x] Startup LNet da alexandria1
+   - [x] Startup LNet da cerberus2
    - [ ] Montagem s2common em cerberus2
- - [ ] Configurar LDAP
+ - [x] Configurar LDAP
    - [x] Pingar LDAP do DCC
    - [x] Configurar LDAP na cerberus2
-   - [ ] Configurar LDAP na ostia1
-   - [ ] **Necessário configurar LDAP na alexandria1? Lustre precisa disso? Parece q sim, mas precisa testar...**
+   - [x] Configurar LDAP na ostia1
+   - [x] Configurar LDAP na alexandria1
 
+## Progresso Sprint 2
+ - [ ] Montagem slurm
+   - [ ] Instalar slurm server em cerberus2
+   - [ ] Montar login node em ostia1
+   - [ ] Configurar compute node em ostia1 para testes
+ - [ ] Preparação para migração
+   - [ ] Encontrar ponto de acesso da NAT privada para as gorgonas
 
