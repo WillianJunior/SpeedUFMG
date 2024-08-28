@@ -26,16 +26,16 @@
    - [x] Formatar cerberus2 com rocky8
    - [x] Adicionar cerberus2 ao DNS da rede do DCC (fora da NAT privada)
    - [x] Montar DHCP em cerberus2
-   - [ ] Formatar ostia1 (nó de login) com rocky8
+   - [x] Formatar ostia1 (nó de login) com rocky8
    - [x] Formatar alexandria1 (nó de armazenamento lustre) com rocky8
    - [ ] Adicionar acesso à internet de alexandria1 via cerberus2->mica->internet
    - [ ] Remover alexandria1 da rede dcc 
    - [ ] Bloquear acesso à cerberus2, exceto root, permitindo apenas tunelamento ssh
- - [ ] Implementar lustre DFS
+ - [x] Implementar lustre DFS
    - [x] Instalar lustre em alexandria1
    - [x] Instalar lustre client em cerberus2
    - [x] Conseguir montar s2common de alexandria1 em cerberus2
-   - [ ] Instalar lustre client em ostia1
+   - [x] Instalar lustre client em ostia1
  - [ ] Configuração de startup
    - [x] Configuração de ip estático da cerberus2
    - [x] Startup DHCP da cerberus2
