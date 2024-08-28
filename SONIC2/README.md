@@ -40,11 +40,11 @@
    - [x] Instalar lustre client em cerberus2
    - [x] Conseguir montar s2common de alexandria1 em cerberus2
    - [x] Instalar lustre client em ostia1
- - [ ] Configuração de startup
+ - [x] Configuração de startup
    - [x] Configuração de ip estático da cerberus2
    - [x] Startup DHCP da cerberus2
    - [x] Configuração de ip de DHCP da alexandria1
-   - [ ] Startup lustre da alexandria1
+   - [x] Startup lustre da alexandria1
    - [x] Startup LNet da alexandria1
    - [x] Startup LNet da cerberus2
    - [x] Montagem s2common em cerberus2
