@@ -48,6 +48,7 @@
    - [x] Startup LNet da alexandria1
    - [x] Startup LNet da cerberus2
    - [ ] Montagem s2common em cerberus2
+   - [ ] Montagem s2common em ostia1
  - [x] Configurar LDAP
    - [x] Pingar LDAP do DCC
    - [x] Configurar LDAP na cerberus2
@@ -59,6 +60,17 @@
    - [ ] Instalar slurm server em cerberus2
    - [ ] Montar login node em ostia1
    - [ ] Configurar compute node em ostia1 para testes
+ - [ ] Configuração userspace lustre
+   - [ ] Montar estrutura de diretórios
+   - [ ] Implementar quotas de armazenamento
  - [ ] Preparação para migração
    - [ ] Encontrar ponto de acesso da NAT privada para as gorgonas
 
+## Progresso Sprint 3
+ - [ ] Documentação
+   - [ ] Preparar scripts ansible para preparação de todos os nós
+   - [ ] Documentação de instalação dos nós
+ - [ ] Testes
+   - [ ] Validação do fs (acesso, permissões, disponibilidade, tolerancia a falhas...)
+   - [ ] Validação execução slurm
+   - [ ] Validação desempenho de I/O (execução de jobs baixando arquivos)
