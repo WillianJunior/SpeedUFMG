@@ -1,0 +1,12 @@
+[lustre-server]
+name=lustre-server
+baseurl=https://downloads.whamcloud.com/public/lustre/lustre-2.15.5/el8.10/server/
+exclude=*debuginfo*
+enabled=0
+gpgcheck=0
+
+[lustre-client]
+name=lustre-client
+baseurl=https://downloads.whamcloud.com/public/lustre/lustre-2.15.5/el8.10/client/
+# exclude=*debuginfo*
+gpgcheck=0
