@@ -34,7 +34,7 @@
    - [x] Formatar alexandria1 (nó de armazenamento lustre) com rocky8
    - [ ] Adicionar acesso à internet de alexandria1 via cerberus2->mica->internet
    - [ ] Remover alexandria1 da rede dcc 
-   - [ ] Bloquear acesso à cerberus2, exceto root, permitindo apenas tunelamento ssh
+   - [x] Bloquear acesso à cerberus2, exceto root, permitindo apenas tunelamento ssh
  - [x] Implementar lustre DFS
    - [x] Instalar lustre em alexandria1
    - [x] Instalar lustre client em cerberus2
