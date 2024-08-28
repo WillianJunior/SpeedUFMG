@@ -47,8 +47,8 @@
    - [ ] Startup lustre da alexandria1
    - [x] Startup LNet da alexandria1
    - [x] Startup LNet da cerberus2
-   - [ ] Montagem s2common em cerberus2
-   - [ ] Montagem s2common em ostia1
+   - [x] Montagem s2common em cerberus2
+   - [x] Montagem s2common em ostia1
  - [x] Configurar LDAP
    - [x] Pingar LDAP do DCC
    - [x] Configurar LDAP na cerberus2
