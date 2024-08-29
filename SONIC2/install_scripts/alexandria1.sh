@@ -75,15 +75,38 @@ systemctl enable lnet
 modprobe -v lustre
 dmesg # Check outputs from lustre
 
+# === Creating a fs =============================
+# This script only creates a fs from a single 
+# vitual group. Only an example. More to come...
 
+# First, create the virtual group of devices to store 
+sh lustre-utils.sh create_vg lustre /dev/sdb
 
+# Should create a single manager target (mgt) for the whole node
+sh lustre-utils.sh create_mgt zfs
 
+# Create a fs with 1 mdt and 4 ost's with
+# 2GB and 4GB each respectively
+lustre-utils.sh create_fs s2common zfs 2 1 zfs 16 4
 
+# === Testing the mounts ========================
+sh lustre-utils.sh start_mgs
+sh lustre-utils.sh start_fs s2common
+sh lustre-utils.sh status
 
-# TODO....
-# create FSs
-# --- Mount s2common fs ------------------------
-mkdir -p /lustre/s2common
-# Enable s2common fs at boot
-echo "alexandria1@tcp1:/s2common /lustre/s2common/ lustre defaults,_netdev,flock 0 0" >> /etc/fstab
+# === Mount fs on boot ==========================
+echo "# Initialize lustre MGT" >> /etc/fstab
+echo "mgt/lustre /lustre/mgt lustre defaults,_netdev,flock 0 0" >> /etc/fstab
+echo "# Initialize s2common lustre fs" >> /etc/fstab
+echo "# mount MDT" >> /etc/fstab
+echo "s2common_mdt0/lustre /lustre/s2common/mdt0 lustre defaults,_netdev,flock 0 0" >> /etc/fstab
+echo "# mount OSTs" >> /etc/fstab
+echo "s2common_ost0/lustre /lustre/s2common/ost0 lustre defaults,_netdev,flock 0 0" >> /etc/fstab
+echo "s2common_ost1/lustre /lustre/s2common/ost1 lustre defaults,_netdev,flock 0 0" >> /etc/fstab
+echo "s2common_ost2/lustre /lustre/s2common/ost2 lustre defaults,_netdev,flock 0 0" >> /etc/fstab
+echo "s2common_ost3/lustre /lustre/s2common/ost3 lustre defaults,_netdev,flock 0 0" >> /etc/fstab
+
+# Testing the fstab mount
+sh lustre-utils.sh stop_fs s2common
+sh lustre-utils.sh stop_mgs
 mount -a # This mounts the s2common fs now, and should work now...
