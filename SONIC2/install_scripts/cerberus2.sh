@@ -1,3 +1,7 @@
+# Tested on:
+# OS:     Rocky 8.10
+# Kernel: 4.18.0-553.16.1.el8_10.x86_64
+
 # === Base ======================================
 dnf install -y epel-release
 dnf install -y htop
