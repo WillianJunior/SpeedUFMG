@@ -1,5 +1,6 @@
 # Nós de Controle
-Nós responsáveis por manter a rede e os serviços nela. Nós não acessíveis aos usuários
+Nós responsáveis por manter a rede e os serviços nela. Nós não acessíveis aos usuários.
+Para o caso da cerberus2, barreira de entrada para a rede, é possível tunelar ssh por ela. Ao acessá-la diretamente é disponibilizada uma interface para gerir chaves públicas dentro da cerberus2.
 
 ## cerberus2
  - ip externo: 150.164.203.178
