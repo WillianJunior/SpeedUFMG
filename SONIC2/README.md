@@ -17,6 +17,8 @@
  - Mudar SO padrão para rocky linux
  - Montar rede NAT privada para facilitar controle do cluster
  - Implementar DFS lustre
+ - Montar sistema de quotas para DFS
+ - Montar perfilamento de uso do lustre (latencia, throughput, ...)
  - Implementar nó login separado do nó HEAD
  - Arrumar avisos slurm por email
  - Arrumar slurm PAM para nós compute
