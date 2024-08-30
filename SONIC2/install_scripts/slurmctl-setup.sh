@@ -71,7 +71,7 @@ dnf install -y mariadb-server mariadb-devel pam-devel readline-devel
 # rrdtool-devel ncurses-devel gtk2-devel libibmad libibumad perl-Switch \
 # perl-ExtUtils-MakeMaker xorg-x11-xauth dbus-devel libbpf
 
-# Build and install slurm
+# Build and install slurm with deps
 export SLURM_VER=24.05.3
 wget https://download.schedmd.com/slurm/slurm-${SLURM_VER}.tar.bz2
 mkdir /lustre/s2common/slurm
@@ -81,7 +81,8 @@ export SLM_PATH=/root/rpmbuild/RPMS/x86_64/
 dnf install -y ${SLM_PATH}/slurm-${SLURM_VER}*rpm \
 ${SLM_PATH}/slurm-devel-${SLURM_VER}*rpm \
 ${SLM_PATH}/slurm-example-configs-${SLURM_VER}*rpm \
-${SLM_PATH}/slurm-slurmctld-${SLURM_VER}*rpm
+${SLM_PATH}/slurm-slurmctld-${SLURM_VER}*rpm \
+${SLM_PATH}/slurm-slurmdbd-${SLURM_VER}*rpm
 
 # Prepare spool, run and log paths
 mkdir /var/spool/slurmctld /var/log/slurm /var/run/slurm
@@ -94,15 +95,9 @@ touch /var/log/slurm/slurmctld.log /var/log/slurm/slurmd.log /home/slurm/jobcomp
 chown slurm: /var/log/slurm/slurmctld.log /var/log/slurm/slurmd.log /home/slurm/jobcompl.txt /var/log/slurm/slurmdbd.log /var/run/slurmdbd.pid
 chmod 0770 /var/log/slurm/slurmctld.log /var/log/slurm/slurmd.log /home/slurm/jobcompl.txt /var/log/slurm/slurmdbd.log /var/run/slurmdbd.pid
 
-# Install slurm, slurmdb and mariadb
-dnf install -y ${SLM_PATH}/slurm-${SLURM_VER}*rpm \
-${SLM_PATH}/slurm-devel-${SLURM_VER}*rpm \
-${SLM_PATH}/slurm-slurmdbd-${SLURM_VER}*rpm
-
+# Configure mariadb
 systemctl start mariadb
 systemctl enable mariadb
-
-# Configure mariadb
 mysql_secure_installation
 echo "[mysqld]" >> /etc/my.cnf
 echo "innodb_buffer_pool_size=4096M" >> /etc/my.cnf
@@ -120,6 +115,8 @@ grant all on slurm_acct_db.* TO 'slurm'@'localhost' identified by 'qp' with gran
 FLUSH PRIVILEGES;
 
 # Fill slurmdb.conf:
+mkdir /etc/slurm
+chown slurm /etc/slurm
 cat /etc/slurm/slurmdbd.conf
 chown slurm /etc/slurm/slurmdbd.conf
 chmod 600 /etc/slurm/slurmdbd.conf
