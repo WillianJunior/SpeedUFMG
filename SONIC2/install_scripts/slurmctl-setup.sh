@@ -3,34 +3,44 @@
 # OS:     Rocky 8.10
 # Kernel: 4.18.0-553.16.1.el8_10.x86_64
 
+# OBS:
+# All config files are within the lustre fs s2common, which
+# should be mounted at /lustre/s2common
+
 # === Basics ========================================================
 export SLURM_UID=38000
 export SLURM_GID=38010
 export MUNGE_UID=48000
 export MUNGE_GID=48010
 
-sudo groupadd -g $SLURM_GID slurm
-sudo groupadd -g $MUNGE_GID munge
-sudo adduser slurm --uid $SLURM_UID --gid $SLURM_GID
-sudo adduser munge --uid $MUNGE_UID --gid $MUNGE_GID --system
+groupadd -g $SLURM_GID slurm
+groupadd -g $MUNGE_GID munge
+adduser slurm --uid $SLURM_UID --gid $SLURM_GID
+adduser munge --uid $MUNGE_UID --gid $MUNGE_GID --system
 
 # === Munge =========================================================
 dnf install -y munge munge-libs munge-devel
 
-# Generate a random munge key. This should be copied to all
-dd if=/dev/urandom bs=1 count=1024 > /etc/munge/munge.key
+# Generate a random munge key
+mkdir /lustre/s2common/munge/
+dd if=/dev/urandom bs=1 count=1024 > /lustre/s2common/munge/munge.key
+chmod 400 /lustre/s2common/munge/munge.key
+
+# Copy munge key from s2common to expected munge path
+# Munge doesn't allow symlinking munge.key
+cp /lustre/s2common/munge/munge.key /etc/munge/
 chown munge /etc/munge/munge.key
 chmod 400 /etc/munge/munge.key
 
 # assign propper permissions for munge dirs
-sudo chmod 0700 /etc/munge/
-sudo chmod 0711 /var/lib/munge/
-sudo chmod 0700 /var/log/munge/
-sudo mkdir /run/munge
-sudo chmod 0755 /run/munge
-sudo touch /var/log/munge/munged.log
-sudo chown munge /etc/munge/ /var/lib/munge/ /var/log/munge/ /run/munge /var/log/munge/munged.log
-sudo chgrp munge /etc/munge/ /var/lib/munge/ /var/log/munge/ /run/munge /var/log/munge/munged.log
+chmod 0700 /etc/munge/
+chmod 0711 /var/lib/munge/
+chmod 0700 /var/log/munge/
+mkdir /run/munge
+chmod 0755 /run/munge
+touch /var/log/munge/munged.log
+chown munge /etc/munge/ /var/lib/munge/ /var/log/munge/ /run/munge /var/log/munge/munged.log
+chgrp munge /etc/munge/ /var/lib/munge/ /var/log/munge/ /run/munge /var/log/munge/munged.log
 
 # More threads for munge
 # https://wiki.fysik.dtu.dk/Niflheim_system/Slurm_installation/#munge-0-5-13-increase-number-of-threads
