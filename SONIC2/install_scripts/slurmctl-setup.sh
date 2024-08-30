@@ -74,6 +74,7 @@ dnf install -y mariadb-server mariadb-devel pam-devel readline-devel
 # Build and install slurm
 export SLURM_VER=24.05.3
 wget https://download.schedmd.com/slurm/slurm-${SLURM_VER}.tar.bz2
+mkdir /lustre/s2common/slurm
 cp slurm-${SLURM_VER}.tar.bz2 /lustre/s2common/slurm/ # Only need to download once
 rpmbuild -ta slurm-$SLURM_VER.tar.bz2
 export SLM_PATH=/root/rpmbuild/RPMS/x86_64/
