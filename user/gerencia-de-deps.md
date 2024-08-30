@@ -58,7 +58,7 @@ Tendo um ambiente conda você terá basicamente um 'apt install' de todo e qualq
 Para instalar um pacote (ainda usando o exemplo do gcc) basta carregar o seu ambiente conda e rodar o comando de instalação (note que existe uma forma de instalar versões específicas de pacotes):
 ```comand
 username@gorgona5:~$ conda activate /home_cerberus/disk3/username
-(/home_cerberus/disk3/username) username@gorgona5:~$ conda list gcc
+(/home_cerberus/disk3/username) username@gorgona5:~$ conda search gcc
 Loading channels: done
 # Name                       Version           Build  Channel             
 [...]      
