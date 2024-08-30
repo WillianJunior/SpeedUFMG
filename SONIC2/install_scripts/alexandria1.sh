@@ -109,6 +109,8 @@ sh lustre-utils.sh status
 # === Mount fs on boot ==========================
 echo "# Initialize lustre MGT" >> /etc/fstab
 echo "mgt/lustre /lustre/mgt lustre defaults,_netdev,flock 0 0" >> /etc/fstab
+
+# common fs
 echo "# Initialize s2common lustre fs" >> /etc/fstab
 echo "# mount MDT" >> /etc/fstab
 echo "s2common_mdt0/lustre /lustre/s2common/mdt0 lustre defaults,_netdev,flock 0 0" >> /etc/fstab
@@ -117,6 +119,16 @@ echo "s2common_ost0/lustre /lustre/s2common/ost0 lustre defaults,_netdev,flock 0
 echo "s2common_ost1/lustre /lustre/s2common/ost1 lustre defaults,_netdev,flock 0 0" >> /etc/fstab
 echo "s2common_ost2/lustre /lustre/s2common/ost2 lustre defaults,_netdev,flock 0 0" >> /etc/fstab
 echo "s2common_ost3/lustre /lustre/s2common/ost3 lustre defaults,_netdev,flock 0 0" >> /etc/fstab
+
+# scratch fs
+echo "# Initialize s2_scr1 lustre fs" >> /etc/fstab
+echo "# mount MDT" >> /etc/fstab
+echo "s2_scr1_mdt0/lustre /lustre/s2_scr1/mdt0 lustre defaults,_netdev,flock 0 0" >> /etc/fstab
+echo "# mount OSTs" >> /etc/fstab
+echo "s2_scr1_ost0/lustre /lustre/s2_scr1/ost0 lustre defaults,_netdev,flock 0 0" >> /etc/fstab
+echo "s2_scr1_ost1/lustre /lustre/s2_scr1/ost1 lustre defaults,_netdev,flock 0 0" >> /etc/fstab
+echo "s2_scr1_ost2/lustre /lustre/s2_scr1/ost2 lustre defaults,_netdev,flock 0 0" >> /etc/fstab
+echo "s2_scr1_ost3/lustre /lustre/s2_scr1/ost3 lustre defaults,_netdev,flock 0 0" >> /etc/fstab
 
 # Testing the fstab mount
 sh lustre-utils.sh stop_fs s2common
