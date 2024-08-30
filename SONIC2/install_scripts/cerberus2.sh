@@ -82,11 +82,13 @@ systemctl enable lnet
 modprobe -v lustre
 dmesg # Check outputs from lustre
 
-# --- Mount s2common fs ------------------------
+# --- Mount lustre fs's ------------------------
 mkdir -p /lustre/s2common
+mkdir -p /lustre/s2_scr1
 # Enable s2common fs at boot
 echo "alexandria1@tcp1:/s2common /lustre/s2common/ lustre defaults,_netdev,flock 0 0" >> /etc/fstab
-mount -a # This mounts the s2common fs now, and should work now...
+echo "alexandria1@tcp1:/s2_scr1 /lustre/s2_scr1/ lustre defaults,_netdev,flock 0 0" >> /etc/fstab
+mount -a # This mounts the fs's now, and should work now...
 
 
 
