@@ -15,6 +15,13 @@ systemctl mask firewalld
 # vim /etc/selinux/config
 # SELINUX=disabled
 
+# Need to create the slurm user to allow it to read the slurm.conf file
+# on s2common.
+export SLURM_UID=38000
+export SLURM_GID=38010
+groupadd -g $SLURM_GID slurm
+adduser slurm --uid $SLURM_UID --gid $SLURM_GID
+
 # === Networking ================================
 hostnamectl set-hostname alexandria1
 
