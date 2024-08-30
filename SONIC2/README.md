@@ -64,11 +64,11 @@
 ## Progresso Sprint 2
  - [ ] Montagem slurm
    - [x] Instalar slurm server em cerberus2
-   - [ ] Montar login node em ostia1
-   - [ ] Configurar compute node em ostia1 para testes
+   - [x] Montar login node em ostia1
+   - [x] Configurar compute node em cerberus2 para testes
+   - [ ] Descobrir como configurar PAM...
  - [ ] Configuração userspace lustre
    - [ ] Montar estrutura de diretórios
-   - [ ] Implementar quotas de armazenamento
  - [ ] Preparação para migração
    - [ ] Encontrar ponto de acesso da NAT privada para as gorgonas
 
