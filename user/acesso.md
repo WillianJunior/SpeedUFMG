@@ -102,8 +102,11 @@ FreeBSD 11.2-RELEASE-p14 (GENERIC) #0: Mon Aug 19 22:38:50 UTC 2019 ....
 [username@mica ~]$ mkdir ~/.ssh
 [username@mica ~]$ vim ~/.ssh/authorized_keys
 ... colar a chave pública, digitar ":wq" + Enter para sair
+[username@mica ~]$ chmod 600 ~/.ssh/authorized_keys
 [username@mica ~]$
 ```
+
+Note o 'chmod 600' ao fim da configuração. Se não alterar a permissão de 'authorized_keys' é possível que as chaves públicas neste arquivo sejam ignoradas.
 
 Para testar se o login com chave pública está funcionado basta desconectar da máquina remota e tentar a conexão novamente. Desta vez, não será pedida senha. Isso deve ser feito em todas as máquinas (mica, cerberus e phocus4) usando a mesma chave pública de seu computador pessoal.
 
