@@ -1,9 +1,21 @@
 #!/bin/bash
-echo ----------------------------------------------------
-echo AAAAAAAAAAAAAAAAAAAAAAAH
-echo $(hostname) cannnot be directly accessed
-echo This bash can only manage public keys for tunelling
-echo ----------------------------------------------------
+
+# =======================================================
+# === Script to disallow users from accessing a control
+# === node directly, but allowing tunneling.
+# === This also allows users to manage their public keys
+# === without actually loging in the control node.
+# === 
+# === Two, operations are allowed: adding a new key or
+# === removing all keys. Current keys are always 
+# === displayed when attempting to login.
+# =======================================================
+
+echo "----------------------------------------------------"
+echo "AAAAAAAAAAAAAAAAAAAAAAAH"
+echo "$(hostname) cannnot be directly accessed"
+echo "This bash can only manage public keys for tunelling"
+echo "----------------------------------------------------"
 echo Your current keys:
 if [ ! -d ~/.ssh ]; then
 	mkdir ~/.ssh
@@ -14,10 +26,10 @@ if [ ! -f ~/.ssh/authorized_keys ]; then
         chmod 0644 ~/.ssh/authorized_keys
 fi
 cat ~/.ssh/authorized_keys
-echo ----------------------------------------------------
-echo Input options for:
-echo  - 1 - Add new key
-echo  - 2 - Delete all keys
+echo "----------------------------------------------------"
+echo "Input options for:"
+echo " - 1 - Add new key"
+echo " - 2 - Delete all keys"
 read -p "Option: " OP
 
 if [ $OP -eq 1 ]; then
