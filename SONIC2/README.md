@@ -66,7 +66,8 @@
    - [x] Instalar slurm server em cerberus2
    - [x] Montar login node em ostia1
    - [x] Configurar compute node em cerberus2 para testes
-   - [ ] Descobrir como configurar PAM...
+   - [ ] Descobrir como configurar PAM... (ver https://www.suse.com/c/deploying-slurm-pam-modules-on-sle-compute-nodes/)
+   - [ ] Configurar notificação por email
  - [ ] Configuração userspace lustre
    - [ ] Montar estrutura de diretórios
  - [ ] Preparação para migração
