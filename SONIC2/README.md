@@ -63,7 +63,7 @@
 
 ## Progresso Sprint 2
  - [ ] Montagem slurm
-   - [ ] Instalar slurm server em cerberus2
+   - [x] Instalar slurm server em cerberus2
    - [ ] Montar login node em ostia1
    - [ ] Configurar compute node em ostia1 para testes
  - [ ] Configuração userspace lustre
