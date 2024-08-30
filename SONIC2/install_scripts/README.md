@@ -11,8 +11,8 @@ Ordem de montagem das máquinas:
  - Todos nós slurm (head, login e compute) devem ter o mesmo arquivo munge.key
  - Manter todos arquivos de configuração no drive /lustre/s2common para não precisar ficar sincronizando máquinas
 
-## Munge
- - 
+## Slurm
+ - Todas contas tem como parent a *speed_acc*. Ela deve ser criada uma única vez: 'sacctmgr add account speed_acc'
 
 ## cerberus2
  - 
