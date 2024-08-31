@@ -16,7 +16,7 @@
  - Formalizar configuração de novas máquinas do zero
  - Mudar SO padrão para rocky linux
  - Montar rede NAT privada para facilitar controle do cluster
- - Implementar DFS lustre
+ - Implementar DFS lustre com suporte a high-availability (raid e demais...)
  - Implementar nó login separado do nó HEAD
  - Arrumar avisos slurm por email
  - Arrumar slurm PAM para nós compute
@@ -74,6 +74,7 @@
    - [ ] Configurar notificação por email (ver com CRC? also: https://www.claudiokuenzler.com/blog/1360/where-is-mailx-command-rocky-linux-el-9-s-nail-package)
  - [ ] Configuração userspace lustre
    - [ ] Montar estrutura de diretórios
+   - [x] Descobrir como funciona raidz no lustre
  - [ ] Preparação para migração
    - [ ] Encontrar ponto de acesso da NAT privada para as gorgonas
 
