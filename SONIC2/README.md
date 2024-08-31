@@ -32,6 +32,7 @@
  - Remover acesso ssh de usuários para nós lustre
  - vg+lv e zfs são dificeis....
  - caso não seja possível matar um lv (Logical volume in use), pode ser que o "in use" seja do zfs, então basta um 'zpool destroy' antes...
+ - mdadm para raid no lustre não deu bom
 
 ## Progresso Sprint 1
  - [ ] Montagem da subrede NAT privada
