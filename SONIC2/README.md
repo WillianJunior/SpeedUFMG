@@ -34,6 +34,8 @@
  - caso não seja possível matar um lv (Logical volume in use), pode ser que o "in use" seja do zfs, então basta um 'zpool destroy' antes...
  - mdadm para raid no lustre não deu bom
  - ao criar um fs (com os ost's no zpool) com o mesmo nome de um fs que foi apagado antes, pode rolar um "The target service's index is already in use.", neste caso será necessário trocar o nome do fs...
+ - resumindo, zfs não é tão difícil, eu q não sabia...
+ - caso hajam dados sensíveis, que devem ser compartilhados com outros usuários específicos de algum projeto, usem ACL (setfacl -m u:username:rw path/to/file)
 
 ## Progresso Sprint 1
  - [ ] Montagem da subrede NAT privada
@@ -73,7 +75,10 @@
    - [ ] Descobrir como configurar PAM... (ver https://www.suse.com/c/deploying-slurm-pam-modules-on-sle-compute-nodes/)
    - [ ] Configurar notificação por email (ver com CRC? also: https://www.claudiokuenzler.com/blog/1360/where-is-mailx-command-rocky-linux-el-9-s-nail-package)
  - [ ] Configuração userspace lustre
-   - [ ] Montar estrutura de diretórios
+   - [x] Montar estrutura de diretórios
+     - Todos usuários tem um diretório pessoal em /s2_scr4/speed
+     - Por padrão, todos arquivos/dirs são inicializados como o+rx
+     - Para controle grão-fino, ou dar permissão de escrita/leitura para usuários de um mesmo projeto, basta o usuário usar ACL nos seus arquivos
    - [x] Descobrir como funciona raidz no lustre
  - [ ] Preparação para migração
    - [ ] Encontrar ponto de acesso da NAT privada para as gorgonas
