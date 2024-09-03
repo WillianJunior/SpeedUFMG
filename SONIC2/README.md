@@ -73,7 +73,7 @@
    - [x] Montar login node em ostia1
    - [x] Configurar compute node em cerberus2 para testes
    - [ ] Descobrir como configurar PAM... (ver https://www.suse.com/c/deploying-slurm-pam-modules-on-sle-compute-nodes/)
-   - [ ] Configurar notificação por email (ver com CRC? also: https://www.claudiokuenzler.com/blog/1360/where-is-mailx-command-rocky-linux-el-9-s-nail-package)
+   - [x] Configurar notificação por email (s-nail + smtp do crc)
  - [ ] Configuração userspace lustre
    - [x] Montar estrutura de diretórios
      - Todos usuários tem um diretório pessoal em /s2_scr4/speed
