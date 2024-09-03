@@ -18,6 +18,9 @@ groupadd -g $MUNGE_GID munge
 adduser slurm --uid $SLURM_UID --gid $SLURM_GID
 adduser munge --uid $MUNGE_UID --gid $MUNGE_GID --system
 
+# === slurm mail ====================================================
+ln -sf /lustre/s2common/slurm/.mailrc /home/slurm/.mailrc
+
 # === Munge =========================================================
 dnf install -y munge munge-libs munge-devel
 
@@ -134,3 +137,5 @@ sinfo
 
 # check all services on head node. all should be active
 SERVICES=(munge slurmctld mariadb slurmdbd); for s in ${SERVICES[@]}; do echo -ne "$s ->\t"; systemctl status $s | grep Active; done
+
+
