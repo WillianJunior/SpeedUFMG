@@ -1,0 +1,4 @@
+set v15-compat
+set smtp-auth=none
+
+set mta=smtp://celestita.dcc.ufmg.br:26
