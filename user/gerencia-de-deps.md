@@ -37,7 +37,7 @@ username@phocus4:~$ conda --version
 conda 23.7.4
 ```
 
-Em seguida, podemos criar um conda env. Porém, por padrão o conda cria seus envs em ~/, que podem estar em paths estranhos (caso da phocus4) ou podem não existir inicialmente (caso das gorgonas). Neste caso deve ser usado um prefixo de instalação diferente. Outro detalhe, é recomendado criar o conda env a partir de uma gorgona. Por questões da falta de um DFS no cluster, não é certo que criar o conda env a partir da phocus4 e usá-lo nas gorgonas funcione, mesmo sendo esse o padrão de uso da phocus4. Abaixo temos um exemplo de como criar um conda env em um prefixo na home_cerberus.
+Em seguida, podemos criar um conda env. Porém, por padrão o conda cria seus envs em ~/, que podem estar em paths estranhos (caso da phocus4) ou podem não existir inicialmente (caso das gorgonas). Neste caso deve ser usado um prefixo de instalação diferente. Outro detalhe: é recomendado criar o conda env a partir de uma gorgona. Por causa da falta de um DFS no cluster não é certo que criar o conda env a partir da phocus4 e usá-lo nas gorgonas funcione, mesmo sendo esse o padrão de uso da phocus4. Abaixo temos um exemplo de como criar um conda env em um prefixo na home_cerberus.
 
 ```comand
 username@phocus4:~$ srun --time 10:00:00 --pty bash
