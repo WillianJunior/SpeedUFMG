@@ -37,7 +37,13 @@ username@phocus4:~$ conda --version
 conda 23.7.4
 ```
 
-Em seguida, podemos criar um conda env. Porém, por padrão o conda cria seus envs em ~/, que podem estar em paths estranhos (caso da phocus4) ou podem não existir inicialmente (caso das gorgonas). Neste caso deve ser usado um prefixo de instalação diferente. Outro detalhe: é recomendado criar o conda env a partir de uma gorgona. Por causa da falta de um DFS no cluster não é certo que criar o conda env a partir da phocus4 e usá-lo nas gorgonas funcione, mesmo sendo esse o padrão de uso da phocus4. Abaixo temos um exemplo de como criar um conda env em um prefixo na home_cerberus.
+Em seguida, podemos criar um conda env. Porém, existem algumas considerações:
+ - O anaconda precisa de um path ~/ existente para manter dotfiles. Se não houver esse dir, **o conda env não será carregado**. Inicialmente esse path não existe nas gorgonas, porém pode ser criado facilmente indo para ele: 'cd ~'.
+ - O local de geração do conda env importa, podendo ser gerado localmente (em uma gorgona específica) ou globalmente (na home_cerberus).
+ - Globalmente é a melhor opção, já que somente será necessário fazer uma vez e acessado por todas as máquinas. Porém, dado que os dados globais estão montados na cerberus, podem ocorrer erros de input/output. Nestes casos crie ambientes locais para todas máquinas que desejar.
+ - A criação do conda env global pode ser feita da phocus4 como de alguma gorgona. Tente primeiro fazer da phocus4. Caso não funcione, tente de uma gorgona. Caso não funcione, será necessário montar um env por máquina.
+
+Abaixo temos um exemplo de como criar um conda env global a partir de uma gorgona. O processo é identico para a phocus4. Para cria localmente basta trocar o path do --prefix.
 
 ```comand
 username@phocus4:~$ srun --time 10:00:00 --pty bash
@@ -50,10 +56,8 @@ username@gorgona5:~$ conda activate /home_cerberus/disk3/username
 (/home_cerberus/disk3/username) username@gorgona5:~$
 ```
 
-Normalmente não é recomendado criar envs na home_cerberus (python venv dá problema), porém foi testada com sucesso a criação em uma gorgona e a ativação em outra. Isso facilita muito o processo de experimentação já que é necessário criar o conda env apenas uma vez para todas as gorgonas. Caso sejam encontrados problemas, perguntar no grupo do telegram.
-
 ### OK, mas como isso me ajuda?
-Tendo um ambiente conda você terá basicamente um 'apt install' de todo e qualquer pacote disponível no mundo conda (>25k no momento de escrita desse texto). Exemplo: preciso compilar meu código com o gcc-10.3, então preciso deste exato compilador. Basta ativar seu ambiente conda (ver acima) e instalar esses pacotes. Quando em dúvida, buscar "conda install <nome_do_pacote>" no google normalmente resolve. Se buscar no conda-forge (maior repositório de pacotes conda) a página ainda mostra o comando que deve ser usado para instalar o pacote (exemplo: https://anaconda.org/conda-forge/gcc).
+Tendo um ambiente conda você terá basicamente um 'apt install' de todo e qualquer pacote disponível no mundo conda (>25k no momento de escrita desse texto). Exemplo: preciso compilar meu código com o gcc-10.3, então preciso deste exato compilador. Basta ativar seu ambiente conda (ver acima) e instalar esses pacotes usando o comando 'conda install'. Quando em dúvida, buscar "conda install <nome_do_pacote>" no google normalmente resolve. Se buscar no conda-forge (maior repositório de pacotes conda) a página ainda mostra o comando que deve ser usado para instalar o pacote (exemplo: https://anaconda.org/conda-forge/gcc).
 
 Para instalar um pacote (ainda usando o exemplo do gcc) basta carregar o seu ambiente conda e rodar o comando de instalação (note que existe uma forma de instalar versões específicas de pacotes):
 ```comand
