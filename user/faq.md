@@ -26,7 +26,7 @@ username@phocus4:~$ python3 --version
 Python 3.12.1
 ```
 
-## [2] Não estou conseguindo mais criar um venv na home_cerberus.
+## [3] Não estou conseguindo mais criar um venv na home_cerberus.
  - A máquina cerberus está instável, falhando ocasionalmente.
  - Esse problema normalmente aparece como o seguinte erro: "Error: [Errno 5] Input/output error: 'lib' -> '/home_cerberus/speed/usename/venv/lib64'"
  - Arquivos ainda estão acessíveis na home_cerberus, porém foram identificados problemas ao gerar (ou mover) venv’s para ela.
