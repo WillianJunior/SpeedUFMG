@@ -147,7 +147,7 @@ Dado que são feitas 3 conexões ssh, é possível que o tempo de login seja um 
  - O que você deve fazer, em ordem, um passo de cada vez, para acessar pela primeira vez o cluster:
    1. Criar uma conta no CRC especificando que precisa estar no grupo 'speed'
    2. Pedir a criação de uma conta na cerberus no tópico 'Novos Acessos' do grupo do telegram
-   3. Criar um par de chaves ssh na sua máquina via 'ssh-keygen', caso você não tenha chaves ssh no seu pc
+   3. Criar um par de chaves ssh na sua máquina via 'ssh-keygen', caso você não tenha chaves ssh no seu pc. Não precisa colocar senha na sua chave ssh
    4. Criar o arquivo ~/.ssh/config descrito acima
    5. Rodar o comando 'ssh phocus4'
    6. Resolvido
