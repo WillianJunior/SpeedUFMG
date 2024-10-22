@@ -61,7 +61,7 @@ username@phocus4:~$
 
 Na phocus4 você poderá usar o cluster normalmente. Para fechar a conexão remota basta usar o comando exit, ou pelo atalho Ctrl+D.
 
-## Login por chave pública e tunneling
+## Login por chave pública
 
 Como você pode ter percebido, precisar passar por 3 logins é um processo chato. Porém é possível fazer o loging direto com apenas 1 comando ssh e sem precisar colocar senha. Existem duas forma de se logar em uma máquina remota via ssh: (i) verificação de senha, ou (ii) verificação de chaves. O ssh usa um modelo de comunicação criptografada asimétrica. Nele existem duas chaves, uma publica e uma privada. Entregando sua chave publica para alguém (por um canal seguro, como a própia conexão feita com senha), é possivel que essa pessoa verifique que você realmente é quem diz ao submeter sua chave privada em seguida (feito automaticamente pelo seu cliente ssh). Em termos práticos, se dermos nossa chave pública para um nó como a mica, ela poderá saber que você realmente é quem diz ser. 
 
@@ -110,7 +110,9 @@ Note o 'chmod 644' ao fim da configuração. Se não alterar a permissão de 'au
 
 Para testar se o login com chave pública está funcionado basta desconectar da máquina remota e tentar a conexão novamente. Desta vez, não será pedida senha. Isso deve ser feito em todas as máquinas (mica, cerberus e phocus4) usando a mesma chave pública de seu computador pessoal.
 
-Porém, isso só resolve a parte de pedir senha. Ainda são necessários 3 comandos de ssh para acessar a máquina de login (phocus4). Esse processo pode ser automatizado por um tunneling ssh. Existe a possibilidade de criar um arquivo de configuração que descreve como deve ser feita a conexão com uma máquina remota via ssh. Coisas como o ip ou hostname, usuário de login, local da chave pública, porta a ser usada, entre outras. Esse arquivo se encontra em ~/.ssh/config, podendo não existir inicialmente. Se for o caso, basta criá-lo para o usar, não sendo necessário nenhum outro tipo de configuração. Abaixo vem um exemplo de um arquivo config de ssh para acessar todas as máquinas remotas já mencionadas (basta copiar isso no arquivo config de sua máquina pessoal substituindo o username):
+## Login por chave pública e tunneling
+
+Porém, o acima só resolve a parte de pedir senha. Ainda são necessários 3 comandos de ssh para acessar a máquina de login (phocus4). Esse processo pode ser automatizado por um tunneling ssh. Existe a possibilidade de criar um arquivo de configuração que descreve como deve ser feita a conexão com uma máquina remota via ssh. Coisas como o ip ou hostname, usuário de login, local da chave pública, porta a ser usada, entre outras. Esse arquivo se encontra em ~/.ssh/config, podendo não existir inicialmente. Se for o caso, basta criá-lo para o usar, não sendo necessário nenhum outro tipo de configuração. Abaixo vem um exemplo de um arquivo config de ssh para acessar todas as máquinas remotas já mencionadas (basta copiar isso no arquivo config de sua máquina pessoal substituindo o username):
 
 ```
 Host mica
@@ -142,9 +144,13 @@ Dado que são feitas 3 conexões ssh, é possível que o tempo de login seja um 
 ## TLDR
  - Acesso ao cluster somente via ssh
  - Mais fácil em sistemas Linux
- - Necessária conta do CRC (mica)
- - Necessária conta na cerberus
- - A máquina inicial do cluster é a phocus4, acessivel via mica->cerberus->phocus4
- - Configure chave pública e tunneling para acesso mais fácil ao cluster. Não é complicado. Usado por todos usuários e simplifica totalmente a tarefa de se conectar ao cluster.
+ - O que você deve fazer, em ordem, um passo de cada vez, para acessar pela primeira vez o cluster:
+   1. Criar uma conta no CRC especificando que precisa estar no grupo 'speed'
+   2. Pedir a criação de uma conta na cerberus no tópico 'Novos Acessos' do grupo do telegram
+   3. Criar um par de chaves ssh na sua máquina via 'ssh-keygen', caso você não tenha chaves ssh no seu pc
+   4. Criar o arquivo ~/.ssh/config descrito acima
+   5. Rodar o comando 'ssh phocus4'
+   6. Resolvido
+ - Configure chave pública para acesso mais fácil ao cluster, assim não será necessário colocar a sua senha 3 vezes.
 
 
