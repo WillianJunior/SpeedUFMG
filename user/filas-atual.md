@@ -24,7 +24,7 @@ Finalidade:
 
 ## Fila gorg-std
 Recursos:
- - gorgona[3-5]
+ - gorgona[3-6]
 
 Regras:
  - **Limite de tempo**: 48 horas
