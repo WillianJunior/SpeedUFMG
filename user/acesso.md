@@ -141,6 +141,34 @@ user@phocus4:~$
 
 Dado que são feitas 3 conexões ssh, é possível que o tempo de login seja um pouco maior (alguns segundos). Quando for usar scp para copiar arquivos para o storage do cluster, isso pode ser feito diretamente via os hostnames que configuramos (e.g., phocus4). Por fim, é possível fazer esse processo de configuração para várias máquinas (caso você tenha mais de um computador), bastando apenas colocar todas as chaves públicas em authorized_keys. Porém é importante ter cuidado ao permitir várias máquinas fazerem login pela sua conta via chave pública. Qualquer um com acesso a uma chave privada poderá se logar pelo seu usuário. Como acessos e comandos executados são armazenados, estes podem ser auditados para encontrar responsaveis de possíveis abusos ou mal usos do cluster.
 
+## Passos para Windows - Como fazer conexão com o Sonic Windows - Puro
+
+Abrir .config do ssh ->  explorer.exe . no WSL ou Windows.
+
+Usando ssh pela primeira vez - Mesmos passos para Linux
+
+### Login por chave pública:
+
+1) Gere uma chave
+	1.1) Acesse o prompt de comando como administrador
+	1.2) Vá para o diretório: C:\Users\<user>\.ssh
+	1.3) ssh-keygen -t rsa -b 4096 -f C:\Users\<user>\.ssh\id_rsa
+
+2) Abra outro terminal
+	2.1) type C:\Users\<user>\.ssh\id_rsa.pub
+	2.2) Copie todo o texto, incluindo "ssh-rsa"
+
+	2.3) A parte a baixo é igual
+```console
+[username@mica ~]$ mkdir ~/.ssh
+[username@mica ~]$ vim ~/.ssh/authorized_keys
+... colar a chave pública, digitar ":wq" + Enter para sair
+[username@mica ~]$ chmod 644 ~/.ssh/authorized_keys
+[username@mica ~]$
+```
+
+Login por chave pública e tunneling - Mesmos passos para Linux
+
 ## TLDR
  - Acesso ao cluster somente via ssh
  - Mais fácil em sistemas Linux
