@@ -7,20 +7,20 @@ O cluster está em uma rede interna da UFMG sem acesso direto à internet, porta
 Pré-requisitos:
   - Conta gerada pelo CRC vinculada ao grupo *speed*
   Isso pode ser feito enviando um email do seu orientador para eles, solicitando acesso.
-  - **Obs:** Recomenda-se usar o sistema Linux para acessar o mesmo por facilidade de uso e tendo em vista que toda documentação foi testada apenas em ambiente Linux. Mas para um appendice usando windows [clique aqui](#Passos-para-Windows-(Puro)-Como-fazer-conexão-com-o-Sonic-Windows)
+  - **Obs:** Recomenda-se usar o sistema Linux para acessar o mesmo por facilidade de uso e tendo em vista que toda documentação foi testada apenas em ambiente Linux. Mas para um appendice usando windows [clique aqui](#passos-para-windows-puro-como-fazer-conexao-com-o-sonic-windows)
 
 Passo-a-passo (resumo):<br>
-  [1) Acessando a mica](#1-acessando-a-mica)<br>
-    - Para ter acesso ao cluster é necessário primeiro logar na máquina externa mica ([login.dcc.ufmg.br]()), conforme as instruções a baixo.<br>
-  [2) Acessando a cerberus](#2-Acessando-a-cerberus)
-    - Uma vez tendo a conta do CRC e conseguindo acesso a mica, deve ser pedido acesso à máquina cerberus no tópico *Novos Acessos* do grupo do telegram. <br>
-    - A cerberus é somente acessível via mica.<br>
-    - Na máquina cerberus não existe nenhum serviço para usuários, por isso **não deve ser usada para mais nada além de acessar o cluster**.<br>
-    - Ao ser gerado o acesso na cerberus, o username para todas as máquinas será o mesmo que o gerado pelo CRC.<br>
-    -A senha, porém, será diferente **apenas na cererus**. A senha inicial gerada na cerberus está disponível no tópico *Novos Acessos* do grupo do telegram. Você deverá mudar essa senha no primeiro acesso à cerberus usando o comando 'yppasswd'.<br>
-  [3) Logar em um nó de login (phocus4)](#3-Logar-em-um-nó-de-login-(phocus4))<br>
-    -  Existem DNSs nas máquinas que reconhecem os hostnames mencionados.<br>
-    - O cluster só é acessível do nó de login phocus4, sendo necessário logar-se nele para realizar qualquer tarefa.<br>
+    [1) Acessando a mica](#1-acessando-a-mica)<br>
+        - Para ter acesso ao cluster é necessário primeiro logar na máquina externa mica ([login.dcc.ufmg.br]()), conforme as instruções a baixo.<br>
+    [2) Acessando a cerberus](#2-Acessando-a-cerberus)
+        - Uma vez tendo a conta do CRC e conseguindo acesso a mica, deve ser pedido acesso à máquina cerberus no tópico *Novos Acessos* do grupo do telegram. <br>
+        - A cerberus é somente acessível via mica.<br>
+        - Na máquina cerberus não existe nenhum serviço para usuários, por isso **não deve ser usada para mais nada além de acessar o cluster**.<br>
+        - Ao ser gerado o acesso na cerberus, o username para todas as máquinas será o mesmo que o gerado pelo CRC.<br>
+        -A senha, porém, será diferente **apenas na cererus**. A senha inicial gerada na cerberus está disponível no tópico *Novos Acessos* do grupo do telegram. Você deverá mudar essa senha no primeiro acesso à cerberus usando o comando 'yppasswd'.<br>
+    [3) Logar em um nó de login (phocus4)](#3-logar-em-um-no-de-login-phocus4)<br>
+        -  Existem DNSs nas máquinas que reconhecem os hostnames mencionados.<br>
+        - O cluster só é acessível do nó de login phocus4, sendo necessário logar-se nele para realizar qualquer tarefa.<br>
 <br>
 
 **SEMPRE use a phocus4!!! NÃO se deve trabalhar da cerberus, apenas usá-la para acessar a phocus4!!!**
