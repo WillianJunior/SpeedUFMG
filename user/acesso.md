@@ -28,9 +28,9 @@ O cluster está em uma rede interna da UFMG sem acesso direto à internet, porta
     [Login por chave pública e tunneling](#Login-por-chave-pública-e-tunneling)
 ___
 
-<div style="border: 2px solid #000; padding: 10px; background-color: #fff; color: #000;">
-  SEMPRE use a phocus4!!! NÃO se deve trabalhar da cerberus, apenas usá-la para acessar a phocus4!!!
-</div>
+```console
+  # SEMPRE use a phocus4!!! NÃO se deve trabalhar da cerberus, apenas usá-la para acessar a phocus4!!!
+```
 ___
 
 
