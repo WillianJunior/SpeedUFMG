@@ -9,6 +9,16 @@ O cluster está em uma rede interna da UFMG sem acesso direto à internet, porta
   Isso pode ser feito enviando um email do seu orientador para eles, solicitando acesso.
   - **Obs:** Recomenda-se usar o sistema Linux para acessar o mesmo por facilidade de uso e tendo em vista que toda documentação foi testada apenas em ambiente Linux. Mas para um appendice usando windows [clique aqui](#passos-para-windows-puro---como-fazer-conexão-com-o-sonic-windows)
 
+___
+
+# Atenção
+
+```console
+#    SEMPRE use a phocus4!!! NÃO se deve trabalhar da cerberus, apenas usá-la para acessar a phocus4!!!  #
+
+```
+___
+
 ## Passo-a-passo (resumo):
   [1) Acessando a mica](#1-acessando-a-mica)<br>
       - Para ter acesso ao cluster é necessário primeiro logar na máquina externa mica ([login.dcc.ufmg.br]()), conforme as instruções a baixo.<br>
@@ -28,15 +38,6 @@ O cluster está em uma rede interna da UFMG sem acesso direto à internet, porta
     [Login por chave pública e tunneling](#Login-por-chave-pública-e-tunneling)<br>
     [Too Long Didn't Read (TLDR)](#tldr)<br>
 ___
-
-# Atenção
-
-```console
-#    SEMPRE use a phocus4!!! NÃO se deve trabalhar da cerberus, apenas usá-la para acessar a phocus4!!!  #
-
-```
-___
-
 
 ## Usando ssh pela primeira vez
 
