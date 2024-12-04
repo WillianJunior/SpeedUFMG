@@ -22,10 +22,10 @@ Vamos entender o comando:
 ```console
 srun --partition=gorgonas --time=1:00:00 --pty bash
 ```
-`srun` significa: "rode esse comando no cluster". 
-`--partition=gorgonas`  especifica qual o conjunto de máquinas que você quer usar sem especificar uma gorgona, deixando para o Slurm te alocar uma máquina que não tenha jobs rodando.
-`--time=1:00:00` especifica por quanto tempo você pretende testar seus experimentos no bash
-`--pty bash` o bash que por sua vez é aberto com esse parametro. Este bash é análogo ao prompt de comando do seu PC, só que da gorgona para o qual você foi alocado para o Slurm
+`srun` significa: "rode esse comando no cluster". <br>
+`--partition=gorgonas`  especifica qual o conjunto de máquinas que você quer usar sem especificar uma gorgona, deixando para o Slurm te alocar uma máquina que não tenha jobs rodando.<br>
+`--time=1:00:00` especifica por quanto tempo você pretende testar seus experimentos no bash<br>
+`--pty bash` o bash que por sua vez é aberto com esse parametro. Este bash é análogo ao prompt de comando do seu PC, só que da gorgona para o qual você foi alocado para o Slurm<br>
 
 Esse erro encontra-se detalhado em [Storage](storage.md):
 
@@ -159,12 +159,18 @@ Obs: Sim, em essência você tem três pastas em diferentes lugares para colocar
 
 Uma vez que seu código está rodando certinho, certifique-se que o seu script bash também está configurado corretamente:
 ```console
-user@phocus4:~$ bash nome_arquivo.sh
+user@gorgona1:/home/all_home/user/$ bash nome_arquivo.sh
 ```
 
 Para exemplos de bash vide a pasta: [Exemplos](Exemplos).
 
-Tudo pronto? Hora de submeter o job.
+Antes do próximo passo, encerre sua conexão com o prompt da gorgona alocada e volte para a `user@phocus4`
+```console
+user@gorgona1:/home/all_home/user/$ exit
+user@phocus4:~$
+```
+
+Tudo pronto? Hora de submeter o job. 
 
 ## Batch jobs
 
@@ -183,8 +189,8 @@ O mínimo necessário para um batch job é um script e definições dos recursos
 ```bash
 #!/bin/bash
 #SBATCH --job-name=my_little_job  # Job name
-#SBATCH --time=00:05:00       	  # Time limit hrs:min:sec
-#SBATCH -N 1            	        # Number of nodes
+#SBATCH --time=00:05:00           # Time limit hrs:min:sec
+#SBATCH -N 1                        # Number of nodes
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=my_mail@mail.com
 
@@ -302,7 +308,7 @@ Comandos Slurm (Sem risco):<br>
  `squeue` vê a lista de jobs em execução<br>
  `scancel` cancela a execução de um job - precisa do job ID<br>
  <br>
- 
+
 Comandos Terminal (Sem risco):<br>
   cd, cp, ls, pwd,
 
