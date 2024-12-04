@@ -1,7 +1,7 @@
 # Como Funciona?
 
 O SONIC é um cluster com Slurm, o que significa que jobs são submetidos para esse serviço, sendo ele responsável por organizar uma fila com esses jobs. Existem dois tipos de nós computacionais (ou computadores) disponíveis: nós de login e nós de computação. 
-Estando em um nó login é possível, apenas, realizar um pedido de recursos ao Slurm para executar sua aplicação. Para rodar uma aplicação qualquer, esta deve ser rodada em nós de computação, ninguém tem acesso direto a esses nós. 
+Estando em um nó login é possível, apenas, realizar um pedido de recursos ao Slurm para executar sua aplicação. Para rodar uma aplicação qualquer, esta deve ser rodada em nós de computação, ninguém tem acesso direto a esses nós, exceto por meio de jobs interativos. 
 
 Nós de login tem como função a preparação dos seus experimentos e de suas aplicações. Nele você terá acesso a um espaço de armazenamento visível pelo cluster inteiro, ou seja, o que for feito nesse espaço é acessível em todos os nós. Nestes tipos de nós é esperado que você baixe (ou git clone) seu código, transfira arquivos necessários para seus experimentos, compile seu código, modifique seus arquivos, e por fim, submeta *jobs*. Algo importante a se lembrar é: **NÃO É PARA RODAR EXPERIMENTOS NOS NÓS DE LOGIN!!!** Esses nós são compartilhados com todos usuários, que fazer tarefas simples neles, como verificar uma saída, ou preparar um experimento. Uma pessoa rodando tarefas intensivas neste nó atrapalha a todos. Sobre compilação, não usar mais de 10% dos cores disponíveis para make paralelo (mínimo de 1 core obviamente).
 
