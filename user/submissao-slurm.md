@@ -1,6 +1,65 @@
 # Como Submeter Jobs?
 
-Existem dois tipos principais de jobs: interativos e batch jobs:
+Existem dois tipos principais de jobs: interativos e batch jobs. A diferença é que os jobs interativos servem para quando você ainda está testando seu código e (obviamente) você não conseguiu rodá-lo localmente. Os batch jobs é quando você já tem o código pronto e/ou você tem que escalar o projeto. Vamos detalhar cada um deles a seguir.
+
+## Pré-requisitos
+Na primeira interação com o cluster você deve garantir que suas pastas de uso pessoal estão devidamente configuradas. Para isso, sugere-se primeiro rodar os seguintes comandos, conforme demonstrado abaixo:
+```console
+user@phocus4:~$ pwd
+/home/<grupo>/<user>
+user@phocus4:~$ls -a
+snap
+```
+Se isso aparecer significa que você já está dentro da sua pasta local. Se você tentar conectar direto no console das gorgonas com o comando abaixo retornará o seguinte erro:
+
+```console
+user@phocus4:~$ srun --partition=gorgonas --time=1:00:00 --pty bash
+slurmstepd: error: couldn't chdir to `/home/<grupo>/<user>': No such file or directory: going to /tmp instead
+slurmstepd: error: couldn't chdir to `/home/<grupo>/<user>': No such file or directory: going to /tmp instead
+user@gorgona1:/tmp$
+```
+
+Vamos entender o comando:
+```console
+srun --partition=gorgonas --time=1:00:00 --pty bash
+```
+`srun` significa: "rode esse comando no cluster". 
+`--partition=gorgonas`  especifica qual o conjunto de máquinas que você quer usar sem especificar uma gorgona, deixando para o Slurm te alocar uma máquina que não tenha jobs rodando.
+`--time=1:00:00` especifica por quanto tempo você pretende testar seus experimentos no bash
+`--pty bash` o bash que por sua vez é aberto com esse parametro. Este bash é análogo ao prompt de comando do seu PC, só que da gorgona para o qual você foi alocado para o Slurm
+
+No caso, o erro acima ocorre porque não há arquivos na sua pasta local. Então basta cria-los com o vim, git clone ou subir os arquivos, conforme os exemplos abaixo:
+
+Exemplo Vim:
+```console
+user@phocus4:~$ vim nome_arquivo.py
+```
+Exemplo Git:
+```console
+user@phocus4:~$ git clone <url>
+```
+
+Exemplo upload: 
+```console
+scp /path/local/do/meu/arquivo.txt phocus4:/home_cerberus/disk2/meu_username/
+```
+Para submeter os batch jobs você precisará em essência de dois arquivos: um .sh para configurar o ambiente, baixar dependências e rodar o código e um .py que é o código em si. Mas antes de mexer com os jobs e efetivamente programar. Certifique-se de ter usa \home_cerberus configurada. Para isso digite no prompt de comando:
+
+```console
+user@phocus4:~$ cd \home_cerberus
+user@phocus4:/home_cerberus$ls -a
+apt-proxy  aquota.user  bla2  cache  disk2  disk3  grad  hadoop  hdfs_namenode  lost+found  speed  vvsd
+```
+Escolha a partição do disco que você quer usar `disk2` ou `disk3` e se já não houver crie uma pasta com seu nome de usuário. **Tem que ser exatamente igual ao seu usuário**.
+
+```console
+user@phocus4:~$ cd \disk2
+user@phocus4:/home_cerberus/disk2$mkdir <user>
+```
+
+Tanto os diretórios: `/home_cerberus/disk2/<user>` quanto `/home/<grupo>/<user> `são o "acesso a um espaço de armazenamento visível pelo cluster inteiro" citado em: [Como funciona?](user/como-funciona.md)
+
+Uma vez feito esses passos vamos dar continuidade:
 
 ## Jobs interativos
 
@@ -25,7 +84,58 @@ Agora são pedidos 2 nós quaisquer da fila gorgonas por um período de 20 min. 
 
 Tendo terminado de usar os nós alocados é interessante retornar os recursos à fila. Por um lado, isso ajuda seus colegas pesquisadores, reduzindo o desperdicio de recursos e poupando o tempo de todos. Por outro lado, todo tempo gasto em alocações reduz a sua prioridade, então é possível que mais a frente você terá que esperar mais para ter seus jobs executados do que se não houvesse desperdiçado tempo agora. Para cancelar sua alocação interativa basta usar o comando ‘exit’ ou Ctrl+d. Caso a conexão com os nós tenha caído por problemas de rede, o job não é finalizado. Neste caso deve-se ou reconectar com o nó que foi alocado (NÃO IMPLEMENTADO AINDA) ou cancelar seu job via scancel (a ver a frente).
 
- O comando srun é padrão do Slurm, com uma página *man* e com muito material disponível online para casos de usos mais complexos.
+O comando srun é padrão do Slurm, com uma página *man* e com muito material disponível online para casos de usos mais complexos.
+
+### Exemplo Hands-On
+Na prática, uma vez que você está dentro da gorgona, você pode rodar seu programa normalmente como você faria em seu computador. Abaixo um exemplo de interação com os seguintes passos:
+
+1. Abrir uma conexão com alguma gorgona que esteja disponível
+```console
+user@phocus4:~$ srun --partition=gorgonas --time=1:00:00 --pty bash
+```
+2. Verifique os modulos disponíveis:
+```console
+user@phocus4:~$ module avail
+----------------------------------------------- /opt/Modules/modulefiles -----------------------------------------------
+anaconda3.2023.09-0  cuda/11.8.0  cuda/12.3.2  module-info  modules  python3.7.6  python3.10.12  python3.12.1
+
+Key:
+modulepath
+```
+Escolha um dos módulos e rode um programinha:
+```console
+user@gorgona1:/home_cerberus/disk2/user$ module load python3.10.12
+user@gorgona1:/home_cerberus/disk2/user$ python3
+Python 3.10.12 (tags/v3.10.12:b4e48a444e, Feb  6 2024, 12:12:45) [GCC 11.4.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> print ("Hello Word")
+Hello Word
+>>>
+```
+
+Para instalar dependências do seu código é necessário criar um venv. Nele você tem autorização para instalar pacotes conforme sua necessidade. Para configurar um venv na mão. Faça:
+```console
+user@gorgona1:/home_cerberus/disk2/user$ python3 -m venv nome_venv
+```
+
+Caso haja problemas conforme relatado em [FAQ](/faq.md#3-não-estou-conseguindo-mais-criar-um-venv-na-home_cerberus). Mude seu diretório de: `/home_cerberus/disk2/user` para `/home/all_home/user/` e faça:
+
+```console
+user@gorgona1:/home/all_home/user/$ python3 -m venv /home/all_home/user/nome_venv/
+user@gorgona1:/home/all_home/user/$ source /home/all_home/larissa.gomide/exp_notebook_venv/bin/activate 
+```
+
+Lembrando que o comando source acima ativa o venv e para desativa-lo basta digitar `deactivate`.
+Obs: Sim, em essência você tem três pastas em diferentes lugares para colocar seus arquivos.
+
+Uma vez que seu código está rodando certinho, certifique-se que o seu script bash também está configurado corretamente:
+```console
+user@phocus4:~$ bash nome_arquivo.sh
+```
+
+Para exemplos de bash vide a pasta: [Exemplos](/Exemplos).
+
+Tudo pronto? Hora de submeter o job.
 
 ## Batch jobs
 
