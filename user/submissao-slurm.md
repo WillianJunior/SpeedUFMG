@@ -57,7 +57,7 @@ user@phocus4:~$ cd \disk2
 user@phocus4:/home_cerberus/disk2$mkdir <user>
 ```
 
-Tanto os diretórios: `/home_cerberus/disk2/<user>` quanto `/home/<grupo>/<user> `são o "acesso a um espaço de armazenamento visível pelo cluster inteiro" citado em: [Como funciona?](user/como-funciona.md)
+Tanto os diretórios: `/home_cerberus/disk2/<user>` quanto `/home/<grupo>/<user> `são o "acesso a um espaço de armazenamento visível pelo cluster inteiro" citado em: [Como funciona?](como-funciona.md)
 
 Uma vez feito esses passos vamos dar continuidade:
 
@@ -118,7 +118,7 @@ Para instalar dependências do seu código é necessário criar um venv. Nele vo
 user@gorgona1:/home_cerberus/disk2/user$ python3 -m venv nome_venv
 ```
 
-Caso haja problemas conforme relatado em [FAQ](/faq.md#3-não-estou-conseguindo-mais-criar-um-venv-na-home_cerberus). Mude seu diretório de: `/home_cerberus/disk2/user` para `/home/all_home/user/` e faça:
+Caso haja problemas conforme relatado em [FAQ](faq.md#3-não-estou-conseguindo-mais-criar-um-venv-na-home_cerberus). Mude seu diretório de: `/home_cerberus/disk2/user` para `/home/all_home/user/` e faça:
 
 ```console
 user@gorgona1:/home/all_home/user/$ python3 -m venv /home/all_home/user/nome_venv/
@@ -133,7 +133,7 @@ Uma vez que seu código está rodando certinho, certifique-se que o seu script b
 user@phocus4:~$ bash nome_arquivo.sh
 ```
 
-Para exemplos de bash vide a pasta: [Exemplos](/Exemplos).
+Para exemplos de bash vide a pasta: [Exemplos](Exemplos).
 
 Tudo pronto? Hora de submeter o job.
 
