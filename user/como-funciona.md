@@ -25,5 +25,5 @@ ___
 
 [Próximo tópico: Acessando o cluster](acesso.md)
 &nbsp;
-[Anterior tópico: Acessando o cluster](README.md)
+[Anterior tópico: README.md](SpeedUFMG/README.md)
 
