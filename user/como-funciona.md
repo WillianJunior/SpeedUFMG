@@ -23,4 +23,4 @@ ___
 
 ___
 
-[Próximo tópico: Acessando o cluster](user/acesso.md)
+[Próximo tópico: Acessando o cluster](acesso.md)

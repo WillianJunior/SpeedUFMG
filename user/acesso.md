@@ -233,6 +233,6 @@ ___
 
 ___
 
- [Próximo tópico: Como submeter jobs](user/submissao-slurm.md)
+ [Próximo tópico: Como submeter jobs](submissao-slurm.md)
 
 
