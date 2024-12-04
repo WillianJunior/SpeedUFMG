@@ -233,6 +233,6 @@ ___
 
 ___
 
- [Próximo tópico: Como submeter jobs](submissao-slurm.md)
-
-
+[Próximo tópico: Como submeter jobs](submissao-slurm.md)
+&nbsp;
+[Anterior tópico: Como funciona?](como-funciona.md)
