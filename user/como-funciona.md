@@ -24,7 +24,5 @@ ___
 ___
 
 
-[Anterior tópico: README.md](../README.md)
-<div style="text-align: left;">
-	[Próximo tópico: Acessando o cluster](acesso.md)
-</div>
+[Anterior tópico: README.md](../README.md)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Próximo tópico: Acessando o cluster](acesso.md)
+
