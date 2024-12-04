@@ -24,5 +24,7 @@ ___
 ___
 
 
-[Anterior tópico: README.md](../README.md)&nbsp;[Próximo tópico: Acessando o cluster](acesso.md)
+[Anterior tópico: README.md](../README.md)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[Próximo tópico: Acessando o cluster](acesso.md)
 
