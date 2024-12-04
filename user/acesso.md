@@ -231,4 +231,8 @@ ___
    6. Resolvido
  - Configure chave pública para acesso mais fácil ao cluster, assim não será necessário colocar a sua senha 3 vezes.
 
+___
 
+[Anterior tópico: Como funciona?](como-funciona.md)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[Próximo tópico: Como submeter jobs](submissao-slurm.md)
