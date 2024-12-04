@@ -296,11 +296,11 @@ ___
 
  ## Tabelinha de comandos essenciais
 
-Comandos Slurm (Sem risco):
- `srun` significa: "rode esse comando no cluster"
- `sbatch` significa "coloque esse script na fila de execução"
- `squeue` vê a lista de jobs em execução
- `scancel` cancela a execução de um job - precisa do job ID
+Comandos Slurm (Sem risco):<br>
+ `srun` significa: "rode esse comando no cluster"<br>
+ `sbatch` significa "coloque esse script na fila de execução"<br>
+ `squeue` vê a lista de jobs em execução<br>
+ `scancel` cancela a execução de um job - precisa do job ID<br>
  <br>
  
 Comandos Terminal (Sem risco):<br>
