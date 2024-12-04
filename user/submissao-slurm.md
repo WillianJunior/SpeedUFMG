@@ -18,7 +18,6 @@ slurmstepd: error: couldn't chdir to `/home/<grupo>/<user>': No such file or dir
 slurmstepd: error: couldn't chdir to `/home/<grupo>/<user>': No such file or directory: going to /tmp instead
 user@gorgona1:/tmp$
 ```
-
 Vamos entender o comando:
 ```console
 srun --partition=gorgonas --time=1:00:00 --pty bash
@@ -28,36 +27,50 @@ srun --partition=gorgonas --time=1:00:00 --pty bash
 `--time=1:00:00` especifica por quanto tempo você pretende testar seus experimentos no bash
 `--pty bash` o bash que por sua vez é aberto com esse parametro. Este bash é análogo ao prompt de comando do seu PC, só que da gorgona para o qual você foi alocado para o Slurm
 
-No caso, o erro acima ocorre porque não há arquivos na sua pasta local. Então basta cria-los com o vim, git clone ou subir os arquivos, conforme os exemplos abaixo:
+Esse erro encontra-se detalhado em [Storage](storage.md):
 
-Exemplo Vim:
-```console
-user@phocus4:~$ vim nome_arquivo.py
-```
-Exemplo Git:
-```console
-user@phocus4:~$ git clone <url>
-```
-
-Exemplo upload: 
-```console
-scp /path/local/do/meu/arquivo.txt phocus4:/home_cerberus/disk2/meu_username/
-```
-Para submeter os batch jobs você precisará em essência de dois arquivos: um .sh para configurar o ambiente, baixar dependências e rodar o código e um .py que é o código em si. Mas antes de mexer com os jobs e efetivamente programar. Certifique-se de ter usa \home_cerberus configurada. Para isso digite no prompt de comando:
+"Outro detalhe importante é: assuma que, exceto por '/home/all_home/', nenhum usuário tem acesso a qualquer outro arquivo ou path local dos nós de computação. Por exemplo, um path de sua home '/home/pos/username' não tem acesso liberado ao usuário 'username'"<br>
+Ou seja: /home/pos não existem nas gorgonas.<br>
+Enquanto os diretórios: `/home_cerberus/disk2/<user>` são o "acesso a um espaço de armazenamento visível pelo cluster inteiro" citado em: [Como funciona?](como-funciona.md)
+Portanto, antes de rodar o comando mude seu diretório para `/home_cerberus/disk2/<user>`. E certifique-se de ter usa \home_cerberus configurada. Para isso digite no prompt de comando:
 
 ```console
 user@phocus4:~$ cd \home_cerberus
 user@phocus4:/home_cerberus$ls -a
 apt-proxy  aquota.user  bla2  cache  disk2  disk3  grad  hadoop  hdfs_namenode  lost+found  speed  vvsd
 ```
-Escolha a partição do disco que você quer usar `disk2` ou `disk3` e se já não houver crie uma pasta com seu nome de usuário. **Tem que ser exatamente igual ao seu usuário**.
+Escolha a partição do disco que você quer usar `disk2` ou `disk3` e se já não houver crie uma pasta com seu nome de usuário. **Tem que ser exatamente igual ao seu usuário**. Para saber qual disco usar pode-se rodar um comando `df -h` para saber como cada partição está sendo usada, e quais os recursos disponíveis.
 
 ```console
+user@phocus4:~$df -h
+Filesystem      Size  Used Avail Use% Mounted on
+tmpfs           1.6G  3.5M  1.6G   1% /run
+/dev/sda2        94G   28G   61G  32% /
+tmpfs           7.9G  8.0K  7.9G   1% /dev/shm
+tmpfs           5.0M     0  5.0M   0% /run/lock
+efivarfs         72K   47K   21K  70% /sys/firmware/efi/efivars
+/dev/sda1       476M  6.1M  469M   2% /boot/efi
+/dev/sda4       1.7T  457G  1.2T  28% /home
+tmpfs           1.6G   76K  1.6G   1% /run/user/127
+cerberus:/home  826G  654G  130G  84% /home_cerberus
+tmpfs           1.6G   60K  1.6G   1% /run/user/5778
+tmpfs           1.6G   60K  1.6G   1% /run/user/5822
+tmpfs           1.6G   60K  1.6G   1% /run/user/4518
+tmpfs           1.6G   60K  1.6G   1% /run/user/6968
+tmpfs           1.6G   56K  1.6G   1% /run/user/0
+tmpfs           1.6G   60K  1.6G   1% /run/user/6933
+tmpfs           1.6G   60K  1.6G   1% /run/user/9647
+tmpfs           1.6G   60K  1.6G   1% /run/user/5322
+tmpfs           1.6G   60K  1.6G   1% /run/user/9083
+tmpfs           1.6G   60K  1.6G   1% /run/user/5712
+tmpfs           1.6G   60K  1.6G   1% /run/user/9071
+tmpfs           1.6G   60K  1.6G   1% /run/user/6397
+tmpfs           1.6G   60K  1.6G   1% /run/user/4550
+tmpfs           1.6G   60K  1.6G   1% /run/user/7485
+tmpfs           1.6G   60K  1.6G   1% /run/user/5680
 user@phocus4:~$ cd \disk2
 user@phocus4:/home_cerberus/disk2$mkdir <user>
 ```
-
-Tanto os diretórios: `/home_cerberus/disk2/<user>` quanto `/home/<grupo>/<user> `são o "acesso a um espaço de armazenamento visível pelo cluster inteiro" citado em: [Como funciona?](como-funciona.md)
 
 Uma vez feito esses passos vamos dar continuidade:
 
@@ -87,7 +100,7 @@ Tendo terminado de usar os nós alocados é interessante retornar os recursos à
 O comando srun é padrão do Slurm, com uma página *man* e com muito material disponível online para casos de usos mais complexos.
 
 ### Exemplo Hands-On
-Na prática, uma vez que você está dentro da gorgona, você pode rodar seu programa normalmente como você faria em seu computador. Abaixo um exemplo de interação com os seguintes passos:
+Na prática, uma vez que você está dentro da gorgona, você pode rodar seu programa normalmente como você faria em seu computador. Para submeter os batch jobs você precisará em essência de dois arquivos: um .sh para configurar o ambiente, baixar dependências e rodar o código e um .py que é o código em si.  Abaixo um exemplo de interação com os seguintes passos:
 
 1. Abrir uma conexão com alguma gorgona que esteja disponível
 ```console
@@ -111,6 +124,22 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>> print ("Hello Word")
 Hello Word
 >>>
+```
+
+Caso queira criar ou subir algum arquivo, seguem algumas possibilidades de comandos:
+
+Exemplo Vim:
+```console
+user@phocus4:~$ vim nome_arquivo.py
+```
+Exemplo Git:
+```console
+user@phocus4:~$ git clone <url>
+```
+
+Exemplo upload: 
+```console
+scp /path/local/do/meu/arquivo.txt phocus4:/home_cerberus/disk2/meu_username/
 ```
 
 Para instalar dependências do seu código é necessário criar um venv. Nele você tem autorização para instalar pacotes conforme sua necessidade. Para configurar um venv na mão. Faça:
@@ -147,9 +176,9 @@ Submitted batch job 1706
 user@phocus4:~$
 ```
 
-No comando acima, o script bash meu_scipt.sh é submetido ao Slurm para execução. Esse é um job fire-and-forget, onde você só precisará se preocupar com a saída ao fim da execução.
+No comando acima, `sbatch` significa "coloque esse script na fila de execução". O script bash meu_scipt.sh é submetido ao Slurm para execução. Esse é um job fire-and-forget, onde você só precisará se preocupar com a saída ao fim da execução.
 
-O mínimo necessário para um batch job é um script e definições dos recursos a serem usados (filas, nós, tempo). Essas definições podem ser passadas para o slurm via parâmetros do sbatch ou pelo próprio script:
+O mínimo necessário para um batch job é um script e definições dos recursos a serem usados (filas, nós, tempo). Essas definições podem ser passadas para o slurm via parâmetros do sbatch ou pelo próprio script. O exemplo abaixo também está disponível em: [Exemplos](Exemplos):
 
 ```bash
 #!/bin/bash
@@ -188,7 +217,7 @@ print(f'{a[1:]}')
 Para submeter o job basta:
 
 ```command
-username@phocus4:/home_cerberus/speed/username$ sbatch run.sh 
+username@phocus4:/home_cerberus/speed/username$ sbatch simple_bash.sh 
 Submitted batch job 1707
 username@phocus4:/home_cerberus/speed/username$ cat slurm-1707.out
 + cd /home_cerberus/speed/username
@@ -250,6 +279,7 @@ gorgonas*    up   infinite      4  alloc gorgona[2,4,6-7]
 gorgonas*    up   infinite      2   idle gorgona[3,10]
 username@phocus4:/home_cerberus/speed/username$
 ```
+___
 
 ## TLDR
  - Alocação interativa:  srun -p gorgonas --time 00:20:00 --pty bash
@@ -261,3 +291,26 @@ username@phocus4:/home_cerberus/speed/username$
  - Não esquecer de encerrar alocações interativas.
  - Usar scancel para cancelar jobs.
  - Usar sinfo para ver o status do cluster.
+
+ ___
+
+ ## Tabelinha de comandos essenciais
+
+Comandos Slurm (Sem risco):
+ `srun` significa: "rode esse comando no cluster"
+ `sbatch` significa "coloque esse script na fila de execução"
+ `squeue` vê a lista de jobs em execução
+ `scancel` cancela a execução de um job - precisa do job ID
+ <br>
+ 
+Comandos Terminal (Sem risco):<br>
+  cd, cp, ls, pwd,
+
+Comandos Terminal (Pouco risco, reversível):<br>
+  mv, chmod
+
+Comandos Terminal (Muito risco , irreversível, tem que tomar cuidado):<br>
+  rm
+
+Comandos Git (sem risco):<br>
+ git clone
