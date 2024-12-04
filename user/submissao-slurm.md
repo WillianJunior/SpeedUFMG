@@ -3,20 +3,20 @@
 Existem dois tipos principais de jobs: interativos e batch jobs. A diferença é que os jobs interativos servem para quando você ainda está testando seu código e (obviamente) você não conseguiu rodá-lo localmente. Os batch jobs é quando você já tem o código pronto e/ou você tem que escalar o projeto. Vamos detalhar cada um deles a seguir.
 
 ## Pré-requisitos
-Na primeira interação com o cluster você deve garantir que suas pastas de uso pessoal estão devidamente configuradas. Para isso, sugere-se primeiro rodar os seguintes comandos, conforme demonstrado abaixo:
+Na primeira interação com o cluster você deve garantir que seus diretórios de uso pessoal estão devidamente configuradas. Para isso, sugere-se primeiro rodar os seguintes comandos, conforme demonstrado abaixo (assume-se um usuário com nome `username` de pós-graduação):
 ```console
-user@phocus4:~$ pwd
-/home/<grupo>/<user>
-user@phocus4:~$ls -a
+username@phocus4:~$ pwd
+/home/pos/username
+username@phocus4:~$ ls -a
 snap
 ```
-Se isso aparecer significa que você já está dentro da sua pasta local. Se você tentar conectar direto no console das gorgonas com o comando abaixo retornará o seguinte erro:
+Se isso aparecer significa que você já está dentro da seu diretório local. Se você tentar conectar direto no console das gorgonas com o comando abaixo retornará o seguinte erro:
 
 ```console
-user@phocus4:~$ srun --partition=gorgonas --time=1:00:00 --pty bash
-slurmstepd: error: couldn't chdir to `/home/<grupo>/<user>': No such file or directory: going to /tmp instead
-slurmstepd: error: couldn't chdir to `/home/<grupo>/<user>': No such file or directory: going to /tmp instead
-user@gorgona1:/tmp$
+username@phocus4:~$ srun --partition=gorgonas --time=1:00:00 --pty bash
+slurmstepd: error: couldn't chdir to `/home/pos/username': No such file or directory: going to /tmp instead
+slurmstepd: error: couldn't chdir to `/home/pos/username': No such file or directory: going to /tmp instead
+username@gorgona1:/tmp$
 ```
 Vamos entender o comando:
 ```console
@@ -24,25 +24,26 @@ srun --partition=gorgonas --time=1:00:00 --pty bash
 ```
 `srun` significa: "rode esse comando no cluster". <br>
 `--partition=gorgonas`  especifica qual o conjunto de máquinas que você quer usar sem especificar uma gorgona, deixando para o Slurm te alocar uma máquina que não tenha jobs rodando.<br>
-`--time=1:00:00` especifica por quanto tempo você pretende testar seus experimentos no bash<br>
-`--pty bash` o bash que por sua vez é aberto com esse parametro. Este bash é análogo ao prompt de comando do seu PC, só que da gorgona para o qual você foi alocado para o Slurm<br>
+`--time=1:00:00` especifica por quanto tempo você pretende testar seus experimentos no bash. Ao fim desse tempo você será desconectado automaticamente.<br>
+`--pty bash` o bash que por sua vez é aberto com esse parametro. Este bash é análogo ao prompt de comando do seu PC, só que da gorgona para o qual você foi alocado para o Slurm.<br>
 
-Esse erro encontra-se detalhado em [Storage](storage.md):
+O erro acima do `slurmstemp` não atrapalha a sua alocação, detalhado em [Storage](storage.md):
 
-"Outro detalhe importante é: assuma que, exceto por '/home/all_home/', nenhum usuário tem acesso a qualquer outro arquivo ou path local dos nós de computação. Por exemplo, um path de sua home '/home/pos/username' não tem acesso liberado ao usuário 'username'"<br>
-Ou seja: /home/pos não existem nas gorgonas.<br>
-Enquanto os diretórios: `/home_cerberus/disk2/<user>` são o "acesso a um espaço de armazenamento visível pelo cluster inteiro" citado em: [Como funciona?](como-funciona.md)
-Portanto, antes de rodar o comando mude seu diretório para `/home_cerberus/disk2/<user>`. E certifique-se de ter usa \home_cerberus configurada. Para isso digite no prompt de comando:
+"Outro detalhe importante é: assuma que, exceto por '/home/all_home/', nenhum usuário tem acesso a qualquer outro arquivo ou path local dos nós de computação. Por exemplo, um diretório de sua home 'gorgona1:/home/pos/username' não tem acesso liberado ao usuário 'username', ou necessariamente existe."<br>
+Ou seja: /home/pos não necesariamente existem nas gorgonas.<br>
+Enquanto os diretórios: `/home_cerberus/disk3/username` são o "acesso a um espaço de armazenamento visível pelo cluster inteiro" citado em: [Como funciona?](como-funciona.md)
+Portanto, antes de rodar o comando mude seu diretório para `/home_cerberus/disk3/username`. E certifique-se de ter sua `/home_cerberus` configurada. Para isso digite no prompt de comando:
 
 ```console
-user@phocus4:~$ cd \home_cerberus
-user@phocus4:/home_cerberus$ls -a
+username@phocus4:~$ cd /home_cerberus
+username@phocus4:/home_cerberus$ ls -a
 apt-proxy  aquota.user  bla2  cache  disk2  disk3  grad  hadoop  hdfs_namenode  lost+found  speed  vvsd
 ```
-Escolha a partição do disco que você quer usar `disk2` ou `disk3` e se já não houver crie uma pasta com seu nome de usuário. **Tem que ser exatamente igual ao seu usuário**. Para saber qual disco usar pode-se rodar um comando `df -h` para saber como cada partição está sendo usada, e quais os recursos disponíveis.
+
+Escolha a partição do disco que você quer usar `disk2` ou `disk3` e, se já não houver, crie um diretório com seu nome de usuário. **Tem que ser exatamente igual ao seu usuário**. Para saber qual disco usar pode-se rodar um comando `df -h` para saber como cada partição está sendo usada, e quais os recursos disponíveis.
 
 ```console
-user@phocus4:~$df -h
+username@phocus4:~$df -h
 Filesystem      Size  Used Avail Use% Mounted on
 tmpfs           1.6G  3.5M  1.6G   1% /run
 /dev/sda2        94G   28G   61G  32% /
@@ -68,57 +69,67 @@ tmpfs           1.6G   60K  1.6G   1% /run/user/6397
 tmpfs           1.6G   60K  1.6G   1% /run/user/4550
 tmpfs           1.6G   60K  1.6G   1% /run/user/7485
 tmpfs           1.6G   60K  1.6G   1% /run/user/5680
-user@phocus4:~$ cd \disk2
-user@phocus4:/home_cerberus/disk2$mkdir <user>
+username@phocus4:/home_cerberus# df -h disk2
+Filesystem      Size  Used Avail Use% Mounted on
+cerberus:/home  3,6T  3,6T     0 100% /home_cerberus
+username@phocus4:/home_cerberus# df -h disk3
+Filesystem      Size  Used Avail Use% Mounted on
+cerberus:/home  3,6T  3,3T  150G  96% /home_cerberus
+username@phocus4:~$ cd /disk3
+username@phocus4:/home_cerberus/disk3$ mkdir username
 ```
-
-Uma vez feito esses passos vamos dar continuidade:
 
 ## Jobs interativos
 
-Embora não seja possível logar diretamente em um nó de computação quando quiser, é possível submeter um job para acessar nós diretamente. Ou seja, é submetido um job que retorna um terminal para os recursos alocados. Novamente, enquanto você tiver uma alocação, ninguém mais terá acesso aos recursos alocados a você nesse período de alocação. No tempo que você tiver alocado você poderá rodar o que quiser, ou até mesmo ficar sem rodar nada. Esse modo de alocação é recomendado para usuários que ainda estão no processo de preparação dos experimentos, testando sua aplicação em ambiente real de execução. Essa alocação pode ser alcançada da seguinte forma: 
+Embora não seja possível logar diretamente em um nó de computação é possível submeter um job para acessar esses nós diretamente. Ou seja, é submetido um job que retorna um terminal para os recursos alocados. Novamente, enquanto você tiver uma alocação, ninguém mais terá acesso aos recursos alocados a você nesse período de alocação. No tempo que você tiver alocado você poderá rodar o que quiser, ou até mesmo ficar sem rodar nada. Esse modo de alocação é recomendado para usuários que ainda estão no processo de preparação dos experimentos, testando sua aplicação em ambiente real de execução. Essa alocação pode ser alcançada da seguinte forma: 
 
 ```console
-user@phocus4:~$ srun -w gorgona10 --time 1:00:00 --pty bash
+username@phocus4:~$ srun -w gorgona10 --time 1:00:00 --pty bash
 srun: job 1704 queued and waiting for resources
 srun: job 1704 has been allocated resources
-user@gorgona10:~$
+username@gorgona10:~$
 ```
+
 No comando acima, o nó específico gorgona10 será alocado por um período máximo de 1 hora. Porém, é possível que você não queira uma máquina específica, mas qualquer máquina em uma fila específica (filas são abordadas mais à frente):
 
 ```console
-user@phocus4:~$ srun -N 2 -p gorgonas --time 00:20:00 --pty bash
+username@phocus4:~$ srun -N 2 -p gorgonas --time 00:20:00 --pty bash
 srun: job 1705 queued and waiting for resources
 srun: job 1705 has been allocated resources
-user@gorgona2:~$
+username@gorgona2:~$
 ```
 
 Agora são pedidos 2 nós quaisquer da fila gorgonas por um período de 20 min. Sim, é possível pedir quantos nós quiser. Ao pedir por mais de 1 nó, a sua sessão de terminal irá para um dos nós, porém é possível usar todos os nós alocados via mpirun.
 
-Tendo terminado de usar os nós alocados é interessante retornar os recursos à fila. Por um lado, isso ajuda seus colegas pesquisadores, reduzindo o desperdicio de recursos e poupando o tempo de todos. Por outro lado, todo tempo gasto em alocações reduz a sua prioridade, então é possível que mais a frente você terá que esperar mais para ter seus jobs executados do que se não houvesse desperdiçado tempo agora. Para cancelar sua alocação interativa basta usar o comando ‘exit’ ou Ctrl+d. Caso a conexão com os nós tenha caído por problemas de rede, o job não é finalizado. Neste caso deve-se ou reconectar com o nó que foi alocado (NÃO IMPLEMENTADO AINDA) ou cancelar seu job via scancel (a ver a frente).
+Tendo terminado de usar os nós alocados é interessante retornar os recursos à fila. Por um lado, isso ajuda seus colegas pesquisadores, reduzindo o desperdicio de recursos e poupando o tempo de todos. Por outro lado, todo tempo gasto em alocações reduz a sua prioridade, então é possível que mais a frente você terá que esperar mais para ter seus jobs executados do que se não houvesse desperdiçado tempo agora. Para cancelar sua alocação interativa basta usar o comando `exit` ou Ctrl+d. Caso a conexão com os nós tenha caído por problemas de rede, o job não é finalizado. Neste caso deve-se ou reconectar com o nó que foi alocado ou cancelar seu job via `scancel` (a ver a frente).
 
-O comando srun é padrão do Slurm, com uma página *man* e com muito material disponível online para casos de usos mais complexos.
+O comando srun é padrão do Slurm, com uma página `man` e com muito material disponível online para casos de usos mais complexos.
 
 ### Exemplo Hands-On
-Na prática, uma vez que você está dentro da gorgona, você pode rodar seu programa normalmente como você faria em seu computador. Para submeter os batch jobs você precisará em essência de dois arquivos: um .sh para configurar o ambiente, baixar dependências e rodar o código e um .py que é o código em si.  Abaixo um exemplo de interação com os seguintes passos:
+Na prática, uma vez que você está dentro de uma gorgona você pode rodar seu programa normalmente como você faria em seu computador. Para submeter os batch jobs você precisará em essência de dois arquivos: um .sh para configurar o ambiente, baixar dependências e rodar o código, e o código em si (e.g., um .py).  Abaixo um exemplo de interação com os seguintes passos:
 
 1. Abrir uma conexão com alguma gorgona que esteja disponível
 ```console
-user@phocus4:~$ srun --partition=gorgonas --time=1:00:00 --pty bash
+username@phocus4:~$ srun --partition=gorgonas --time=1:00:00 --pty bash
+username@gorgona1:/tmp
 ```
+
 2. Verifique os modulos disponíveis:
 ```console
-user@phocus4:~$ module avail
+username@phocus4:~$ module avail
 ----------------------------------------------- /opt/Modules/modulefiles -----------------------------------------------
 anaconda3.2023.09-0  cuda/11.8.0  cuda/12.3.2  module-info  modules  python3.7.6  python3.10.12  python3.12.1
 
 Key:
 modulepath
 ```
+
 Escolha um dos módulos e rode um programinha:
 ```console
-user@gorgona1:/home_cerberus/disk2/user$ module load python3.10.12
-user@gorgona1:/home_cerberus/disk2/user$ python3
+username@gorgona1:/home_cerberus/disk3/username$ python3 --version
+Python 3.10.9
+username@gorgona1:/home_cerberus/disk3/username$ module load python3.10.12
+username@gorgona1:/home_cerberus/disk3/username$ python3
 Python 3.10.12 (tags/v3.10.12:b4e48a444e, Feb  6 2024, 12:12:45) [GCC 11.4.0] on linux
 Type "help", "copyright", "credits" or "license" for more information.
 >>> print ("Hello Word")
@@ -130,59 +141,61 @@ Caso queira criar ou subir algum arquivo, seguem algumas possibilidades de coman
 
 Exemplo Vim:
 ```console
-user@phocus4:~$ vim nome_arquivo.py
+username@phocus4:~$ vim nome_arquivo.py
 ```
+
 Exemplo Git:
 ```console
-user@phocus4:~$ git clone <url>
+username@phocus4:~$ git clone <url>
 ```
 
 Exemplo upload: 
 ```console
-scp /path/local/do/meu/arquivo.txt phocus4:/home_cerberus/disk2/meu_username/
+scp /path/local/do/meu/arquivo.txt phocus4:/home_cerberus/disk3/username/
 ```
 
-Para instalar dependências do seu código é necessário criar um venv. Nele você tem autorização para instalar pacotes conforme sua necessidade. Para configurar um venv na mão. Faça:
+Para instalar dependências do seu código é necessário criar um venv. Nele você tem autorização para instalar pacotes conforme sua necessidade. Para criar um venv faça:
 ```console
-user@gorgona1:/home_cerberus/disk2/user$ python3 -m venv nome_venv
+username@gorgona1:/home_cerberus/disk3/username$ python3 -m venv nome_venv
 ```
 
-Caso haja problemas conforme relatado em [FAQ](faq.md#3-não-estou-conseguindo-mais-criar-um-venv-na-home_cerberus). Mude seu diretório de: `/home_cerberus/disk2/user` para `/home/all_home/user/` e faça:
+Caso haja problemas conforme relatado em [FAQ](faq.md#3-não-estou-conseguindo-mais-criar-um-venv-na-home_cerberus). Mude seu diretório de: `/home_cerberus/disk3/username` para `/home/all_home/username/` e faça:
 
 ```console
-user@gorgona1:/home/all_home/user/$ python3 -m venv /home/all_home/user/nome_venv/
-user@gorgona1:/home/all_home/user/$ source /home/all_home/larissa.gomide/exp_notebook_venv/bin/activate 
+username@gorgona1:/home/all_home/username/$ python3 -m venv /home/all_home/username/nome_venv/
+username@gorgona1:/home/all_home/username/$ source /home/all_home/larissa.gomide/exp_notebook_venv/bin/activate 
+(nome_venv) username@gorgona1:/home/all_home/username/$
 ```
 
 Lembrando que o comando source acima ativa o venv e para desativa-lo basta digitar `deactivate`.
-Obs: Sim, em essência você tem três pastas em diferentes lugares para colocar seus arquivos.
+Obs: Sim, em essência você tem três diretórios em diferentes lugares para colocar seus arquivos.
 
 Uma vez que seu código está rodando certinho, certifique-se que o seu script bash também está configurado corretamente:
 ```console
-user@gorgona1:/home/all_home/user/$ bash nome_arquivo.sh
+username@gorgona1:/home/all_home/username/$ bash nome_arquivo.sh
 ```
 
-Para exemplos de bash vide a pasta: [Exemplos](Exemplos).
+Para exemplos de bash vide: [Exemplos](Exemplos).
 
-Antes do próximo passo, encerre sua conexão com o prompt da gorgona alocada e volte para a `user@phocus4`
+Antes do próximo passo, encerre sua conexão com o prompt da gorgona alocada e volte para a `username@phocus4`
 ```console
-user@gorgona1:/home/all_home/user/$ exit
-user@phocus4:~$
+username@gorgona1:/home/all_home/username/$ exit
+username@phocus4:~$
 ```
 
-Tudo pronto? Hora de submeter o job. 
+Tudo pronto? Hora de submeter jobs.
 
 ## Batch jobs
 
-Normalmente, rodar um experimento não é simplesmente executar apenas um comando. Comummente é necessário mudar arquivos, preparar um ambiente de teste, testar aplicações com configurações diferentes, replicar execuções, etc. Para isso é interessante colocar todas essas operações em um único script bash e rodá-lo. Esta é inclusive uma forma interessante de se trabalhar, melhorando a reprodutibilidade dos seus experimentos e reduzindo o tempo de trabalho manual em execuções com diferentes configurações. Outro aspecto interessante é que como se trata de um bash script, este pode ser executado em qualquer máquina Linux. O Slurm disponibiliza uma forma simples de trabalhar dessa forma, via Batch jobs: 
+Normalmente, rodar um experimento não é simplesmente executar apenas um comando. Comummente é necessário mudar arquivos, preparar um ambiente de teste, testar aplicações com configurações diferentes, replicar execuções, etc. Para isso é interessante colocar todas essas operações em um único script bash e rodá-lo. Esta é inclusive uma forma interessante de se trabalhar, melhorando a reprodutibilidade dos seus experimentos e reduzindo o tempo de trabalho manual em execuções com diferentes configurações. Outro aspecto interessante é que como se trata de um bash script, este pode ser executado em qualquer máquina Linux. O Slurm disponibiliza uma forma simples de trabalhar dessa forma: via Batch jobs: 
 
 ```console
-user@phocus4:~$ sbatch meu_script.sh param1 param2
+username@phocus4:~$ sbatch meu_script.sh param1 param2
 Submitted batch job 1706
-user@phocus4:~$
+username@phocus4:~$
 ```
 
-No comando acima, `sbatch` significa "coloque esse script na fila de execução". O script bash meu_scipt.sh é submetido ao Slurm para execução. Esse é um job fire-and-forget, onde você só precisará se preocupar com a saída ao fim da execução.
+No comando acima, `sbatch` significa "coloque esse script na fila de execução". O script bash meu_scipt.sh é submetido ao Slurm para execução. Esse é um job do tipo [fire-and-forget](https://en.wikipedia.org/wiki/Fire-and-forget), onde você só precisará se preocupar com a saída ao fim da execução.
 
 O mínimo necessário para um batch job é um script e definições dos recursos a serem usados (filas, nós, tempo). Essas definições podem ser passadas para o slurm via parâmetros do sbatch ou pelo próprio script. O exemplo abaixo também está disponível em: [Exemplos](Exemplos):
 
@@ -240,7 +253,7 @@ slurmstepd: error: Cannot write to cgroup.procs for (null)
 slurmstepd: error: Unable to move pid 351386 to init root cgroup (null)
 ```
 
-As últimas 3 linhas do output acima são "normais". Isso significa: elas vão aparecer e não tem com o que se preocupar.
+As últimas 3 linhas do output acima são "normais". Isso significa: elas podem aparecer e, se for o caso, não tem com o que se preocupar.
 
 Ao usar ‘#SBATCH’ no seu script, você estará passando parâmetros ao sbatch. Esses parâmetros são iguais aos de srun, podendo ser passados diretamente para sbatch. Alguns parâmetros interessantes de se conchecer são:
  - **time**: tempo máximo do job.
@@ -266,7 +279,7 @@ username@phocus4:/home_cerberus/speed/username$ squeue
               1669  gorgonas  ecg_job pedrorob  R 1-01:00:36      1 gorgona4
 ```
 
-O comando squeue retorna a fila do cluster inteiro, com o status dos jobs, tempo que estão em execução, recursos usados e o ID do job. Esse ID é único no cluster, independente da fila ou usuário. É recomendado usar ‘squeue | grep username’ para filtrar apenas os seus jobs. O campo de state (ST) representa o estado do job, sendo os mais comuns PD (pending) e R (running). É recomendado ler guias online sobre squeue para verificar outras informações pertinentes desses campos.
+O comando squeue retorna a fila do cluster inteiro, com o status dos jobs, tempo que estão em execução, recursos usados e o ID do job. Esse ID é único no cluster, independente da fila ou usuário. É recomendado usar ‘squeue | grep username’ para filtrar apenas os seus jobs. O campo de state (ST) representa o estado do job, sendo os mais comuns PD (pending) e R (running). É recomendado ler guias online sobre squeue para verificar outras informações pertinentes desses campos. Outro estado que pode aparecer é CG (completing). Caso haja algum job nesse estado por um período prolongado de tempo notifique no grupo do telegram, pois pode ser um problema no slurm.
 
 Caso necessário é possível cancelar um job manualmente. Por exemplo, um usuário pode ter submetido um job com os parâmetros errados, ou ter verificado que o resultado já está errado antes do fim do experimento. Nesse caso basta rodar o seguinte comando com o ID do seu job:
 
@@ -285,6 +298,8 @@ gorgonas*    up   infinite      4  alloc gorgona[2,4,6-7]
 gorgonas*    up   infinite      2   idle gorgona[3,10]
 username@phocus4:/home_cerberus/speed/username$
 ```
+
+Os STATEs mais importantes são: idle (livre para uso), alloc (alocado para um job), drain (removido da fila para manutenção), down (fora da fila por problema no nó, reporte se vir isso) e comp (mesmo que CG). Outra coisa que pode aparecer no STATE é um asterisco, significando que a máquina está inacessível, mesmo para o slurm (e.g., down* significa que a máquina pode estar desligada).
 ___
 
 ## TLDR
