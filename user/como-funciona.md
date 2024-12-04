@@ -24,3 +24,6 @@ ___
 ___
 
 [Próximo tópico: Acessando o cluster](acesso.md)
+<button name="Proximo" onclick="acesso.md">Proximo</button>
+<button name="Anterior" onclick="acesso.md">Anterior</button>
+<a href="acesso.md"><button>Proximo</button></a>
