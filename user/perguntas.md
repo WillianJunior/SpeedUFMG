@@ -45,6 +45,6 @@ python3 test.py
 
 *Na saída do slurm (em /home_cerberus/speed/username/slurm-1709.out) a versão do python3 estava errada mesmo após o module load. O que eu devo fazer para carregar a versão 3.12.1?*
 
-No caso acima foi mostrado claramente (i) o que foi executado, (ii) como foi executado, facilitando a replicação do problema, (iii) o log de saída caso seja muito grande para colar no chat, e (iv) finaliza com uma pergunta direta que, respondida, levará quem perguntou a conseguir continuar os trabalhos. Não é necessário mandar os arquivos inteiros no chat, mas o path é importante. Você também pode enviar (Ctrl+Shift+c, Ctrl+Shift+v) a saída do terminal caso seja algo pequeno e bem descritivo.
+No caso acima foi mostrado claramente (i) o que foi executado e por qual usuário (username), (ii) como foi executado, facilitando a replicação do problema, (iii) o log de saída caso seja muito grande para colar no chat, e (iv) finaliza com uma pergunta direta que, respondida, levará quem perguntou a conseguir continuar os trabalhos. Não é necessário mandar os arquivos inteiros no chat, mas o path é importante. Você também pode enviar (Ctrl+Shift+c, Ctrl+Shift+v) a saída do terminal caso seja algo pequeno e bem descritivo.
 
 
