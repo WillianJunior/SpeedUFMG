@@ -21,7 +21,7 @@ ___
 
 ## Passo-a-passo (resumo):
   [1) Acessando a mica](#1-acessando-a-mica)<br>
-      - Para ter acesso ao cluster é necessário primeiro logar na máquina externa mica ([login.dcc.ufmg.br]()), conforme as instruções a baixo.<br>
+      - Para ter acesso ao cluster é necessário primeiro logar na máquina externa mica ([login.dcc.ufmg.br]()), conforme as instruções abaixo.<br>
   [2) Acessando a cerberus](#2-Acessando-a-cerberus)
       - Uma vez tendo a conta do CRC e conseguindo acesso a mica, deve ser pedido acesso à máquina cerberus no tópico *Novos Acessos* do grupo do telegram. <br>
       - A cerberus é somente acessível via mica.<br>
