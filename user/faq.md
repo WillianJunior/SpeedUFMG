@@ -56,6 +56,36 @@ Python 3.12.1
 ```
  - Uma desvantágem dessa solução é que você deverá usar apenas uma gorgona para seus testes por venv. Alternativamente, você pode criar um venv local em cada gorgona que usar.
 
+## [0] ERROR: Could not install packedges due to an OSError: [Errorno 28] No space left on device
+Use o comando 
+
+```comand 
+$ df -h
+```
+Para verificar se realmente há ou não espaço no diretório que está sendo operado. Caso realmente não haja espaço, retorne para a home da máquina, execute novamente o comando acima e avalie qual partição tem espaço disponível e mude os arquivos para ela usando o comando:
+
+```comand 
+$ mv [options(s)] [source_file_name(s)] [Destination_file_name]
+```
+
+Exemplo: No meu caso eu tive problemas ao criar um venv e instalar minhas dependências - o espaço acabava antes de instalar tudo o que precisava. Estava em um nó de computação (vulgo gorgona) no diretorio /home/all_home/user e o que eu fiz foi mudar os meus arquivos para a pasta /scratch/user.
+
+
+## [0] ERROR: Could not install packedges due to an OSError: [Errorno 13] Permission denied: 'home/pos/user' check the permissions
+
+Aparentemente o venv precisa de um home. O que você deve fazer nesse caso é criar um dir na sua pasta. (Ex. /scratch/user/home) e "fingir" que essa é a sua home através do comando:
+
+```comand 
+$ export HOME=/scratch/user/home
+```
+Assim ele deve baixar as coisas do venv nesse other home.
+
+De todo modo indico usar o comando abaixo para forçar o sistema a usar apenas os dados dentro do venv com o comando:
+
+```comand 
+pip install --no-cache-dir -r <dir_onde_ta_o_arquivo>/requirements.txt
+```
+
 ## [1] A minha home não existe em algumas gorgonas.
 As gorgonas foram formatadas e preparadas em momentos diferentes, então por mais que a gente tente mantê-las consistentes entre si, não tem como fazer isso de forma mais definitiva até uma formatação completa delas. Essa formatação é algo a ser feito mais a frente.
 
