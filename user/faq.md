@@ -68,10 +68,10 @@ Para verificar se realmente há ou não espaço no diretório que está sendo op
 $ mv [options(s)] [source_file_name(s)] [Destination_file_name]
 ```
 
-Exemplo: No meu caso eu tive problemas ao criar um venv e instalar minhas dependências - o espaço acabava antes de instalar tudo o que precisava. Estava em um nó de computação (vulgo gorgona) no diretorio /home/all_home/user e o que eu fiz foi mudar os meus arquivos para a pasta /scratch/user.
+Exemplo: No meu caso eu tive problemas ao criar um venv e instalar minhas dependências - o espaço acabava antes de instalar tudo o que precisava. Estava em um nó de computação (vulgo gorgona) no diretorio /home/all_home/user e o que eu fiz foi mudar os meus arquivos para a pasta /scratch/username.
 
 
-## [0] ERROR: Could not install packedges due to an OSError: [Errorno 13] Permission denied: 'home/pos/user' check the permissions
+## [0] ERROR: Could not install packedges due to an OSError: [Errorno 13] Permission denied: '/home/pos/user' check the permissions
 
 Aparentemente o venv precisa de um home. O que você deve fazer nesse caso é criar um dir na sua pasta. (Ex. /scratch/user/home) e "fingir" que essa é a sua home através do comando:
 
