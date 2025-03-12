@@ -10,6 +10,8 @@ O storage local dos nós de computação está localizado no path '/home/all_hom
 
 Outro detalhe importante é: assuma que, exceto por '/home/all_home/', nenhum usuário tem acesso a qualquer outro arquivo ou path local dos nós de computação. Por exemplo, um path de sua home '/home/pos/username' não tem acesso liberado ao usuário 'username'.
 
+É possível mover arquivos diretamente entre sua máquina e os nós de computação, dado que você tenha esse nó alocado. Para mais informações leia [aqui](https://github.com/WillianJunior/SpeedUFMG/blob/main/user/gamba.md#4-copiando-diretamente-para-as-gorgonas).
+
 ## Storage distribuído (DFS)
 
 Dados globalmente acessíveis estão disponíveis no diretório ‘/home_cerberus/speed/username’. O diretório ‘/home_cerberus’ é montado em todas as máquinas (login e computação), e qualquer dado nele é visível em todo cluster. Neste ambiente é esperado que código, dados de entrada, resultados, scripts e logs sejam armazenados.
