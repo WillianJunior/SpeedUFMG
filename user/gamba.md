@@ -33,7 +33,56 @@ Se não é possível acessar uma gorgona via ssh diretamente, também não é po
 Caso você tenha preparado seu ambiente de testes em uma máquina específica e não queira ficar esperando na fila, basta alocar outro nó. Não existem limites de alocações. Você pode pedir o tempo que for necessário, como mais de 1000 hrs (~1 mês e meio), ou até mais. Se houverem vários jobs que você precise submeter, basta submetê-los. O slurm vai rodar cada um dos seus jobs na ordem que você os submeteu. No pior dos casos vai haver alguem que, assim como você, só configurou os experimentos em um nó. Neste caso, fica a dica de deixar mais de um nó preparado para os seus experimentos. É possível passar uma lista de nós que você precisa que o seu job use (parâmetro -w tanto para 'srun' como para 'sbatch').
 
 
+## 4. Copiando diretamente para as gorgonas
+O storage local das gorgonas é muito grande, enquanto o storage global fica cheio quase o tempo inteiro. Aqueles que querem/precisam mover dados para as gorgonas estão tendo que copiar primeiro os dados para a home_cerberus, para então copiar para as gorgonas. Porém, é possível realizar uma cópia direta para uma gorgona **dado que você tenha ela alocada**. Para realizar essa operação é assumido que você tem um arquivo ~/.ssh/config na sua máquina ([como configurar](https://github.com/WillianJunior/SpeedUFMG/blob/main/user/acesso.md#login-por-chave-p%C3%BAblica-e-tunneling)).
+
+Basta usar o comando scp com a opção de tunelamento abaixo:
+
+```command
+scp -o ProxyJump=phocus4 file.txt  username@gorgona2:/home/all_home/username
+################################################  
+#                    ATENCAO                   #
+# Antes de efetuar o login, certifique-se que  #
+# voce realmente tem autorizacao.              #
+# Acessos nao autorizados e/ou tentativas de   #
+# login serao monitoradas, armazenadas em log  #
+# e serao devidamente reportadas ao CRC!       #
+################################################
 
 
+username@cerberus.speed.dcc.ufmg.br's password: 
+username@phocus4's password: 
+file.txt                                      100%  732    73.4KB/s   00:00  
+```
 
+Caso você não tenha um job alocado na gorgona de destino receberá o seguinte erro:
+
+```command
+scp -o ProxyJump=phocus4 file.txt  username@gorgona2:/home/all_home/username
+################################################  
+#                    ATENCAO                   #
+# Antes de efetuar o login, certifique-se que  #
+# voce realmente tem autorizacao.              #
+# Acessos nao autorizados e/ou tentativas de   #
+# login serao monitoradas, armazenadas em log  #
+# e serao devidamente reportadas ao CRC!       #
+################################################
+
+
+username@cerberus.speed.dcc.ufmg.br's password: 
+username@phocus4's password: 
+Access denied by pam_slurm_adopt: you have no active jobs on this node
+
+Connection closed by UNKNOWN port 65535
+scp: Connection closed
+```
+
+Uma forma simples de conseguir uma alocação no nó é por meio de uma sessão interativa (para mais informações vide [Jobs interativos](https://github.com/WillianJunior/SpeedUFMG/blob/main/user/submissao-slurm.md#jobs-interativos):
+
+```console
+username@phocus4:~$ srun -w gorgona2 --time 1:00:00 --pty bash
+srun: job 1704 queued and waiting for resources
+srun: job 1704 has been allocated resources
+username@gorgona2:~$
+```
 
