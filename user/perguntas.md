@@ -61,7 +61,7 @@ Não dá para saber qual é o seu usuário, como você fez para se conectar à p
 
 ![image](https://github.com/user-attachments/assets/acea3f26-1dd3-4431-94e7-8e844b448aaa)
 
-Já acima dá para saber que (i) é para o usuário willianjunior, (ii) que a conexão foi feita de um terminal linux, (iii) o problema está na conexão da cerberus para a phocus4 (não foi configurado o ~/.ssh/config), e (iv) que não foi usada chave ssh, apenas senha. Um Ctrl+c/Ctrl+v sempre é melhor que um print, porém um print também ajuda muito.
+Já acima dá para saber que (i) é para o usuário willianjunior, (ii) que a conexão foi feita de um terminal linux, (iii) o problema está na conexão da cerberus para a phocus4 (não foi configurado o ~/.ssh/config), e (iv) que não foi usada chave ssh, apenas senha. Um Ctrl+c/Ctrl+v do texto do terminal sempre é melhor que um print, porém um print já serve.
 
 
 
