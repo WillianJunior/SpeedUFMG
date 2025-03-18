@@ -47,4 +47,23 @@ python3 test.py
 
 No caso acima foi mostrado claramente (i) o que foi executado e por qual usuário (username), (ii) como foi executado, facilitando a replicação do problema, (iii) o log de saída caso seja muito grande para colar no chat, e (iv) finaliza com uma pergunta direta que, respondida, levará quem perguntou a conseguir continuar os trabalhos. Não é necessário mandar os arquivos inteiros no chat, mas o path é importante. Você também pode enviar (Ctrl+Shift+c, Ctrl+Shift+v) a saída do terminal caso seja algo pequeno e bem descritivo.
 
+Outro exemplo mais simples:
+
+## Ruim:
+
+*Não estou conseguindo entrar na phocus4.*
+
+Não dá para saber qual é o seu usuário, como você fez para se conectar à phocus4 ou de onde.
+
+## Bom:
+
+*Não estou conseguindo entrar na phocus4. Eis o que aparece para mim:*
+
+![image](https://github.com/user-attachments/assets/acea3f26-1dd3-4431-94e7-8e844b448aaa)
+
+Já acima dá para saber que (i) é para o usuário willianjunior, (ii) que a conexão foi feita de um terminal linux, (iii) o problema está na conexão da cerberus para a phocus4 (não foi configurado o ~/.ssh/config), e (iv) que não foi usada chave ssh, apenas senha. Um Ctrl+c/Ctrl+v sempre é melhor que um print, porém um print também ajuda muito.
+
+
+
+
 
