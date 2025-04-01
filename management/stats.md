@@ -6,9 +6,10 @@ Campos:
  - Down: Tempo de máquinas fora da fila de execução por qualquer motivo (falha de nó, manutenção, testes, ...).
  - Reported: Quantidade de tempo observada no período. Sendo menos que 100% significa que o cluser inteiro (ou o nó HEAD) estava fora do ar.
 
-## 2024
+## 2025
 | Month | Alloc. | Idle   | Down   | Reported |
 |-------|--------|--------|--------|----------|
+|03|29.37%|69.58%|0.99%|100.00%|
 |02|27.38%|68.51%|4.10%|100.00%|
 |01|18.96%|53.38%|24.61%|100.16%|
 
