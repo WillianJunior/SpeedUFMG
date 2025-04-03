@@ -86,3 +86,77 @@ srun: job 1704 has been allocated resources
 username@gorgona2:~$
 ```
 
+## 5. Movendo dados entre gorgonas
+
+Da mesma forma que podemos copiar dados diretamente para uma gorgona alocada, pode-se mover dados entre gorgonas alocadas. Vamos assumir que desejo mover um arquivo com mais de 100GB da gorgona7 para a gorgona10, porém, não quero nem baixar isso para a minha máquina local antes, nem passar esse arquivo pela home_cerberus. Começemos abrindo uma sessão interativa com 2 nós:
+
+```command
+willianjunior@phocus4:~/$ srun -N 2 -w gorgona[7,10] --time 10:00:00 --pty bash
+willianjunior@gorgona7:~/$ ls /home/all_home/willianjunior/large_files
+100GB_file.large  1GB_file.small
+willianjunior@gorgona7:~/$ ssh gorgona10 ls /home/all_home/willianjunior/large_files
+1GB_file.small
+```
+
+Acima conseguimos uma alocação às gorgonas 7 e 10. Vimos que temos um arquivo grande no storage local (all_home) da gorgona 7 que não está presente na gorgona10. Para realizar a cópia basta usar scp:
+
+```command
+willianjunior@gorgona7:~/$ scp -o "StrictHostKeyChecking no" /home/all_home/willianjunior/large_files/100GB_file.large gorgona10:/home/all_home/willianjunior/large_files
+100GB_file.large                                                   100%    0     0.0KB/s   00:00    
+willianjunior@gorgona7:~/$ ssh gorgona10 ls /home/all_home/willianjunior/large_files
+100GB_file.large
+1GB_file.small
+```
+
+Note que a opção -o "StrictHostKeyChecking no" não é obrigatória, mas caso o scp falhe por fingerprint não identificado essa opção irá ignorar o fingerprint. Porém, não é muito interessante ter que ficar esperando por nós específicos para uma alocação interativa. Um alternativa para mover esses arquivos então seria por meio de um batch job:
+
+```bash
+#!/bin/bash
+#SBATCH --job-name=copy-data
+#SBATCH --time=1:00:00
+#SBATCH --nodes=2
+#SBATCH -w gorgona[7,10]
+
+# copy-data.sh
+
+set -x
+
+# Listagem de nós alocados
+echo $SLURM_NODELIST
+
+# Qual nó está rodando esse script
+hostname
+
+# Verificação dos arquivos presentes nas duas gorgonas
+ls /home/all_home/willianjunior/large_files
+ssh gorgona10 ls /home/all_home/willianjunior/large_files
+
+# Cópia do arquivo
+scp -o "StrictHostKeyChecking no" /home/all_home/willianjunior/large_files/100GB_file.large gorgona10:/home/all_home/willianjunior/large_files
+
+# Verificação final se a cópia foi feita
+ssh gorgona10 ls /home/all_home/willianjunior/large_files
+```
+
+```command
+willianjunior@phocus4:~/$ sbatch copy-data.sh
+Submitted batch job 9284
+willianjunior@phocus4:~/$ cat slurm-9284.out
++ echo 'gorgona[7,10]'
+gorgona[7,10]
++ hostname
+gorgona7
++ ls /home/all_home/willianjunior/large_files
+100GB_file.large
+1GB_file.small
++ ssh gorgona10 ls /home/all_home/willianjunior/large_files
+1GB_file.small
++ scp -o 'StrictHostKeyChecking no' /home/all_home/willianjunior/large_files/100GB_file.large gorgona10:/home/all_home/willianjunior/large_files
++ ssh gorgona10 ls /home/all_home/willianjunior/large_files
+100GB_file.large
+1GB_file.small
+slurmstepd: error: _cgroup_procs_check: failed on path (null)/cgroup.procs: No such file or directory
+slurmstepd: error: Cannot write to cgroup.procs for (null)
+slurmstepd: error: Unable to move pid 319946 to init root cgroup (null)
+```
+
