@@ -195,7 +195,7 @@ ___
    4. Criar o arquivo ~/.ssh/config descrito acima
    5. Rodar o comando 'ssh phocus4'
    6. Resolvido
- - Configure chave pública para acesso mais fácil ao cluster, assim não será necessário colocar a sua senha 3 vezes.
+ - Configure chave pública para acesso mais fácil ao cluster, assim não será necessário colocar a sua senha 2 vezes.
 
 ___
 
