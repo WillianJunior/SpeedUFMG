@@ -23,7 +23,24 @@ Exemplo: Temos um hard limit de 10G, um soft limit de 5G e um grace time de 1 se
 Limites diferentes podem ser aplicados a usuários ou grupos de forma individual. Também é possível criar uma entidade de grão mais fino chamada projeto. Em snfs1 **apenas quotas de projeto serão usadas**. Atualmente existe apenas 1 projeto (speed) que todos podem usar. Para evitar que o storage fique cheio ao ponto de inviabilizar o seu uso por outros usuários, também será possível realizar alocações de projetos. Aqueles que começarem a usar o snfs1 e se sentirem confortaveis com ele poderão pedir a criação de um projeto no tópico "Novos Acessos" no Telegram. Será feita uma alocação exclusiva para o projeto, sendo possível criar um grupo unix a fim de permitir apenas que usuários deste grupo acessem esse projeto.
 
 ### Qual é o meu uso?
-Existem ferramentas para verificação de quotas e quanto dela você está usando. Porém, para as tecnologias usadas para implementar o snfs1 (xfs por NFS) não é possível ainda verificar uso de quotas remotamente (como pela phocus4). Isso é algo que está em desenvolvimento e será implementado no futuro.
+Existem ferramentas para verificação de quotas e quanto dela você está usando. Porém, para as tecnologias usadas para implementar o snfs1 (xfs por NFS) não é possível ainda verificar uso de quotas remotamente (como pela phocus4). Isso é algo que está em desenvolvimento e será implementado no futuro. Porém é possível verificar o uso global via df:
+
+```command
+username@phocus4:~$ df -h
+Filesystem                          Size  Used Avail Use% Mounted on
+tmpfs                               1.6G  2.3M  1.6G   1% /run
+/dev/sda2                            94G   29G   61G  32% /
+tmpfs                               7.9G     0  7.9G   0% /dev/shm
+tmpfs                               5.0M     0  5.0M   0% /run/lock
+efivarfs                             72K   39K   29K  58% /sys/firmware/efi/efivars
+/dev/sda1                           476M  6.1M  469M   2% /boot/efi
+/dev/sda4                           1.7T  557G  1.1T  35% /home
+cerberus:/home                      826G  774G   11G  99% /home_cerberus
+150.164.203.121:/nfs/exports/snfs1  2.0T   15G  2.0T   1% /snfs1
+```
+
+Como visto, são 2TB de storage inicial, com mais storage a ser adicionado no futuro.
+
 
 
 
