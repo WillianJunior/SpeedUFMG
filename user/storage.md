@@ -2,6 +2,8 @@
 
 O cluster possui dois tipos de espaço para armazenamento: local e distribuído. Armazenamento local é aquele presente fisicamente em cada nó usado, e é acessível apenas de seu nó. Armazenamento distribuído (DFS) é um espaço acessível globalmente por qualquer máquina no cluster. Pode-se imaginar dados nesse espaço como em um HD gigante conectado a todas as máquinas, ou em um serviço Google Drive ou Dropbox.
 
+**NOVO** Está em fase de testes o NFS snfs1 montado em /snfs1 em todo o cluster. Leia mais [aqui](nfs.md).
+
 ## Storage local
 
 Para nós de login, não faz sentido acessar seu armazenamento local já que qualquer dado local no nó de login é acessível somente por ele (nós de computação não conseguem acessar). Para nós de computação o storage local deve ser visto como um espaço temporário, limpo ao fim de cada job. Usar armazenamento local pode ser interessante para otimizar os tempos de acesso a dados, em casos específicos. Porém, vale lembrar que qualquer dado neste espaço de armazenamento é volátil, sendo necessário copiar explicitamente arquivos de interesse nele presentes para o DFS **antes do fim da alocação**. A fim de padronização assuma que qualquer dado que seja deixado no armazenamento local após o fim de uma alocação (seja batch script ou interativa) será **perdido**, podendo ser apagado ou corrompido.
