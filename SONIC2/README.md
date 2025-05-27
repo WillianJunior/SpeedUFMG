@@ -40,7 +40,7 @@
  - [ ] format rocky9.5
  - [ ] block ssh from non root, only allow public-key access
  - [ ] install nfs server
- - [ ] /setc (shared_etc) (nfs mount)
+ - [ ] /setc (shared_etc) (nfs mount) (32GB)
    - no quotas, other-r-w-x
    - user access controled by service
    - [ ] slurm configs
@@ -51,10 +51,10 @@
      - sssd.conf
    - [ ] fs configs
    - [ ] munge key
- - [ ] /smodules (shared_modules) (nfs mount)
+ - [ ] /smodules (shared_modules) (nfs mount) (512GB)
    - [ ] modules install
    - [ ] modules definitions
- - [ ] /scratch1 (storage nfs 1)
+ - [ ] /scratch1 (storage nfs 1) (3TB)
    - [ ] /scratch1/speed (speed project)
  - [ ] ldap
 
