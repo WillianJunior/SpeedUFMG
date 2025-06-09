@@ -19,6 +19,9 @@ Um último detalhe importante: **NÃO RODEM JOBS NA PHOCUS4.** A phocus4 serve a
  - [Fazendo perguntas](user/perguntas.md)
  - [Soluções paliativas](user/gamba.md)
 
+# Tópicos Legais
+ - [Como rodar LLMs com mais de 1 nó em paralelo](https://github.com/TopologyMapping/network-security/tree/main/info-llm-speed-lab)
+
 # Management
 Essa é a parte de gerenciamento do cluster. Nela estão as etapas necessárias para montar o cluster do zero, ou fazer manutneção no mesmo. Se você não está prestando manutenção no cluster, não precisa ler nada daqui para baixo.
 
