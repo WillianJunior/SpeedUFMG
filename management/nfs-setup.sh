@@ -39,6 +39,7 @@ xfs_quota -x -c "limit -p bhard=2t bsoft=2t $PROJ_NAME" $FS_MOUNT
 xfs_quota -x -c 'report -p' $FS_MOUNT # check quota
 
 # Setup NFS server
+# Mudar: Domain = dcc.ufmg.br
 dnf install -y nfs-utils
 systemctl enable --now nfs-server
 systemctl enable --now rpcbind
@@ -54,9 +55,10 @@ exportfs -rv
 ### ==========================================================================
 
 # For clients (automounts at boot)
+# Mudar: Domain = dcc.ufmg.br
 apt install -y nfs-common
 mkdir /snfs1
-echo "150.164.203.121:/nfs/exports/snfs1 /snfs1 nfs defaults 0 0" >> /etc/fstab
+echo "150.164.203.121:/nfs/exports/snfs1 /snfs1 nfs defaults,acl 0 0" >> /etc/fstab
 mount -a
 systemctl daemon-reload
 ls /snfs1
