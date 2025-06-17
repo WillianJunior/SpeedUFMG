@@ -51,9 +51,10 @@
      - sssd.conf
    - [ ] fs configs
    - [ ] munge key
- - [ ] /smodules (shared_modules) (nfs mount) (512GB)
-   - [ ] modules install
-   - [ ] modules definitions
+ - [ ] /shome1 (shared_home) (ext4 nfs mount) (1TB)
+   - [ ] setup this as home for users in login node (with create on first access)
+   - [ ] setup this as home for users in other nodes
+   - [ ] add project quota for each dir
  - [ ] /scratch1 (storage nfs 1) (3TB)
    - [ ] /scratch1/speed (speed project)
  - [ ] ldap
