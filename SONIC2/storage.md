@@ -1,5 +1,7 @@
 # Storage
 
+## **OBS: /prj ainda não está dispinível...**
+
 O cluster possui três tipos de partição para armazenamento: /scratch, /home e /prj. Essas partições tem as seguintes caracteristicas:
 
 | | /scratch | /home | /prj |
