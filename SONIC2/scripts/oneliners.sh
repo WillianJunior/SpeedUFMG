@@ -2,6 +2,9 @@
 scontrol reboot gorgona6
 scontrol update NodeName=gorgona[6] State=Resume
 
+# Create reservation
+scontrol create reservation user=username nodes=gorgona4 starttime=now endtime=2024-03-16 flags=magnetic reservationname=r1
+
 # Returns the CPU usage for jobs in the last 30 days
 susage(){
   DAYS="$1"
