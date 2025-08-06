@@ -37,27 +37,21 @@
 
 
 ## Progresso NFS (tails1)
- - [ ] format rocky9.5
- - [ ] block ssh from non root, only allow public-key access
- - [ ] install nfs server
- - [ ] /setc (shared_etc) (nfs mount) (32GB)
+ - [x] format rocky9.5
+ - [x] block ssh from non root, only allow public-key access
+ - [x] install nfs server
+ - [x] /setc (shared_etc) (nfs mount) (32GB)
    - no quotas, other-r-w-x
    - user access controled by service
-   - [ ] slurm configs
+   - [x] slurm configs
      - slurm.conf
-   - [ ] network configs
-     - hosts
-   - [ ] ldap configs
-     - sssd.conf
-   - [ ] fs configs
-   - [ ] munge key
  - [ ] /shome1 (shared_home) (ext4 nfs mount) (1TB)
    - [ ] setup this as home for users in login node (with create on first access)
    - [ ] setup this as home for users in other nodes
-   - [ ] add project quota for each dir
+   - [x] add project quota for each dir
  - [ ] /scratch1 (storage nfs 1) (3TB)
    - [ ] /scratch1/speed (speed project)
- - [ ] ldap
+ - [x] ldap
 
 ## Progresso nó Head (sonic1)
  - [ ] format rocky9.5
