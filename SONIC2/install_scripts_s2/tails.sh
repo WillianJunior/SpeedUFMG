@@ -1,5 +1,7 @@
 #!/bin/bash
 # tails1
+# Tested with Rocky Linux release 9.5 (Blue Onyx)
+# Linux 5.14.0-503.40.1.el9_5.x86_64
 
 # Configurations
 ME=tails1
@@ -8,6 +10,9 @@ MY_IP_SPEED=192.168.62.100
 NET_INTF=enp2s0
 GATEWAY_DCC=150.164.203.1
 GATEWAY_SPEED=192.168.62.254
+
+# Enable PSI
+grubby --update-kernel=ALL --args="systemd.unified_cgroup_hierarchy=1 psi=1"
 
 # Network
 hostnamectl set-hostname $ME
