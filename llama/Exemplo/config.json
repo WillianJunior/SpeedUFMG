@@ -1,0 +1,15 @@
+{
+  "job_name": "llamaJob",
+  "output_log": "/snfs1/speed/leonardooliveira/llama-result/output.log",
+  "result_file": "/snfs1/speed/leonardooliveira/llama-result/result.txt",
+  "dir_llama_script": "/home/all_home/gabriel.cardoso/llama-cpp/build-rpc-cuda/bin",
+  "model": "/snfs1/llm-models/Instruct-Llama-3.1-70B-Q4_K_L-40GB.gguf",
+  "port_rpc": 50052,
+  "port_server": 50001,
+  "venv_dir": "/snfs1/llm-models/llama-result/venv",
+  "prompt_dir": "/snfs1/speed/leonardooliveira/llama-result/prompts",
+  "nodes": 2,
+  "ntasks": 2,
+  "time": "01:00:00",
+  "sbatch_script": "/snfs1/speed/leonardooliveira/llama-result/2-node_sbatch.sh"
+}
