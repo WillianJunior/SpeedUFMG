@@ -5,6 +5,14 @@ scontrol update NodeName=gorgona[6] State=Resume
 # Create reservation
 scontrol create reservation user=username nodes=gorgona4 starttime=now endtime=2024-03-16 flags=magnetic reservationname=r1
 
+# Print all allocations in the last 30 days (canceled with 0 runtime not here)
+# Printing: JobID|DayOfStart|User|Nodes|ElapsedTimeInSecs
+sacct --starttime=$(date -d '30 days ago' +%Y-%m-%d) --format=JobID,Start,User,State,NNodes,CPUTimeRAW --noheader --allocations | awk '$1 ~ /^[0-9]+$/ && $2 != "None" { split($2, d, "T"); $2=d[1]; print }' | awk '{$6 = $6 / 32; print}'
+
+# Print total time in seconds spent by each user in the last 30 days. last column is the % of the last 30 days the user has used
+sacct -S $(date -d '30 days ago' +%Y-%m-%d) --format=User,CPUTimeRAW -n -P --allocations | awk -F'|' '{cpu[$1]+=$2} END {for (u in cpu) print u, cpu[u]}' | sort -n -k2 | awk '{$2=$2/32/3600; $3=sprintf("%.2f%%", $2/(6*24*30)*100); print}'
+
+
 # Returns the CPU usage for jobs in the last 30 days
 susage(){
   DAYS="$1"
