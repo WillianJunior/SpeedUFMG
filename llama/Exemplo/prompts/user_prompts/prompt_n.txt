@@ -1,0 +1,42 @@
+Classifique o script abaixo em uma categoria que voce ache que faz sentido atribuilo entre "Simulacao de ataque", "Checagem de Banner", "Ataque com privilegio":
+
+##
+# This module is part of the Metasploit Framework
+##
+
+require 'msf/core'
+
+class MetasploitModule < Msf::Auxiliary
+
+  include Msf::Exploit::Remote::SMB::Client
+  include Msf::Auxiliary::Scanner
+
+  def initialize(info = {})
+    super(update_info(info,
+      'Name'        => 'MS17-010 SMB Vulnerability Scanner',
+      'Description' => %q{
+        This module checks if hosts are vulnerable to MS17-010 (EternalBlue).
+      },
+      'Author'      => [ 'Metasploit Team' ],
+      'License'     => MSF_LICENSE
+    ))
+  end
+
+  def run_host(ip)
+    begin
+      connect
+      smb_login
+
+      if smb_peer_os =~ /Windows/
+        print_good("#{ip} appears vulnerable to MS17-010")
+      else
+        print_status("#{ip} does not appear vulnerable")
+      end
+
+    rescue ::Rex::ConnectionError
+      print_error("Could not connect to #{ip}")
+    ensure
+      disconnect
+    end
+  end
+end

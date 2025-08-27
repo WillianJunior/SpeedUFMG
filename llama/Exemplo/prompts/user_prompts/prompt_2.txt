@@ -1,0 +1,27 @@
+Em qual linguagem esta escrito o algoritmo abaixo? Me explique tambem o que ele esta fazendo.
+
+section .data
+    array dd 1, 2, 3, 4, 5
+    array_len equ 5
+
+section .bss
+    soma resd 1
+
+section .text
+    global _start
+
+_start:
+    mov ecx, array_len
+    mov esi, array
+    xor eax, eax
+
+loop_array:
+    add eax, [esi]
+    add esi, 4
+    loop loop_array
+
+    mov [soma], eax
+
+    mov eax, 1
+    xor ebx, ebx
+    int 0x80
