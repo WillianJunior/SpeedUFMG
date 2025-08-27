@@ -1,21 +1,8 @@
 #!/bin/bash
 
-# Função para obter IP com base no nome do nó
 get_ip() {
-    declare -A MAP_IPS=(
-        [gorgona1]="192.168.62.31"
-        [gorgona2]="192.168.62.32"
-        [gorgona3]="192.168.62.33"
-        [gorgona4]="192.168.62.34"
-        [gorgona5]="192.168.62.35"
-        [gorgona6]="192.168.62.36"
-        [gorgona7]="192.168.62.37"
-        [gorgona8]="192.168.62.38"
-        [gorgona9]="192.168.62.39"
-        [gorgona10]="192.168.62.40"
-    )
-
-    echo "${MAP_IPS[$1]}"
+    local node=$1
+    srun --nodes=1 --nodelist=$node hostname -I | awk '{print $1}'
 }
 
 echo "Nós alocados pelo SLURM: $SLURM_NODELIST"
@@ -55,31 +42,35 @@ echo "Executando cliente Python..."
 import os
 import openai
 
-system_prompt = open(os.path.join("$PROMPT_DIR", "system_prompt")).read()
-user_prompt = open(os.path.join("$PROMPT_DIR", "user_prompt")).read()
+system_prompt = open(os.path.join("$PROMPT_SERVER")).read()
 
 llm = openai.OpenAI(
     base_url="http://$IP_SERVER:$PORT_SERVER/v1",
     api_key="sk-no-key-required"
 )
 
-out = llm.chat.completions.create(
-    model="local-llama",
-    messages=[
-        {"role": "system", "content": system_prompt},
-        {"role": "user", "content": user_prompt}
-    ],
-    max_tokens=None
-)
-
-with open("$RESULT_FILE", "w") as f:
-    f.write(out.choices[0].message.content)
+for user_prompt_file in os.listdir("$PROMPTS_USER_DIR"):
+    user_prompt = open(os.path.join("$PROMPTS_USER_DIR", user_prompt_file)).read()
+    
+    out = llm.chat.completions.create(
+        model="local-llama",
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt}
+        ],
+        max_tokens=None
+    )
+    
+    base_name = os.path.splitext(user_prompt_file)[0]
+    result_file_path = os.path.join("$RESULT_DIR", f"result_{base_name}.txt")
+    with open(result_file_path, "w") as f:
+        f.write(out.choices[0].message.content)
 EOF
 
 echo "Encerrando servidor..."
 kill $SERVER_PID 2>/dev/null || true
 wait $SERVER_PID 2>/dev/null || true
 
-echo "Servidor finalizado. Resultado salvo em $RESULT_FILE."
+echo "Servidor finalizado. Resultado salvo em $RESULT_DIR."
 echo "Script concluído com sucesso."
 exit 0
