@@ -21,7 +21,7 @@ Um último detalhe importante: **NÃO RODEM JOBS NA PHOCUS4.** A phocus4 serve a
 
 # Tópicos Legais
  - [Como rodar LLMs com mais de 1 nó em paralelo](https://github.com/TopologyMapping/network-security/tree/main/info-llm-speed-lab)
- - [Como construir um sbatch para utilizar LLMs no SONIC](llama/sbatch.md)
+ - [Como construir um sbatch para utilizar LLMs no SONIC com mais de 1 nó (independente do nó)](llama/sbatch.md)
 
 # Management
 Essa é a parte de gerenciamento do cluster. Nela estão as etapas necessárias para montar o cluster do zero, ou fazer manutneção no mesmo. Se você não está prestando manutenção no cluster, não precisa ler nada daqui para baixo.
