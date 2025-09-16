@@ -27,7 +27,8 @@ INFO:    Fetching OCI image...
 [...]
 INFO:    Inserting Apptainer configuration...
 INFO:    Creating SIF file...
-[...]
+INFO:    To see mksquashfs output with progress bar enable verbose logging
+INFO:    Build complete: ./vllm.sif
 username@phocus4:/sonic_home/username$
 ```
 
