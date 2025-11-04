@@ -2,7 +2,7 @@
 
 Problemas vão ocorrer. Eles podem ser do cluster, ou você pode ainda estar procurando como fazer algo corretamente. Independentemente do caso, queremos chegar à resposta o mais rápido possível, o que é bom para todos. Para isso, você pode seguir esses passos para resolver o seu problema o mais rapidamente possível.
 
-## 1. Veja no [FAQ](user/faq.md)
+## 1. Veja no [FAQ](faq.md)
 
 Talvez esse problema já tenha ocorrido com outro colega, e já tenha sido resolvido. O FAQ é um ótimo lugar para começar, pois é mais resumido. Quando temos problemas recorrentes, tentamos atualizar a sua descrição no FAQ. Como usar ele rapidamente:
  1. Abra o FAQ;
