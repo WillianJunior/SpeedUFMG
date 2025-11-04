@@ -1,58 +1,94 @@
 # Storage
 
-O cluster possui dois tipos de espaço para armazenamento: local e distribuído. Armazenamento local é aquele presente fisicamente em cada nó usado, e é acessível apenas de seu nó. Armazenamento distribuído (DFS) é um espaço acessível globalmente por qualquer máquina no cluster. Pode-se imaginar dados nesse espaço como em um HD gigante conectado a todas as máquinas, ou em um serviço Google Drive ou Dropbox.
+**DEPRECATION NOTE: a home_cerberus apresenta problemas diversos, principalmente de permissão de arquivos. EVITEM usar a `home_cerberus`. Usem outro storage global.**
 
-**NOVO** Está em fase de testes o NFS snfs1 montado em /snfs1 em todo o cluster. Leia mais [aqui](nfs.md).
+O cluster possui três tipos de partição para armazenamento: `/scratch`, `/sonic_home`, e `/snfs1`. Cada uma delas é otimizada para um caso de uso específico. Essas partições tem as seguintes caracteristicas:
 
-## Storage local
+| | `/scratch` | `/sonic_home` | `/snfs1` |
+|:---:|:---:|:---:|:---:|
+| Visibilidade | Local | Global | Global |
+| Volatilidade | Tempo da alocação | Persistente | Persistente |
+| Quotas | Não | Por user | Por projeto |
+| Desempenho<br>Arquivos<br>Pequenos | +++ | ++ | + |
+| Desempenho<br>Arquivos<br>Grandes | +++ | ++ | ++ |
+| Recomendaçao<br>de Uso | Copie seus arquivos que tem muito acesso aqui.<br>Zipar diretorios grandes com varios arquivos pequenos e descomprimir aqui. | Monte seus envs no `/scratch` e copie para `/sonic_home` ao fim, ou faça direto em `/sonic_home` (um pouco mais devagar) | Fique atento às permissoes de usuários. |
+| Quando Usar | Aplicações I/O heavy em arquivos | Codigo, envs, dotfiles | Arquivos grandes ou compartilhados pelo grupo de projeto |
 
-Para nós de login, não faz sentido acessar seu armazenamento local já que qualquer dado local no nó de login é acessível somente por ele (nós de computação não conseguem acessar). Para nós de computação o storage local deve ser visto como um espaço temporário, limpo ao fim de cada job. Usar armazenamento local pode ser interessante para otimizar os tempos de acesso a dados, em casos específicos. Porém, vale lembrar que qualquer dado neste espaço de armazenamento é volátil, sendo necessário copiar explicitamente arquivos de interesse nele presentes para o DFS **antes do fim da alocação**. A fim de padronização assuma que qualquer dado que seja deixado no armazenamento local após o fim de uma alocação (seja batch script ou interativa) será **perdido**, podendo ser apagado ou corrompido.
+### Visibilidade
+Global significa que todos os nós do cluster acessam o mesmo arquivo. Ou seja, ao alterar um arquivo em `gorgona4:/sonic_home/username/f.txt`, essa alteração será visível em `phocus4:/sonic_home/username/f.txt`. Isso acontece pois você estará acessando **o mesmo arquivo**.
+Local significa que arquivos nessa partição são visíveis apenas no nó que mantém esse arquivo. Ou seja, um arquivo em `gorgona4:/scratch/username/f.txt` não é acessível fora da `gorgona4`.
 
-O storage local dos nós de computação está localizado no path '/home/all_home'. Este path é válido em qualquer nó de computação. Neste path todos usuários tem permissão para ler, escrever e criar arquivos. A fim não ficar desorganizado é pedido a qualquer usuário que use esse espaço para **antes criar antes um diretório com seu nome** e colocar seus dados neste diretório recém criado. Por exemplo, '/home/all_home/username'. Como acesso ssh direto aos nós de computação é permitido apenas para aplicações interativas, não é possível transferir dados via 'scp'. Dessa forma, pode-se copiar arquivos do DFS (que é elaborado mais a frente) para o armazenamento local.
+### Volatilidade
+Arquivos em partições volateis são apagados ao fim de um job. 
+Arquivos em partições não-volateis persistem entre jobs e sessões de usuário. Ou seja, somente serão apagados diretamente pelo usuário.
 
-Outro detalhe importante é: assuma que, exceto por '/home/all_home/', nenhum usuário tem acesso a qualquer outro arquivo ou path local dos nós de computação. Por exemplo, um path de sua home '/home/pos/username' não tem acesso liberado ao usuário 'username'.
+### Quotas
+Para evitar que poucos usuários monopilizem o espaço de armazenamento para seus arquivos, bloqueando o uso de outros usuários, o cluster conta com 2 sistemas de cotas de armazenamento. A partição `/scratch` não possui limite de uso, tendo em vista que é armazenamento local volátil.
 
-É possível mover arquivos diretamente entre sua máquina e os nós de computação, dado que você tenha esse nó alocado. Para mais informações leia [aqui](https://github.com/WillianJunior/SpeedUFMG/blob/main/user/gamba.md#4-copiando-diretamente-para-as-gorgonas).
+Em `/sonic_home` cada usuário tem **160GB** de soft-limit e **200GB** de hard-limit. Caso o usuário tente exceder os 200GB, o SO retrnará um erro de falta de espaço. O limite de 160GB pode ser excedido por até 1 semana (até no máximo 200GB). Caso o limite de 160GB permaneça excedido por 1 semana ou mais, o SO retornará erro de falta de espaço para qualquer tentativa de alocação até que o usuário reduza seu uso para menos que 160GB.
 
-## Storage distribuído (DFS)
+Exemplo: digamos que você tenha usado 159GB em `/sonic_home`. No decorrer da execução de um job, é escrito 3GB de dados de saída em `/sonic_home`. A sua saída **não será perdida**. No decorrer de 1 semana, você conseguirá usar até 200GB. Digamos que após essa semana não houveram mais escritas, resultando em um uso de 162GB na `/sonic_home` por você. Qualquer operação de escrita que precise alocar mais storage será **bloqueada** pelo SO. Caso um job esteja rodando e tentando escrever neste momento **haverá perda das novas escritas**.
 
-Dados globalmente acessíveis estão disponíveis no diretório ‘/home_cerberus/speed/username’. O diretório ‘/home_cerberus’ é montado em todas as máquinas (login e computação), e qualquer dado nele é visível em todo cluster. Neste ambiente é esperado que código, dados de entrada, resultados, scripts e logs sejam armazenados.
+Atualmente a `/snfs1` não tem limite de quotas. Vamos tentar usar de forma razoável para não precisar implementar limites.
 
-Atualmente o DFS não é distribuído, sendo um diretório da máquina cerberus montada em todos nós do cluster. Futuramente será usado o sistema Lustre para manter esses dados. Caso hajam problemas de acesso, sendo o mais recorrente '/home_cerberus' não estar montado, basta notificar no grupo do Telegram.
-
-### Gerenciando espaço
-
-Uma consequência infeliz do Slurm foi ao aumentar o alcance dos recursos para os alunos agora temos muito mais usuários, e como todos precisam armazenar dados de experimentos isso colocou uma pressão nos recursos de armazenamento. Além disso, o local onde o DFS está montado atualmente (nó crberus) é um nó antigo e com armazenamento limitado para a necessidade de armazenamento do cluster. Na cerberus existem 3 discos fisicos: /home (sda onde está a home_cerberus), /home/disk2 (sdb) e /home/disk3 (sdc):
+Como saber quanto espaço tenho? O comando `quota -s` mostra seu consumo e `du -sh` te ajuda a descobrir onde está sendo gasto o storage:
 
 ```console
-username@phocus4:/home_cerberus# df -h .
-Filesystem      Size  Used Avail Use% Mounted on
-cerberus:/home  826G  775G  8,6G  99% /home_cerberus
-username@phocus4:/home_cerberus# df -h disk2
-Filesystem      Size  Used Avail Use% Mounted on
-cerberus:/home  3,6T  2,9T  542G  85% /home_cerberus
-username@phocus4:/home_cerberus# df -h disk3
-Filesystem      Size  Used Avail Use% Mounted on
-cerberus:/home  3,6T  2,0T  1,5T  59% /home_cerberus
+username@phocus4:~$ quota -s
+Disk quotas for user username (uid 9999): 
+     Filesystem   space   quota   limit   grace   files   quota   limit   grace
+tails1:/nfs/exports/sonic_home
+                 89636K    160G    200G            2849       0       0   
+username@phocus4:~$ du -sh /sonic_home/username/*
+200K	./infer-dset.txt
+2,7M	./llama
+6,0G	./Llama3.2-3B
+4,0K	./prep.sh
+4,0K	./run-llm1.py
+4,0K	./run-llm2.py
+28G	./vllm
 ```
 
-Um problema atual é que do disco 1 também é usado pelo SO da cerberus. Dessa forma, caso alguém gaste todo o espaço em cerberus:/dev/sda o SO pode travar. Como a cerberus é o nó de entrada para o cluster, é possível que **apenas 1 usuário trave o laboratório inteiro travando a cerberus, e bloqueando o acesso às outras máquinas!!!**. Isso foi algo que já aconteceu, travando o acesso ssh pois não havia espaço para o deamon rodar. Já está sendo implementada uma solução permanente, com um sistema DFS Lustre, mas no meio tempo pedimos a ajuda daqueles que usam o sistema para evitar tais problemas.
+Como saber quanto espaço tem disponível no cluster? O comando `df -h -x tmpfs -x efivarfs` o uso de todas as partições:
 
-Como pode-se observar, os discos 2 e 3 são montados dentro da cerberus:/home (phocus4:/home_cerberus), assim são acessíveis pela home_cerberus de qualquer nó no cluster. Dessa forma, eles são trivialmente acessíveis para aqueles que já usam a home_cerberus. Pedimos que ao copiar dados para o ambiente do cluster sejam tomados os seguintes cuidados:
- 1. Preste atenção na quantidade de dados que você está movendo. Verifique se tem espaço no cluster antes (o comando 'df -h PATH' é usável por qualquer usuário).
- 2. Priorize usar os discos 2 e 3. Temos documentação de como fazer isso [aqui](https://github.com/WillianJunior/SpeedUFMG/blob/main/user/gamba.md#problema-11-espa%C3%A7o).
- 3. Façam tudo na phocus4, não é para ficar mexendo da cerberus!!! As configurações de acesso são testadas todas na phocus4.
- 4. PRESTE MUITA ATENÇÃO NOS SEUS DADOS!!! Vamos tentar evitar problemas...
-
-## Performance
-
-Embora incomum, é possível que sua aplicação tenha perda de performance no acesso aos dados do DFS, principalmente se houverem várias operações pequenas de leitura. Para cada operação de leitura existe um overhead significativo pois os dados estão sendo acessados em um ambiente de rede. Uma forma de mitigar esse problema seria implementações que fazem carregamento de dados em bulk, assim amortizando o custo de leitura. Outra alternativa seria o uso do storage local. Porém, não é recomendado se preocupar com isso se não for identificado algum gargalo. Lembre-se, otimização prematura é a raiz de todo mal.
-
-## TLDR
- - Usar principalmente DFS em  /home_cerberus/speed/username.
- - Dados no DFS são globalmente acessíveis por todos os nós do cluster.
- - Storage local pode ser usado, mas apenas quando for justificável (baixa performance de leitura do DFS).
+```console
+username@phocus4:~# df -h -x tmpfs -x efivarfs
+Filesystem                          Size  Used Avail Use% Mounted on
+/dev/sda2                            94G   60G   29G  68% /
+/dev/sda4                           1.7T  609G  1.1T  38% /home
+/dev/sda1                           476M  6.1M  469M   2% /boot/efi
+cerberus:/home                      826G  752G   32G  96% /home_cerberus
+150.164.203.121:/nfs/exports/snfs1  2.0T  1.5T  597G  71% /snfs1
+tails1:/nfs/exports/sonic_etc        30G  258M   30G   1% /sonic_etc
+tails1:/nfs/exports/sonic_home      3.3T  403G  2.9T  13% /sonic_home
+tails1:/nfs/exports/sonic_modules   330G  2.4G  328G   1% /sonic_modules
+```
 
 
+# Considerações de Desempenho e Recomendações
+
+Operações de I/O podem degradar severamente o desempenho de suas aplicações. Isso pode ser visto pelo comando `htop` mostrando o PSI:
+
+## Execuções topadas. Uso máximo de CPU e GPU (`nvtop`):
+
+<img width="741" height="221" alt="image" src="https://github.com/user-attachments/assets/defc3386-6012-4849-8123-4b41d74c2e1b" />
+<img width="740" height="336" alt="image" src="https://github.com/user-attachments/assets/025f3db3-2042-4f2e-9158-309082b3893d" />
 
 
+## Execução com gargalo de I/O. Vai demorar para sair os resultados:
+
+<img width="740" height="222" alt="image" src="https://github.com/user-attachments/assets/02b6bbf8-7aa3-4089-9c87-bed7ed70b525" />
+
+
+## Algumas recomendações:
+ 1. Se não tem problema, não precisa de solução. Comecem usando o `/sonic_home` e o `/snfs1`, e só busquem soluções quando problemas aparecerem.
+ 2. Tenho arquivos muito grandes (<60 GB) que são lidos apenas uma vez, o que faço? **Nada**. O sistema de file cache do linux vai carregar os seus dados apenas uma vez em memória. Próximos acessos serão feitos em memória.
+ 3. Tenho arquivos MUITO grandes (>60 GB) que são lidos com frequência pela minha execução, o que faço? **Copie os arquivos para o `/scratch` local**. Assim você copia uma vez e consegue acessar várias vezes.
+ 4. Meus arquivos não são tão grandes, mas fica aparecendo PSI de I/O. O que está acontecendo? Provavelmente você está escrevendo muito. Se houver muitas escritas, escreva em `/scratch`, e ao fim da execução copie para `/sonic_home` ou `/snfs1`. Lembre-se, se o job morrer antes **seus dados serão perdidos!!!**. Então cuidado.
+ 5. E as minhas dependências (venvs e conda envs), onde deixo elas? Deixe em `/sonic_home`. Ele foi otimizado para acesso de arquivos pequenos.
+
+# Sobre a `/home_cerberus`
+
+Historicamente ela deu muito trabalho. Como está em uma máquina legada, está sendo deixada para trás. Além disso, ela tem muitos problemas com permissões de usuários. 
+
+TLDR: não começem a usá-la. Quem já usa, pode continuar usando ela como storage frio, mas escreva seus arquivos novos em outro storage global.
