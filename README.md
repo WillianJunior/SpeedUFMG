@@ -1,7 +1,7 @@
 # Bem vindo ao SONIC
 Este é o cluster de alto desempenho do laboratório SPEED do DCC/UFMG. Nele temos máquinas com diversas configurações para uso coletivo por meio do sistema slurm. Nesta página temos explicações completas do que está disponível para uso, assim como uma seção too long, didn’t read (TLDR) com informações resumidas para uso imediato do cluster.
 
-Também temos um FAQ com material recente. Favor ler as dúvidas existentes caso tenha problemas. Naturalmente, por mais que tentemos, haverão gaps de informações nesta documentação, assim como possíveis problemas não recorrentes. Neste caso, pode-se pedir ajuda no grupo do Telegram, tentando se atentar a algumas [recomendações de etiqueta de perguntas](user/perguntas.md)
+Também temos um FAQ com material recente. Favor ler as dúvidas existentes caso tenha problemas. Naturalmente, por mais que tentemos, haverão gaps de informações nesta documentação, assim como possíveis problemas não recorrentes. Neste caso, deve-se pedir ajuda no grupo do Telegram. Dicas de como [fazer perguntas melhores para resolver o seu problema mais rápido](user/perguntas.md).
 
 Por fim, temos uma seção com soluções paliativas para auxiliar o uso imediato do cluster, mesmo ele ainda não estando em sua forma final.
 
