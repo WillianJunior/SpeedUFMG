@@ -1,11 +1,17 @@
 ## Checking network usage
+```command
 sar -n DEV 1
+```
 
 ## Checking IO usage
+```command
 iostat -x 1 -m
+```
 
 ## Checking which process is using IO
+```command
 iotop -o
+```
 
 # IO Tests
 
