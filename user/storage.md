@@ -94,4 +94,6 @@ Operações de I/O podem degradar severamente o desempenho de suas aplicações.
 
 Historicamente ela deu muito trabalho. Como está em uma máquina legada, está sendo deixada para trás. Além disso, ela tem muitos problemas com permissões de usuários. 
 
+Eventualmente ela será removida do cluster. O que isso significa: não será possível acessar o storage dela diretamente pela phocus4 (e demais) no path /home_cerberus. O que isso não significa: a cerberus será desligada, ou terá seus dados apagados.
+
 TLDR: não começem a usá-la. Quem já usa, pode continuar usando ela como storage frio, mas escreva seus arquivos novos em outro storage global.
