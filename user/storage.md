@@ -75,9 +75,12 @@ Operações de I/O podem degradar severamente o desempenho de suas aplicações.
 <img width="740" height="336" alt="image" src="https://github.com/user-attachments/assets/025f3db3-2042-4f2e-9158-309082b3893d" />
 
 
-## Execução com gargalo de I/O. Vai demorar para sair os resultados:
+## Execução com gargalo de I/O. Provavelmente está tendo muita escrita. Vai demorar para sair os resultados:
 
 <img width="740" height="222" alt="image" src="https://github.com/user-attachments/assets/02b6bbf8-7aa3-4089-9c87-bed7ed70b525" />
+
+## Não necessariamente gargalando, mas muitos dados são guardados na file cache, provavelmente trabalhando com mais de 60 GB de dados:
+<img width="684" height="222" alt="image" src="https://github.com/user-attachments/assets/6f9c10f1-3b8e-4df4-9262-e0cbef4ba00a" />
 
 
 ## Algumas recomendações:
