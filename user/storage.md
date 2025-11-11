@@ -90,6 +90,8 @@ Operações de I/O podem degradar severamente o desempenho de suas aplicações.
  4. Meus arquivos não são tão grandes, mas fica aparecendo PSI de I/O. O que está acontecendo? Provavelmente você está escrevendo muito. Se houver muitas escritas, escreva em `/scratch`, e ao fim da execução copie para `/sonic_home` ou `/snfs1`. Lembre-se, se o job morrer antes **seus dados serão perdidos!!!**. Então cuidado.
  5. E as minhas dependências (venvs e conda envs), onde deixo elas? Deixe em `/sonic_home`. Ele foi otimizado para acesso de arquivos pequenos.
 
+**Como saber se estou esperando a toa o disco?** Olha o `htop` em PSI de I/O. Se tiver próximo de 0%, tá ok, se não, vc tá esperando a toa...
+
 # Sobre a `/home_cerberus`
 
 Historicamente ela deu muito trabalho. Como está em uma máquina legada, está sendo deixada para trás. Além disso, ela tem muitos problemas com permissões de usuários. 
