@@ -1,6 +1,8 @@
-Checking gpu usage with `nvidia-smi dmon -s pumc -d 10`
-Using systemd to start the deamon to always log
-Using logrotate weekly to avoid large files
+Checking gpu usage with `nvidia-smi dmon -s pumc -d 10`.
+Using systemd to start the deamon to always log.
+Using logrotate weekly to avoid large files.
+
+Don't forget to `systemctl enable --now my_gpu_usage`.
 
 ## /usr/local/bin/my_gpu_usage.sh
 ```command
