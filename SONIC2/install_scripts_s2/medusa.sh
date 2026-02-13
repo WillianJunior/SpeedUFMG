@@ -16,8 +16,19 @@ systemctl restart sshd.service
 
 
 # Network ================================================================
- # - set static ip or dhcp for speed network
+ME=medusa5
+MY_IP_SPEED=192.168.62.101
+NET_INTF=eno2 # check correct interface
+GATEWAY_SPEED=192.168.62.254
 
+hostnamectl set-hostname $ME
+nmcli con mod $NET_INTF +ipv4.addresses ${MY_IP_SPEED}/24
+nmcli con mod $NET_INTF +ipv4.routes "192.168.62.0/24 $GATEWAY_SPEED"
+nmcli con mod $NET_INTF ipv4.method manual
+nmcli con mod $NET_INTF connection.autoconnect yes
+nmcli con down $NET_INTF && nmcli con up $NET_INTF
+
+# TODO ===============> use the speed DHCP
 
 # LDAP ===================================================================
 dnf install -y openldap-clients sssd sssd-ldap oddjob-mkhomedir
