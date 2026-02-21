@@ -119,9 +119,67 @@ modules
 
 # Slurm ==================================================================
 
-slurm client
- - munge
- - slurmd
+# Allow slurm controller to send requests
+firewall-cmd --permanent --add-port=6817-6818/tcp
+firewall-cmd --reload
+
+SLURM_UID=38000
+SLURM_GID=38010
+MUNGE_UID=48000
+MUNGE_GID=48010
+useradd -r -u $SLURM_UID -g $SLURM_GID -d /var/lib/slurm -s /sbin/nologin slurm
+useradd -r -u $MUNGE_UID -g $MUNGE_GID -d /var/lib/munge -s /sbin/nologin munge
+
+
+
+dnf install -y munge munge-libs munge-devel
+# copy munge key file
+
+chmod 0700 /etc/munge/
+chmod 0711 /var/lib/munge/
+chmod 0700 /var/log/munge/
+mkdir /run/munge
+chmod 0755 /run/munge
+touch /var/log/munge/munged.log
+chown munge /etc/munge/ /var/lib/munge/ /var/log/munge/ /run/munge /var/log/munge/munged.log
+chgrp munge /etc/munge/ /var/lib/munge/ /var/log/munge/ /run/munge /var/log/munge/munged.log
+
+
+dnf install -y pam-devel perl-ExtUtils-MakeMaker readline-devel systemd-devel dbus-devel
+
+wget https://download.schedmd.com/slurm/slurm-23.02.4.tar.bz2
+tar --bzip -x -f slurm-23.02.4.tar.bz2; 
+cd slurm-23.02.4
+mkdir /usr/local/slurm
+mkdir /lib/security
+./configure --prefix=/usr/local/slurm/ --without-hdf5 --enable-pam --with-pam_dir=/lib/security --sysconfdir=/etc/slurm
+
+TODO: --enable-plugins=all, reconfigure, rebuild
+
+make -j
+make install
+make contrib -j
+cd contribs/pam_slurm_adopt/
+make install
+cd ../..
+ldconfig -n /usr/local/slurm/lib/
+
+
+mkdir /usr/local/slurm/etc
+
+echo 'export PATH=/usr/local/slurm/bin:$PATH' | tee /etc/profile.d/slurm.sh > /dev/null
+chmod +x /etc/profile.d/slurm.sh
+
+echo "d /run/slurm 0770 slurm slurm -" > /etc/tmpfiles.d/slurm.conf
+systemd-tmpfiles --create
+
+ln -s /sonic_etc/slurm /etc/slurm
+
+cp etc/slurmd.service /etc/systemd/system/
+systemctl enable --now slurmd.service
+
+
+# TODO: testar pam, resolver gres 1gpu 32cores
 
 slurm PAM
 
