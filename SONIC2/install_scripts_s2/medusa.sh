@@ -16,11 +16,6 @@ dnf install -y ansible
 
 # TODO: configure htop globally with PSI (PSI already showing)
 
-# Security/ssh ===========================================================
-echo "AllowUsers root" >> /etc/ssh/sshd_config
-echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
-systemctl restart sshd.service
-
 
 # Network ================================================================
 export ME=medusa5
@@ -154,7 +149,6 @@ mkdir /usr/local/slurm
 mkdir /lib/security
 ./configure --prefix=/usr/local/slurm/ --without-hdf5 --enable-pam --with-pam_dir=/lib/security --sysconfdir=/etc/slurm
 
-TODO: --enable-plugins=all, reconfigure, rebuild
 
 make -j
 make install
@@ -179,8 +173,34 @@ cp etc/slurmd.service /etc/systemd/system/
 systemctl enable --now slurmd.service
 
 
-# TODO: testar pam, resolver gres 1gpu 32cores
+# Security/ssh/pam =======================================================
+# if .so from pam are not at lib64
+ln -s /usr/lib/security/pam_*slurm* /usr/lib64/security/
 
-slurm PAM
+echo "PubkeyAuthentication yes" >> /etc/ssh/sshd_config
+echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
+echo "UsePAM yes" >> /etc/ssh/sshd_config
+echo "PermitRootLogin root" >> /etc/ssh/sshd_config
+
+# remove/commit the following line from /etc/ssh/sshd_config
+# Include /etc/ssh/sshd_config.d/*.conf
+
+systemctl restart sshd.service
+
+# prepend in /etc/pam.d/sshd:
+# account required pam_slurm_adopt.so
+# auth required pam_succeed_if.so user ingroup speed
+# auth sufficient pam_permit.so
+
+# remove/comment in /etc/pam.d/sshd:
+# auth       substack     password-auth
+# auth       include      postlogin
+
+
+
+
+
+
+# TODO: resolver gres 1gpu 32cores
 
 GRES 1 GPU
