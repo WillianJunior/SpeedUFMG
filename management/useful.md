@@ -16,3 +16,17 @@ A montagem deve ter alguns argumentos importantes:
 cerberus:/home /home_cerberus fuse.sshfs x-systemd.automount,_netdev,users,exec,IdentityFile=/root/.ssh/id_rsa,allow_other,reconnect,ServerAliveInterval=15,ServerAliveCountMax=3,follow_symlinks 0 0
 ```
 O método acima é de auto-mount on-demand, ou seja, a home_cerberus será montada assim que o primeiro acesso a ela for realizado. Isso permite que a cerberus realize seu boot antes de qualquer job entrar em execução, dado que para submeter um job é necessario passar pela cerberus/phocus4.
+
+
+# Limitando memória system-wide
+
+vim /etc/systemd/system/user.slice.d/override.conf
+
+[Slice]
+# Limit RAM usage for all users combined
+MemoryMax=1G
+# Limit RAM + Swap usage for all users combined
+# If MemoryMax is 8G and you want 2G of actual swap, set this to 10G
+MemorySwapMax=2G
+
+systemctl daemon-reload
