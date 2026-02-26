@@ -21,13 +21,13 @@ O método acima é de auto-mount on-demand, ou seja, a home_cerberus será monta
 # Limitando memória system-wide
 
 ```command
-vim /etc/systemd/system/user.slice.d/override.conf
+vim /etc/systemd/system/user-.slice.d/limits.conf
 ```
 
 ```ini
 [Slice]
 # Limit RAM usage for all users combined
-MemoryMax=1G
+MemoryMax=4G
 # Limit RAM + Swap usage for all users combined
 # If MemoryMax is 8G and you want 2G of actual swap, set this to 10G
 MemorySwapMax=2G
