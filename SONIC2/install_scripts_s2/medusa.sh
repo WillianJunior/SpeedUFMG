@@ -30,6 +30,15 @@ nmcli con mod $NET_INTF ipv4.method auto # currently the 192.168.62.0/24 network
 nmcli con mod $NET_INTF connection.autoconnect yes
 nmcli con down $NET_INTF && nmcli con up $NET_INTF
 
+# Security ================================================================
+echo "PubkeyAuthentication yes" >> /etc/ssh/sshd_config
+echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
+echo "UsePAM yes" >> /etc/ssh/sshd_config
+echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
+systemctl restart sshd.service
+
+
+
 # TODO ===============> use the speed DHCP
 
 # LDAP ===================================================================
@@ -177,15 +186,8 @@ systemctl enable --now slurmd.service
 # if .so from pam are not at lib64
 ln -s /usr/lib/security/pam_*slurm* /usr/lib64/security/
 
-echo "PubkeyAuthentication yes" >> /etc/ssh/sshd_config
-echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
-echo "UsePAM yes" >> /etc/ssh/sshd_config
-echo "PermitRootLogin root" >> /etc/ssh/sshd_config
-
 # remove/commit the following line from /etc/ssh/sshd_config
 # Include /etc/ssh/sshd_config.d/*.conf
-
-systemctl restart sshd.service
 
 # prepend in /etc/pam.d/sshd:
 # account required pam_slurm_adopt.so
