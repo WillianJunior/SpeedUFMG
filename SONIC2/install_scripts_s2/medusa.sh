@@ -37,8 +37,11 @@ dnf install -y ansible
 
 # TODO: configure htop globally with PSI (PSI already showing)
 
-
 # TODO ===============> use the speed DHCP
+
+
+# TODO ============== copy host files
+
 
 # LDAP ===================================================================
 dnf install -y openldap-clients sssd sssd-ldap oddjob-mkhomedir
@@ -73,10 +76,12 @@ dnf install -y  nfs-utils
 mkdir /sonic_etc
 mkdir /sonic_modules
 mkdir /sonic_home
+mkdir /snfs1
 
-echo "192.168.62.100:/nfs/exports/sonic_etc /sonic_etc nfs defaults,_netdev 0 0" >> /etc/fstab
-echo "192.168.62.100:/nfs/exports/sonic_modules /sonic_modules nfs defaults,_netdev 0 0" >> /etc/fstab
-echo "192.168.62.100:/nfs/exports/sonic_home /sonic_home nfs defaults,_netdev 0 0" >> /etc/fstab
+echo "tails1:/nfs/exports/sonic_etc /sonic_etc nfs defaults,_netdev 0 0" >> /etc/fstab
+echo "tails1:/nfs/exports/sonic_modules /sonic_modules nfs defaults,_netdev 0 0" >> /etc/fstab
+echo "tails1:/nfs/exports/sonic_home /sonic_home nfs defaults,_netdev 0 0" >> /etc/fstab
+echo "sonik2:/nfs/exports/snfs1 /snfs1 nfs defaults,acl,_netdev 0 0" >> /etc/fstab
 
 systemctl daemon-reload
 mount -a
@@ -86,22 +91,27 @@ mount -a
 umount /home
 vim /etc/fstab # remove /home mount line
 lvdisplay # to find the name of the home logical volume
-lvchange -an /dev/rl_cisteina/home # deactivate volume
-lvremove /dev/rl_cisteina/home # kill volume
-lvcreate -n scratch -L 1T rl_cisteina
-lvcreate -n storage rl_cisteina -l 100%FREE
+export VOLUME=rl
+export VOLUME_OLD=/dev/$VOLUME/home
+lvchange -an $VOLUME_OLD # deactivate volume
+lvremove $VOLUME_OLD # kill volume
+lvcreate -n scratch -L 1T $VOLUME
+lvcreate -n storage $VOLUME -l 100%FREE
 
 # Format volumes
-mkfs.xfs /dev/rl_cisteina/scratch
-mkfs.xfs /dev/rl_cisteina/storage
+mkfs.xfs /dev/$VOLUME/scratch
+mkfs.xfs /dev/$VOLUME/storage
 
 # Mount volumes
 mkdir /scratch
 mkdir /storage
-echo '/dev/rl_cisteina/scratch   /scratch   xfs   defaults   0 0' >> /etc/fstab
-echo '/dev/rl_cisteina/storage   /storage   xfs   defaults   0 0' >> /etc/fstab
+echo "/dev/$VOLUME/scratch   /home      xfs   defaults   0 0" >> /etc/fstab # temporary... change mount to /scratch later
+echo "/dev/$VOLUME/storage   /storage   xfs   defaults   0 0" >> /etc/fstab
 systemctl daemon-reload
 mount -a
+
+
+medusa4 e 6 pararam aqui... ===================================
 
 # Modules ================================================================
 # Install and source module across all users
