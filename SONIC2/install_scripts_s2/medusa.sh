@@ -6,24 +6,13 @@
 # 4. mounting sonic_home -> TODO: should be /home
 # Change to ansible
 
-# Base ===================================================================
-dnf install -y epel-release
-dnf update -y
-grubby --update-kernel=ALL --args="systemd.unified_cgroup_hierarchy=1 psi=1"
-dnf groupinstall -y "Development Tools"
-dnf install -y htop cmake
-dnf install -y ansible
-
-# TODO: configure htop globally with PSI (PSI already showing)
-
-
 # Network ================================================================
-export ME=medusa5
+# export ME=medusa5
 export MY_IP_SPEED=192.168.62.101
 export NET_INTF=eno2
 export GATEWAY_SPEED=192.168.62.254
 
-hostnamectl set-hostname $ME
+# hostnamectl set-hostname $ME
 nmcli con mod $NET_INTF +ipv4.addresses ${MY_IP_SPEED}/24
 nmcli con mod $NET_INTF +ipv4.routes "192.168.62.0/24 $GATEWAY_SPEED"
 nmcli con mod $NET_INTF ipv4.method auto # currently the 192.168.62.0/24 network doesn't forward to the internet, thus the CRC IP is needed.
@@ -37,6 +26,16 @@ echo "UsePAM yes" >> /etc/ssh/sshd_config
 echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
 systemctl restart sshd.service
 
+
+# Base ===================================================================
+dnf install -y epel-release
+dnf update -y
+grubby --update-kernel=ALL --args="systemd.unified_cgroup_hierarchy=1 psi=1"
+dnf groupinstall -y "Development Tools"
+dnf install -y htop cmake
+dnf install -y ansible
+
+# TODO: configure htop globally with PSI (PSI already showing)
 
 
 # TODO ===============> use the speed DHCP
