@@ -160,8 +160,13 @@ systemctl enable --now beegfs-client
 #  3. Read/write performance: spikes... If lucky, file is in the same node (basically bare metal performance), it not, network bound...
 beegfs entry set --num-targets 1 /snfs2
 
+
 # Show all nodes (clients included)
 beegfs node list
+
+# LAST: disable new servers from entering
+echo "registration-disable = true" >> /etc/beegfs/beegfs-mgmtd.toml
+systemctl status beegfs-mgmtd.service 
 
 # +++ On node failure +++++++++++++++
 # Can delete storage targets and return them later with the same name. no file lost
@@ -183,9 +188,24 @@ firewall-cmd --reload
 /opt/beegfs/sbin/beegfs-setup-storage -p /storage/beegfs/storage -s 4 -m medusa4 -f
 systemctl enable --now beegfs-storage
 
-# Just client ===========================
+# Just client (rocky) =================
 curl -fsSL https://www.beegfs.io/release/beegfs_8.2/dists/beegfs-rhel9.repo | tee /etc/yum.repos.d/beegfs.repo
 dnf install -y beegfs-client
 echo "/snfs2 /etc/beegfs/beegfs-client.conf" > /etc/beegfs/beegfs-mounts.conf
 /opt/beegfs/sbin/beegfs-setup-client -m medusa4
+# COPY AUTH KEY
 systemctl enable --now beegfs-client
+
+
+# Just client (ubuntu) ================
+wget https://www.beegfs.io/release/beegfs_8.2/gpg/GPG-KEY-beegfs -O /etc/apt/trusted.gpg.d/beegfs.asc
+wget https://www.beegfs.io/release/beegfs_8.2/dists/beegfs-noble.list -O /etc/apt/sources.list.d/beegfs.list
+apt update
+apt install beegfs-client -y
+/opt/beegfs/sbin/beegfs-setup-client -m medusa4
+echo "/snfs2 /etc/beegfs/beegfs-client.conf" > /etc/beegfs/beegfs-mounts.conf
+# COPY AUTH KEY
+# ADD HOSTS
+systemctl enable --now beegfs-client
+ls /snfs2/root
+
