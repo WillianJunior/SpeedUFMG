@@ -110,10 +110,10 @@ sed -i 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/selinux/config
 
 # === BeeGFS =================================================
 
-# Full server with management, metadata, and storage =====================
+# Full server with management, metadata, storage, and client =====================
 # Install deps
 curl -fsSL https://www.beegfs.io/release/beegfs_8.2/dists/beegfs-rhel9.repo | tee /etc/yum.repos.d/beegfs.repo
-dnf install -y beegfs-mgmtd beegfs-meta beegfs-storage beegfs-tools
+dnf install -y beegfs-mgmtd beegfs-meta beegfs-storage beegfs-client beegfs-tools
 
 # Generate auth key. Use same for other nodes...
 dd if=/dev/random of=/etc/beegfs/conn.auth bs=128 count=1
@@ -142,6 +142,34 @@ systemctl enable --now beegfs-mgmtd.service beegfs-meta.service beegfs-storage.s
 export BEEGFS_TLS_DISABLE='true'
 export BEEGFS_MGMTD_ADDR=medusa4:8010
 beegfs node list
+
+# Set targets alisases
+beegfs target list
+beegfs target set-alias target_0-69A244A0-4 target_medusa4_storage
+beegfs target set-alias target_0-69A25721-6 target_medusa6_storage
+# other targets...
+
+# Mount client locally for testing
+echo "/snfs2 /etc/beegfs/beegfs-client.conf" > /etc/beegfs/beegfs-mounts.conf
+systemctl enable --now beegfs-client
+
+# Disable stripping:
+#  1. Nodes tend to fail a lot here... On failure, better to lose the files on a single node than to corrupt files of multiple nodes
+#  2. On node failure, easier to fix/manage.
+#  3. Read/write performance: spikes... If lucky, file is in the same node (basically bare metal performance), it not, network bound...
+beegfs entry set --num-targets 1 /snfs2
+
+# +++ On node failure +++++++++++++++
+# Can delete storage targets and return them later with the same name. no file lost
+beegfs target list --state                   # check targets
+beegfs target delete target_medusa6_storage  # delete the target
+
+# Before recovering, stop all clients on each node...
+systemctl stop beegfs-client
+
+# When the target connects to mgmt, it has a target alias. Just set the old alias
+beegfs target set-alias target_0-69A25721-6 target_medusa6_storage  
+
 
 # Just storage ===========================
 dnf install beegfs-storage -y
