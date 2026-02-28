@@ -1,4 +1,4 @@
-# Tested on medusa4
+# tested on medusa[4,6]
 
 # Network ================================================================
 # export ME=medusa5
@@ -104,68 +104,55 @@ echo "/dev/$VOLUME/storage   /storage   xfs   defaults   0 0" >> /etc/fstab
 systemctl daemon-reload
 mount -a
 
-
-
-# ========================================================================
-# ========================================================================
-# ========================================================================
-# ========================================================================
-# start beegfs...
-
-
 # Disable SELinux
 setenforce 0
 sed -i 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/selinux/config
 
-# === MANAGER =================================================
+# === BeeGFS =================================================
 
+# Full server with management, metadata, and storage =====================
 # Install deps
 curl -fsSL https://www.beegfs.io/release/beegfs_8.2/dists/beegfs-rhel9.repo | tee /etc/yum.repos.d/beegfs.repo
-dnf install -y beegfs-mgmtd beegfs-meta beegfs-storage beegfs-client beegfs-tools
+dnf install -y beegfs-mgmtd beegfs-meta beegfs-storage beegfs-tools
 
 # Generate auth key. Use same for other nodes...
-openssl rand -hex 32 | sudo tee /etc/beegfs/conn.auth
+dd if=/dev/random of=/etc/beegfs/conn.auth bs=128 count=1
+chown root:root /etc/beegfs/conn.auth
+chmod 400 /etc/beegfs/conn.auth
 
-# Create beegfs user
-groupadd --system beegfs
-useradd --system --gid beegfs --home-dir /var/lib/beegfs --shell /sbin/nologin beegfs
-
-# Setup management service
-mkdir -p /var/lib/beegfs/mgmtd
-echo "storeMgmtdDirectory = /var/lib/beegfs/mgmtd" > /etc/beegfs/beegfs-mgmtd.conf
-echo "connAuthFile = /etc/beegfs/conn.auth" >> /etc/beegfs/beegfs-mgmtd.conf
-/opt/beegfs/sbin/beegfs-mgmtd --init
-
+# Create configs for mgmt, meta, storage
+/opt/beegfs/sbin/beegfs-mgmtd --init --tls-disable true --auth-file /etc/beegfs/conn.auth
 echo "tls-disable = true" >> /etc/beegfs/beegfs-mgmtd.toml
-chown -R beegfs:beegfs /var/lib/beegfs
-chmod 700 /var/lib/beegfs
-systemctl enable --now beegfs-mgmtd.service
+/opt/beegfs/sbin/beegfs-setup-meta -p /storage/beegfs/meta -s 4 -m medusa4 -f
+/opt/beegfs/sbin/beegfs-setup-storage -p /storage/beegfs/storage -s 4 -m medusa4 -f
 
-# Setup metadata service
-mkdir -p /storage/beegfs/metadata
-chown -R beegfs:beegfs /storage/beegfs/metadata
-chmod 700 /storage/beegfs/metadata
-echo "sysMgmtdHost = medusa4" > /etc/beegfs/beegfs-meta.conf
-echo "storeMetaDirectory = /storage/beegfs/metadata" >> /etc/beegfs/beegfs-meta.conf
-echo "connAuthFile = /etc/beegfs/conn.auth" >> /etc/beegfs/beegfs-meta.conf
-systemctl enable --now beegfs-meta
+# Open ports
+firewall-cmd --add-port=8003/tcp --permanent # storage
+firewall-cmd --add-port=8005/tcp --permanent # meta
+firewall-cmd --add-port=8008/tcp --permanent # mgmt
+firewall-cmd --add-port=8010/tcp --permanent # mgmt
+firewall-cmd --add-port=8003/udp --permanent # storage
+firewall-cmd --add-port=8005/udp --permanent # meta
+firewall-cmd --add-port=8008/udp --permanent # mgmt
+firewall-cmd --reload
 
-# Setup storage service
-mkdir -p /storage/beegfs/storage
-chown -R beegfs:beegfs /storage/beegfs/storage
-chmod 700 /storage/beegfs/storage
-echo "sysMgmtdHost = medusa4" > /etc/beegfs/beegfs-storage.conf
-echo "storeStorageDirectory = /storage/beegfs/storage" >> /etc/beegfs/beegfs-storage.conf
-echo "connAuthFile = /etc/beegfs/conn.auth" >> /etc/beegfs/beegfs-storage.conf
+systemctl enable --now beegfs-mgmtd.service beegfs-meta.service beegfs-storage.service
+
+# Check nodes/targets
+export BEEGFS_TLS_DISABLE='true'
+export BEEGFS_MGMTD_ADDR=medusa4:8010
+beegfs node list
+
+# Just storage ===========================
+dnf install beegfs-storage -y
+firewall-cmd --add-port=8003/udp --permanent
+firewall-cmd --add-port=8003/tcp --permanent
+firewall-cmd --reload
+/opt/beegfs/sbin/beegfs-setup-storage -p /storage/beegfs/storage -s 4 -m medusa4 -f
 systemctl enable --now beegfs-storage
 
-# === \MANAGER ================================================
-
-
-TODO: 
- - install/configure client
- - mount and test storage
- - create a medusa pool
- - add another medusa to the pool
-
-
+# Just client ===========================
+curl -fsSL https://www.beegfs.io/release/beegfs_8.2/dists/beegfs-rhel9.repo | tee /etc/yum.repos.d/beegfs.repo
+dnf install -y beegfs-client
+echo "/snfs2 /etc/beegfs/beegfs-client.conf" > /etc/beegfs/beegfs-mounts.conf
+systemctl enable --now beegfs-client
