@@ -1,4 +1,5 @@
 # tested on medusa[4,6]
+beegfs configuration
 
 # Network ================================================================
 # export ME=medusa5
@@ -147,10 +148,10 @@ beegfs node list
 beegfs target list
 beegfs target set-alias target_0-69A244A0-4 target_medusa4_storage
 beegfs target set-alias target_0-69A25721-6 target_medusa6_storage
-# other targets...
 
 # Mount client locally for testing
 echo "/snfs2 /etc/beegfs/beegfs-client.conf" > /etc/beegfs/beegfs-mounts.conf
+/opt/beegfs/sbin/beegfs-setup-client -m medusa4
 systemctl enable --now beegfs-client
 
 # Disable stripping:
@@ -158,6 +159,9 @@ systemctl enable --now beegfs-client
 #  2. On node failure, easier to fix/manage.
 #  3. Read/write performance: spikes... If lucky, file is in the same node (basically bare metal performance), it not, network bound...
 beegfs entry set --num-targets 1 /snfs2
+
+# Show all nodes (clients included)
+beegfs node list
 
 # +++ On node failure +++++++++++++++
 # Can delete storage targets and return them later with the same name. no file lost
@@ -183,4 +187,5 @@ systemctl enable --now beegfs-storage
 curl -fsSL https://www.beegfs.io/release/beegfs_8.2/dists/beegfs-rhel9.repo | tee /etc/yum.repos.d/beegfs.repo
 dnf install -y beegfs-client
 echo "/snfs2 /etc/beegfs/beegfs-client.conf" > /etc/beegfs/beegfs-mounts.conf
+/opt/beegfs/sbin/beegfs-setup-client -m medusa4
 systemctl enable --now beegfs-client
