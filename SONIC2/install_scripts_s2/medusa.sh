@@ -35,7 +35,12 @@ dnf groupinstall -y "Development Tools"
 dnf install -y htop cmake
 dnf install -y ansible
 
-# TODO: configure htop globally with PSI (PSI already showing)
+# Load htop config from cluster, apply to root, and set skeleton
+cp /sonic_etc/skel/.config/htop/htoprc ~/.config/htop/htoprc 
+mkdir -p /etc/skel/.config/htop
+cp ~/.config/htop/htoprc /etc/skel/.config/htop/
+chmod 644 /etc/skel/.config/htop/htoprc
+
 
 # TODO ===============> use the speed DHCP
 
