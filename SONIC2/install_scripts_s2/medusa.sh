@@ -115,9 +115,6 @@ echo "/dev/$VOLUME/storage   /storage   xfs   defaults   0 0" >> /etc/fstab
 systemctl daemon-reload
 mount -a
 
-
-medusa4 e 6 pararam aqui... ===================================
-
 # Modules ================================================================
 # Install and source module across all users
 dnf install -y environment-modules
@@ -141,17 +138,18 @@ modules
 firewall-cmd --permanent --add-port=6817-6818/tcp
 firewall-cmd --reload
 
-SLURM_UID=38000
-SLURM_GID=38010
-MUNGE_UID=48000
-MUNGE_GID=48010
+export SLURM_UID=3010
+export SLURM_GID=3000
+export MUNGE_UID=970
+export MUNGE_GID=970
+groupadd -g $SLURM_GID slurm
+groupadd -g $MUNGE_GID munge
 useradd -r -u $SLURM_UID -g $SLURM_GID -d /var/lib/slurm -s /sbin/nologin slurm
 useradd -r -u $MUNGE_UID -g $MUNGE_GID -d /var/lib/munge -s /sbin/nologin munge
 
 
-
 dnf install -y munge munge-libs munge-devel
-# copy munge key file
+# copy munge key file in /etc/munge/munge.key
 
 chmod 0700 /etc/munge/
 chmod 0711 /var/lib/munge/
@@ -159,8 +157,10 @@ chmod 0700 /var/log/munge/
 mkdir /run/munge
 chmod 0755 /run/munge
 touch /var/log/munge/munged.log
-chown munge /etc/munge/ /var/lib/munge/ /var/log/munge/ /run/munge /var/log/munge/munged.log
-chgrp munge /etc/munge/ /var/lib/munge/ /var/log/munge/ /run/munge /var/log/munge/munged.log
+chown -R munge /etc/munge/ /var/lib/munge/ /var/log/munge/ /run/munge /var/log/munge/munged.log
+chgrp -R munge /etc/munge/ /var/lib/munge/ /var/log/munge/ /run/munge /var/log/munge/munged.log
+systemctl enable --now munge.service
+systemctl status munge.service
 
 
 dnf install -y pam-devel perl-ExtUtils-MakeMaker readline-devel systemd-devel dbus-devel
@@ -183,10 +183,11 @@ ldconfig -n /usr/local/slurm/lib/
 
 
 mkdir /usr/local/slurm/etc
-
+mkdir /var/log/slurm
+chown slurm /var/log/slurm
+chgrp slurm /var/log/slurm
 echo 'export PATH=/usr/local/slurm/bin:$PATH' | tee /etc/profile.d/slurm.sh > /dev/null
 chmod +x /etc/profile.d/slurm.sh
-
 echo "d /run/slurm 0770 slurm slurm -" > /etc/tmpfiles.d/slurm.conf
 systemd-tmpfiles --create
 
@@ -212,8 +213,7 @@ ln -s /usr/lib/security/pam_*slurm* /usr/lib64/security/
 # auth       substack     password-auth
 # auth       include      postlogin
 
-
-
+systemctl restart sshd
 
 
 
