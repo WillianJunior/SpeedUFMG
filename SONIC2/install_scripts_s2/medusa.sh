@@ -1,4 +1,4 @@
-# tested on medusa5
+# tested on medusa[4-6]
 # BAD:
 # 1. using static IP on SPEED
 # 2. using CRC IP for internet
