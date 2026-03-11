@@ -27,4 +27,8 @@ sminusage(){
 }
 
 
+# Setting up max 2 nodes per user for partition
+sacctmgr add qos max2nodes MaxNodesPerUser=2
+# at slurm.conf: 
+# PartitionName=...  QOS=max2nodes
 
