@@ -32,3 +32,37 @@ sacctmgr add qos max2nodes MaxNodesPerUser=2
 # at slurm.conf: 
 # PartitionName=...  QOS=max2nodes
 
+
+# Get top 10 jobs from last 30 days with the highest job wait time
+TOP_N=10; L_DAYS=30; sacct --starttime=$(date -d "$L_DAYS days ago" +"%Y-%m-%d") \
+      --format=JobID,Submit,Start,State,User --parsable2 | \
+awk -F'|' '
+NR>1 && $4=="COMPLETED" {
+    # Convert submit and start to seconds since epoch
+    cmd="date -d \""$2"\" +%s"; cmd | getline submit_sec; close(cmd);
+    cmd="date -d \""$3"\" +%s"; cmd | getline start_sec; close(cmd);
+    wait_sec=start_sec-submit_sec;
+    
+    # Accumulate max wait per user
+    if(wait_sec>user_max[$5]) user_max[$5]=wait_sec
+}
+END {
+    # Print user and their max wait time in hours
+    for(u in user_max) printf "%s|%.2f\n", u, user_max[u]/3600
+}' | sort -t'|' -k2 -nr | head -n $TOP_N
+
+
+# Get top 10 jobs from last 30 days with highest waiting time
+TOP_N=10; L_DAYS=30; sacct --starttime=$(date -d "$L_DAYS days ago" +"%Y-%m-%d") \
+      --format=JobID,Submit,Start,State,User --parsable2 | \
+awk -F'|' '
+NR>1 && $4=="COMPLETED" {
+    # Convert submit and start to seconds since epoch
+    cmd="date -d \""$2"\" +%s"; cmd | getline submit_sec; close(cmd);
+    cmd="date -d \""$3"\" +%s"; cmd | getline start_sec; close(cmd);
+    wait_sec=start_sec-submit_sec;
+
+    # Store job info
+    print wait_sec "|" $1 "|" $5
+}' | sort -t'|' -k1 -nr | head -n $TOP_N | \
+awk -F'|' '{printf "JobID: %s | User: %s | WaitTime: %.2f hours\n", $2, $3, $1/3600}'
