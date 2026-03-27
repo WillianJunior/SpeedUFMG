@@ -177,7 +177,7 @@ Na prática, uma vez que você está dentro de uma gorgona você pode rodar seu 
 1. Abrir uma conexão com alguma gorgona que esteja disponível
 ```console
 username@phocus4:/snfs2/username$ srun --partition=gorgonas --time=1:00:00 --pty bash
-username@gorgona3:/snfs2/username
+username@gorgona3:/snfs2/username$
 ```
 
 2. Verifique os modulos disponíveis:
