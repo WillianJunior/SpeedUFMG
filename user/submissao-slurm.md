@@ -1,122 +1,188 @@
-# Como Submeter Jobs?
+# Como Funciona o Cluster?
 
-Existem dois tipos principais de jobs: interativos e batch jobs. A diferença é que os jobs interativos servem para quando você ainda está testando seu código e (obviamente) você não conseguiu rodá-lo localmente. Os batch jobs é quando você já tem o código pronto e/ou você tem que escalar o projeto. Vamos detalhar cada um deles a seguir.
+Para seguir essa documentação, asusme-se que você já tem acesso ao nó de login `phocus4`. Existem duas formas de usar as máquinas do cluster: (i) acessando alguma máquina direamente ou (ii) submetendo um script com seus programas/testes a serem executados. Chamamos essas máquina de nós computacionais (ou apenas nós). Ao acessar uma máquina (ou nó) é garantido que só você terá acesso a ela. Esse acesso tem uma duração máxima de tempo que você pode pedir. Chamamos essas alocações de *jobs*. Jobs são compostos pelos recursos pedidos e o tempo requisitado. Por exemplo, pode-se pedir "quero 1 nó com a GPU 4090 por no máximo 20 horas", ou "gostaria de 2 nós, cada um com 2 GPUs 5090 por 30 minutos". 
 
-## Pré-requisitos
-Na primeira interação com o cluster você deve garantir que seus diretórios de uso pessoal estão devidamente configuradas. Para isso, sugere-se primeiro rodar os seguintes comandos, conforme demonstrado abaixo (assume-se um usuário com nome `username` de pós-graduação):
-```console
-username@phocus4:~$ pwd
-/home/pos/username
-username@phocus4:~$ ls -a
-snap
-```
-Se isso aparecer significa que você já está dentro da seu diretório local. Se você tentar conectar direto no console das gorgonas com o comando abaixo retornará o seguinte erro:
+Além de você, existem outros usuários do cluster querendo alocações de jobs. Todos usuários pedem recursos por meio de jobs, sendo esses jobs enfileirados automaticamente. Assim que os recursos necessários para o primeiro job da fila estiverem disponíveis, ele será executado. Quando jobs encerram, os recursos (nós) são liberados, e podem ser usados por outros jobs. Como existem vários nós, vários jobs podem estar em execução em um dado momento. Adicionalmente, é possível submeter quantos jobs forem necessários, não havendo limite de uso. Ou seja, se o cluster estiver livre, nada lhe impede de usar 10 ou mais nós ao mesmo tempo para 10 jobs diferentes. Porém, o cluster tentará dividir o tempo de uso igualmente entre seus usuários. Caso você submeta 100 jobs em 24 horas quando ninguém estava usando o cluster, e em seguida aparecem novos jobs de outros usuários, seus jobs terão menos prioridade. O uso do cluster é medido em tempo com jobs em execução.
+
+# Acessando Nṍs Diretamente - Sessões Interativas
+
+A primeira forma de acessar nós é por meio de uma sessão interativa. Nesse modelo, você submeterá um job de alocação, e quando alocados os recursos, poderá acessá-los via terminal.
 
 ```console
 username@phocus4:~$ srun --partition=gorgonas --time=1:00:00 --pty bash
-slurmstepd: error: couldn't chdir to `/home/pos/username': No such file or directory: going to /tmp instead
-slurmstepd: error: couldn't chdir to `/home/pos/username': No such file or directory: going to /tmp instead
-username@gorgona1:/tmp$
+srun: job 16212 queued and waiting for resources
+srun: job 16212 has been allocated resources
+username@gorgona3:~$
 ```
-Vamos entender o comando:
+
+Vamos entender o comando acima:
+
 ```console
 srun --partition=gorgonas --time=1:00:00 --pty bash
 ```
 `srun` significa: "rode esse comando no cluster". <br>
-`--partition=gorgonas`  especifica qual o conjunto de máquinas que você quer usar sem especificar uma gorgona, deixando para o Slurm te alocar uma máquina que não tenha jobs rodando.<br>
-`--time=1:00:00` especifica por quanto tempo você pretende testar seus experimentos no bash. Ao fim desse tempo você será desconectado automaticamente.<br>
-`--pty bash` o bash que por sua vez é aberto com esse parametro. Este bash é análogo ao prompt de comando do seu PC, só que da gorgona para o qual você foi alocado para o Slurm.<br>
+`--partition=gorgonas`  especifica qual o conjunto de máquinas que você quer usar. A configuração dos nós disponíveis no cluster estão [aqui](nodes.md). <br>
+`--time=1:00:00` especifica por quanto tempo você gostaria de alocar os recursos. Ao fim desse tempo o job será forçosamente encerrado, independente do que esteja rodando.<br>
+`--pty bash` indica que a aplicação `bash` será aberta para você (i.e., terminal). Este bash é análogo ao prompt de comando do seu PC, só que do nó alocado a você.<br>
 
-O erro acima do `slurmstemp` não atrapalha a sua alocação, detalhado em [Storage](storage.md):
-
-"Outro detalhe importante é: assuma que, exceto por '/home/all_home/', nenhum usuário tem acesso a qualquer outro arquivo ou path local dos nós de computação. Por exemplo, um diretório de sua home 'gorgona1:/home/pos/username' não tem acesso liberado ao usuário 'username', ou necessariamente existe."<br>
-Ou seja: /home/pos não necesariamente existem nas gorgonas.<br>
-Enquanto os diretórios: `/home_cerberus/disk3/username` são o "acesso a um espaço de armazenamento visível pelo cluster inteiro" citado em: [Como funciona?](como-funciona.md)
-Portanto, antes de rodar o comando mude seu diretório para `/home_cerberus/disk3/username`. E certifique-se de ter sua `/home_cerberus` configurada. Para isso digite no prompt de comando:
+Ao encerrar o terminal (e.g., comando `exit`) o job será terminado, e o recurso poderá ser usado por outros jobs. Caso sua conexão de internet caia enquanto você está em uma sessão interativa da forma acima, sua alocação poderá ser encerrada em algum momento, mesmo que você volte a se conectar com o nó alocado. Para realizar uma alocação de um nó de forma mais permanente, é possível usar o seguinte comando:
 
 ```console
-username@phocus4:~$ cd /home_cerberus
-username@phocus4:/home_cerberus$ ls -a
-apt-proxy  aquota.user  bla2  cache  disk2  disk3  grad  hadoop  hdfs_namenode  lost+found  speed  vvsd
+username@phocus4:~$ salloc -p gorgonas --time=1:00:00
+salloc: Granted job allocation 16214
+salloc: Nodes gorgona3 are ready for job
+username@phocus4:~$ ssh gorgona3
+Last login: Thu Feb 26 17:43:51 2026 from 192.168.62.4
+username@gorgona3:~$ 
 ```
 
-Escolha a partição do disco que você quer usar `disk2` ou `disk3` e, se já não houver, crie um diretório com seu nome de usuário. **Tem que ser exatamente igual ao seu usuário**. Para saber qual disco usar pode-se rodar um comando `df -h` para saber como cada partição está sendo usada, e quais os recursos disponíveis.
+Note que os mesmo argumentos do `srun` valem para o `salloc`. Em seguida, é possível acessar diretamente (sem senha) o nó alocado. Você poderá se desconectar e reconectar via ssh quantas vezes vocês quiserem, enquanto possuirem a alocação. Por meio do comando `exit` pode-se fechar a conexão com um nó de computação ou encerrar a sua alocação.
 
 ```console
-username@phocus4:~$df -h
-Filesystem      Size  Used Avail Use% Mounted on
-tmpfs           1.6G  3.5M  1.6G   1% /run
-/dev/sda2        94G   28G   61G  32% /
-tmpfs           7.9G  8.0K  7.9G   1% /dev/shm
-tmpfs           5.0M     0  5.0M   0% /run/lock
-efivarfs         72K   47K   21K  70% /sys/firmware/efi/efivars
-/dev/sda1       476M  6.1M  469M   2% /boot/efi
-/dev/sda4       1.7T  457G  1.2T  28% /home
-tmpfs           1.6G   76K  1.6G   1% /run/user/127
-cerberus:/home  826G  654G  130G  84% /home_cerberus
-tmpfs           1.6G   60K  1.6G   1% /run/user/5778
-tmpfs           1.6G   60K  1.6G   1% /run/user/5822
-tmpfs           1.6G   60K  1.6G   1% /run/user/4518
-tmpfs           1.6G   60K  1.6G   1% /run/user/6968
-tmpfs           1.6G   56K  1.6G   1% /run/user/0
-tmpfs           1.6G   60K  1.6G   1% /run/user/6933
-tmpfs           1.6G   60K  1.6G   1% /run/user/9647
-tmpfs           1.6G   60K  1.6G   1% /run/user/5322
-tmpfs           1.6G   60K  1.6G   1% /run/user/9083
-tmpfs           1.6G   60K  1.6G   1% /run/user/5712
-tmpfs           1.6G   60K  1.6G   1% /run/user/9071
-tmpfs           1.6G   60K  1.6G   1% /run/user/6397
-tmpfs           1.6G   60K  1.6G   1% /run/user/4550
-tmpfs           1.6G   60K  1.6G   1% /run/user/7485
-tmpfs           1.6G   60K  1.6G   1% /run/user/5680
-username@phocus4:/home_cerberus# df -h disk2
-Filesystem      Size  Used Avail Use% Mounted on
-cerberus:/home  3,6T  3,6T     0 100% /home_cerberus
-username@phocus4:/home_cerberus# df -h disk3
-Filesystem      Size  Used Avail Use% Mounted on
-cerberus:/home  3,6T  3,3T  150G  96% /home_cerberus
-username@phocus4:~$ cd /disk3
-username@phocus4:/home_cerberus/disk3$ mkdir username
+username@gorgona3:~$ exit
+logout
+Connection to gorgona3 closed.
+username@phocus4:~$ exit
+exit
+salloc: Relinquishing job allocation 16215
+salloc: Job allocation 16215 has been revoked.
+username@phocus4:~$ 
 ```
 
-## Jobs interativos
-
-Embora não seja possível logar diretamente em um nó de computação é possível submeter um job para acessar esses nós diretamente. Ou seja, é submetido um job que retorna um terminal para os recursos alocados. Novamente, enquanto você tiver uma alocação, ninguém mais terá acesso aos recursos alocados a você nesse período de alocação. No tempo que você tiver alocado você poderá rodar o que quiser, ou até mesmo ficar sem rodar nada. Esse modo de alocação é recomendado para usuários que ainda estão no processo de preparação dos experimentos, testando sua aplicação em ambiente real de execução. Essa alocação pode ser alcançada da seguinte forma: 
+Como mencionado, não é possível acessar um nó que não lhe foi alocado:
 
 ```console
-username@phocus4:~$ srun -w gorgona10 --time 1:00:00 --pty bash
-srun: job 1704 queued and waiting for resources
-srun: job 1704 has been allocated resources
-username@gorgona10:~$
+username@phocus4:~$ ssh gorgona10
+Access denied by pam_slurm_adopt: you have no active jobs on this node
+
+Connection closed by 192.168.62.40 port 22
+username@phocus4:~$
 ```
 
-No comando acima, o nó específico gorgona10 será alocado por um período máximo de 1 hora. Porém, é possível que você não queira uma máquina específica, mas qualquer máquina em uma fila específica (filas são abordadas mais à frente):
+# Gerenciando Seus Jobs
+
+A fila de execução pode ser vista por meio do comando `squeue`, que mostra todos os jobs em execução (State=Running: ST=R) e esperando na fila (State=Pending: ST=PD). Para cada job é mostrado o ID do job, a partição usada, os nós alocados e o tempo atual de execução.
 
 ```console
-username@phocus4:~$ srun -N 2 -p gorgonas --time 00:20:00 --pty bash
-srun: job 1705 queued and waiting for resources
-srun: job 1705 has been allocated resources
-username@gorgona2:~$
+username@phocus4:~$ squeue
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+             16188  gorgonas test_all user123  PD       0:00      1 (Resources)
+             16079  gorgonas TimesNet user658   R 3-20:18:33      1 gorgona4
+             16070  gorgonas depressi user557   R 4-02:04:58      1 gorgona5
+             16216  gorgonas visual_p user109   R       0:17      1 gorgona10
+             16210   medusas     bash user987   R      18:10      1 medusa6
+
 ```
 
-Agora são pedidos 2 nós quaisquer da fila gorgonas por um período de 20 min. Sim, é possível pedir quantos nós quiser. Ao pedir por mais de 1 nó, a sua sessão de terminal irá para um dos nós, porém é possível usar todos os nós alocados via mpirun.
+Jobs podem ser cancelados a qualquer momento via comando `scancel <JOBID>`. Não é possível cancelar um job de outro usuário:
 
-Tendo terminado de usar os nós alocados é interessante retornar os recursos à fila. Por um lado, isso ajuda seus colegas pesquisadores, reduzindo o desperdicio de recursos e poupando o tempo de todos. Por outro lado, todo tempo gasto em alocações reduz a sua prioridade, então é possível que mais a frente você terá que esperar mais para ter seus jobs executados do que se não houvesse desperdiçado tempo agora. Para cancelar sua alocação interativa basta usar o comando `exit` ou Ctrl+d. Caso a conexão com os nós tenha caído por problemas de rede, o job não é finalizado. Neste caso deve-se ou reconectar com o nó que foi alocado ou cancelar seu job via `scancel` (a ver a frente).
+```console
+username@phocus4:~$ scancel 16070
+scancel: error: Kill job error on job id 16070: Access/permission denied
+username@phocus4:~$
+```
 
-O comando srun é padrão do Slurm, com uma página `man` e com muito material disponível online para casos de usos mais complexos.
+Também é possível ver quais nós estão ou não disponíveis via `sinfo`:
 
-### Exemplo Hands-On
+```console
+username@phocus4:~$ sinfo
+PARTITION    AVAIL  TIMELIMIT  NODES  STATE NODELIST
+medusas         up 2-00:00:00      2  alloc medusa[4,6]
+medusas_shr     up 2-00:00:00      1  alloc medusa5
+gorgonas*       up   infinite      4  alloc gorgona[4-5,7,10]
+gorgonas*       up   infinite      2   idle gorgona[3,6]
+gorgonas_dev    up      30:00      1  alloc gorgona10
+```
+
+A marcação * na partição `gorgonas` indica que esta é a partição default. Ou seja caso não seja informada a partição (`-p`) será solicitado um nó da partição `gorgonas`.
+
+Outro detalhe importante que é mostrado pelo `sinfo` são os STATEs. Neles são mostrados o estado de cada nó. Os estados mais importantes de se conhecer são: idle (livre para uso), alloc (completamente alocado para um ou mais jobs), mix(partialmente alocado para um ou mais jobs), drain (removido da fila para manutenção), down (fora da fila por problema no nó, reporte no grupo do telegram se vir isso) e comp (com um job em estado de finalização). Outra coisa que pode aparecer no STATE é um asterisco, significando que a máquina está inacessível, mesmo para o slurm (e.g., down* significa que a máquina pode estar desligada).
+
+# Batch jobs
+
+Normalmente, rodar um experimento não é simplesmente executar apenas um comando. Comummente é necessário mudar arquivos, preparar um ambiente de teste, testar aplicações com configurações diferentes, replicar execuções, etc. Para isso é interessante colocar todas essas operações em um único script bash e rodá-lo. Esta é inclusive uma forma interessante de se trabalhar, melhorando a reprodutibilidade dos seus experimentos e reduzindo o tempo de trabalho manual em execuções com diferentes configurações. Outro aspecto interessante é que como se trata de um bash script, este pode ser executado em qualquer máquina Linux. O Slurm disponibiliza uma forma simples de trabalhar dessa forma: via Batch jobs: 
+
+```console
+username@phocus4:~$ sbatch meu_script.sh param1 param2
+Submitted batch job 16078
+username@phocus4:~$
+```
+
+No comando acima, `sbatch` significa "quero executar o script `meu_script.sh` em um job". O script é submetido ao Slurm para execução. Esse é um job do tipo [fire-and-forget](https://en.wikipedia.org/wiki/Fire-and-forget), onde você só precisará se preocupar com a saída ao fim da execução.
+
+Em um script para batch job é possível definir os recursos a serem usados (filas, nós, tempo). Essas definições podem ser passadas para o slurm via parâmetros do `sbatch` ou pelo próprio script. O exemplo abaixo também está disponível em: [Exemplos](Exemplos):
+
+```bash
+#!/bin/bash
+#SBATCH --job-name=my_little_job  # Job name
+#SBATCH --time=00:05:00           # Time limit hrs:min:sec
+#SBATCH -N 1                      # Number of nodes
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=my_mail@mail.com
+
+set -x # all comands are also outputted
+
+cd /snfs2/username/my_test_path
+
+module list
+module avail
+module load python3.12.1
+
+python3 test.py
+
+hostname   # just show the allocated node
+```
+
+Ao usar `#SBATCH` no seu script, você estará passando parâmetros ao `sbatch` pelo seu script. Esses parâmetros são iguais aos de `srun`, podendo ser passados diretamente para `sbatch`. Alguns parâmetros interessantes de se conchecer são:
+ - **time**: tempo máximo do job.
+ - **N**: número de nós a serem alocados.
+ - **job-name**: nome do seu job, que aparecerá na fila (ajuda quando são submetidos vários jobs).
+ - **mail-coisas**: te avisa por email o que está acontecendo com o seu job. Com o type ALL é enviado um email quando o seu job começa a executar (também mostrando o tempo que passou na fila) e quando termina de executar (independentemente do motivo, e.g., acabou, timeout, foi cancelado, nó caiu). Ou seja: mande seus jobs e vá tomar um cafezinho até receber um email que ele terminou.
+
+O script acima foi feito para rodar o seguinte exemplo python:
+
+```python3
+# test.py
+a = [1,2,3]
+print(f'{a[1:]}')
+```
+
+Para submeter o job basta:
+
+```command
+username@phocus4:~$ sbatch simple_bash.sh 
+Submitted batch job 1707
+username@phocus4:~$ cat slurm-1707.out
++ cd /snfs2/username/my_test_path
+No Modulefiles Currently Loaded.
+--------------------------- /opt/Modules/modulefiles ---------------------------
+anaconda3.2023.09-0  cuda/11.8.0  cuda/12.8.0     python/3.12.1  
+apptainer/1.4.2      cuda/12.3.2  python/3.7.6    uv/0.8.9       
+cuda/11.1            cuda/12.6.2  python/3.10.12  
+
+Key:
+modulepath  
++ python3 test.py
+[2 3]
++ hostname
+gorgona7
+```
+
+Existe outra vantagem de usar o batch jobs comparado a sessões interativas: os logs de saída. Todo job submetido via sbatch gera um arquivo `slurm-1707.out` (sendo 1707 o ID do job) com o `stdout` e `stderr` do script executado. Esse arquivo .out é gerado no mesmo local de onde o comando sbatch foi invocado. Uma dica é usar o comando `set -x` em seus scripts. Esse comando faz com que todos os comandos executados saiam no `stdout`. Exemplo, a primeira linha de  `slurm-1707.out` do script exemplo foi `+ cd /snfs2/username/my_test_path`, mostrando que esse comando foi executado.
+
+
+# Exemplo Hands-On
 Na prática, uma vez que você está dentro de uma gorgona você pode rodar seu programa normalmente como você faria em seu computador. Para submeter os batch jobs você precisará em essência de dois arquivos: um .sh para configurar o ambiente, baixar dependências e rodar o código, e o código em si (e.g., um .py).  Abaixo um exemplo de interação com os seguintes passos:
 
 1. Abrir uma conexão com alguma gorgona que esteja disponível
 ```console
-username@phocus4:~$ srun --partition=gorgonas --time=1:00:00 --pty bash
-username@gorgona1:/tmp
+username@phocus4:/snfs2/username$ srun --partition=gorgonas --time=1:00:00 --pty bash
+username@gorgona3:/snfs2/username
 ```
 
 2. Verifique os modulos disponíveis:
 ```console
-username@phocus4:~$ module avail
+username@phocus4:/snfs2/username$ module avail
 ----------------------------------------------- /opt/Modules/modulefiles -----------------------------------------------
 anaconda3.2023.09-0  cuda/11.8.0  cuda/12.3.2  module-info  modules  python3.7.6  python3.10.12  python3.12.1
 
@@ -126,10 +192,10 @@ modulepath
 
 Escolha um dos módulos e rode um programinha:
 ```console
-username@gorgona1:/home_cerberus/disk3/username$ python3 --version
+username@gorgona3:/snfs2/username$ python3 --version
 Python 3.10.9
-username@gorgona1:/home_cerberus/disk3/username$ module load python3.10.12
-username@gorgona1:/home_cerberus/disk3/username$ python3
+username@gorgona3:/snfs2/username$ module load python3.10.12
+username@gorgona3:/snfs2/username$ python3
 Python 3.10.12 (tags/v3.10.12:b4e48a444e, Feb  6 2024, 12:12:45) [GCC 11.4.0] on linux
 Type "help", "copyright", "credits" or "license" for more information.
 >>> print ("Hello Word")
@@ -141,170 +207,111 @@ Caso queira criar ou subir algum arquivo, seguem algumas possibilidades de coman
 
 Exemplo Vim:
 ```console
-username@phocus4:~$ vim nome_arquivo.py
+username@phocus4:/snfs2/username$ vim nome_arquivo.py
 ```
 
 Exemplo Git:
 ```console
-username@phocus4:~$ git clone <url>
+username@phocus4:/snfs2/username$ git clone <url>
 ```
 
-Exemplo upload: 
+Exemplo upload (note que você estará executando esse comando da sua máquina, não da `phocus4`): 
 ```console
-scp /path/local/do/meu/arquivo.txt phocus4:/home_cerberus/disk3/username/
+scp /path/local/do/meu/arquivo.txt phocus4:/snfs2/username
 ```
 
-Para instalar dependências do seu código é necessário criar um venv. Nele você tem autorização para instalar pacotes conforme sua necessidade. Para criar um venv faça:
+Para instalar dependências python do seu código é necessário criar um venv. Nele você tem autorização para instalar pacotes conforme sua necessidade. Para criar um venv faça:
 ```console
-username@gorgona1:/home_cerberus/disk3/username$ python3 -m venv nome_venv
-```
-
-Caso haja problemas conforme relatado em [FAQ](faq.md#3-não-estou-conseguindo-mais-criar-um-venv-na-home_cerberus). Mude seu diretório de: `/home_cerberus/disk3/username` para `/home/all_home/username/` e faça:
-
-```console
-username@gorgona1:/home/all_home/username/$ python3 -m venv /home/all_home/username/nome_venv/
-username@gorgona1:/home/all_home/username/$ source /home/all_home/larissa.gomide/exp_notebook_venv/bin/activate 
-(nome_venv) username@gorgona1:/home/all_home/username/$
+username@phocus4:/snfs2/username$ python3 -m venv nome_venv
+username@phocus4:/snfs2/username$ source nome_venv/bin/activate
+(nome_venv) username@phocus4:/snfs2/username$
 ```
 
 Lembrando que o comando source acima ativa o venv e para desativa-lo basta digitar `deactivate`.
-Obs: Sim, em essência você tem três diretórios em diferentes lugares para colocar seus arquivos.
 
-Uma vez que seu código está rodando certinho, certifique-se que o seu script bash também está configurado corretamente:
+Uma vez que seu código está rodando certinho, certifique-se que o seu script bash também está configurado corretamente. Para isso, execute em um nó de computação:
 ```console
-username@gorgona1:/home/all_home/username/$ bash nome_arquivo.sh
+username@gorgona3:/snfs2/username$ bash nome_arquivo.sh
 ```
 
 Para exemplos de bash vide: [Exemplos](Exemplos).
 
-Antes do próximo passo, encerre sua conexão com o prompt da gorgona alocada e volte para a `username@phocus4`
+Antes do próximo passo, encerre sua conexão com o prompt da gorgona alocada e volte para a `phocus4`
 ```console
-username@gorgona1:/home/all_home/username/$ exit
+username@gorgona3:/snfs2/username$ exit
 username@phocus4:~$
 ```
 
-Tudo pronto? Hora de submeter jobs.
+Tudo pronto? Hora de submeter jobs usando `sbatch nome_arquivo.sh`.
 
-## Batch jobs
+# Nós Compartilhados
 
-Normalmente, rodar um experimento não é simplesmente executar apenas um comando. Comummente é necessário mudar arquivos, preparar um ambiente de teste, testar aplicações com configurações diferentes, replicar execuções, etc. Para isso é interessante colocar todas essas operações em um único script bash e rodá-lo. Esta é inclusive uma forma interessante de se trabalhar, melhorando a reprodutibilidade dos seus experimentos e reduzindo o tempo de trabalho manual em execuções com diferentes configurações. Outro aspecto interessante é que como se trata de um bash script, este pode ser executado em qualquer máquina Linux. O Slurm disponibiliza uma forma simples de trabalhar dessa forma: via Batch jobs: 
+Nem sempre é necessário usar todos os recursos de uma máquina. Por exemplo, as `medusas` possuem 2 GPUs RTX 5090. Talvez você tenha um job que consiga usar eficientemente apenas 1 GPU. Neste caso, não faz sentido desperdiçar o tempo da outra GPU parada. Para isso, partições com o sufixo `_shr` possuem nós de uso compartilhado. Embora mais de um job possa executar simultaneamente em tais nós, apenas 1 job por vez terá acesso a recursos individuais. Por exemplo, se uma `medusa` tem 2 GPUs, cada GPU poderá ser alocada apenas para 1 único job ao mesmo tempo. Notem que ainda é possível pedir ambas GPUs para um único job. Analogamente, os recursos de CPU (cores) e memória são rateados por GPU. Dado que uma `medusa`tem 2 GPUs, ao se pedir uma das GPUs, também serão alocados 50% da memória e dos cores de CPU para o mesmo job. Ou seja, não tem como um outro job atrapalhar o seu, por exemplo, alocando toda a memória do nó.
+
+Para pedir alocações nesses nós, é necessário (i) informar a partição, já que essas não são partições default, e (ii) informar o número de GPUs necessárias. **Importante: caso não seja informado o número de GPUs, será alocado apenas 1 core de CPU! Ou seja, seu job não terá acesso a nenhuma GPU.** A seguir, um exemplo de alocação requisitando apenas 1 GPU e pedindo para mostrar as GPUs disponíveis para uso em um job:
 
 ```console
-username@phocus4:~$ sbatch meu_script.sh param1 param2
-Submitted batch job 1706
-username@phocus4:~$
+username@phocus4:/snfs2/username$ srun --gres=gpu:1 -pmedusas_shr nvidia-smi
+Fri Mar 27 12:08:07 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 570.211.01             Driver Version: 570.211.01     CUDA Version: 12.8     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA GeForce RTX 5090        Off |   00000000:41:00.0 Off |                  N/A |
+|  0%   41C    P1             83W /  575W |       9MiB /  32607MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+username@phocus4:/snfs2/username$ 
 ```
 
-No comando acima, `sbatch` significa "coloque esse script na fila de execução". O script bash meu_scipt.sh é submetido ao Slurm para execução. Esse é um job do tipo [fire-and-forget](https://en.wikipedia.org/wiki/Fire-and-forget), onde você só precisará se preocupar com a saída ao fim da execução.
+Notem abaixo que se forem pedidas 2 GPUs, elas estarão disponíveis:
 
-O mínimo necessário para um batch job é um script e definições dos recursos a serem usados (filas, nós, tempo). Essas definições podem ser passadas para o slurm via parâmetros do sbatch ou pelo próprio script. O exemplo abaixo também está disponível em: [Exemplos](Exemplos):
-
-```bash
-#!/bin/bash
-#SBATCH --job-name=my_little_job  # Job name
-#SBATCH --time=00:05:00           # Time limit hrs:min:sec
-#SBATCH -N 1                        # Number of nodes
-#SBATCH --mail-type=ALL
-#SBATCH --mail-user=my_mail@mail.com
-
-set -x # all comands are also outputted
-
-cd /home_cerberus/speed/username
-
-module list
-module avail
-module load python3.12.1
-
-source myenv1/bin/activate
-
-python3 test.py
-
-hostname   # just show the allocated node
+```console
+username@phocus4:/snfs2/username$ srun --gres=gpu:2 -pmedusas_shr nvidia-smi
+Fri Mar 27 12:08:07 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 570.211.01             Driver Version: 570.211.01     CUDA Version: 12.8     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA GeForce RTX 5090        Off |   00000000:41:00.0 Off |                  N/A |
+|  0%   41C    P1             83W /  575W |       9MiB /  32607MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA GeForce RTX 5090        Off |   00000000:83:00.0 Off |                  N/A |
+|  0%   46C    P1             81W /  575W |       9MiB /  32607MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+                                                                                                
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+username@phocus4:/snfs2/username$ 
 ```
 
-O script acima foi feito para rodar o seguinte código python:
 
-```python3
-# test.py
-import numpy as np
-
-a=np.array([1,2,3])
-
-print(f'{a[1:]}')
-```
-
-Para submeter o job basta:
-
-```command
-username@phocus4:/home_cerberus/speed/username$ sbatch simple_bash.sh 
-Submitted batch job 1707
-username@phocus4:/home_cerberus/speed/username$ cat slurm-1707.out
-+ cd /home_cerberus/speed/username
-No Modulefiles Currently Loaded.
---------------------------- /opt/Modules/modulefiles ---------------------------
-anaconda3.2023.09-0  module-git   modules  python3.12.1  
-dot                  module-info  null     use.own       
-+ python3 test.py
-[2 3]
-+ hostname
-gorgona7
-slurmstepd: error: _cgroup_procs_check: failed on path (null)/cgroup.procs: No such file or directory
-slurmstepd: error: Cannot write to cgroup.procs for (null)
-slurmstepd: error: Unable to move pid 351386 to init root cgroup (null)
-```
-
-As últimas 3 linhas do output acima são "normais". Isso significa: elas podem aparecer e, se for o caso, não tem com o que se preocupar.
-
-Ao usar ‘#SBATCH’ no seu script, você estará passando parâmetros ao sbatch. Esses parâmetros são iguais aos de srun, podendo ser passados diretamente para sbatch. Alguns parâmetros interessantes de se conchecer são:
- - **time**: tempo máximo do job.
- - **N**: número de nós a serem alocados.
- - **job-name**: nome do seu job, que aparecerá na fila (ajuda quando são submetidos vários jobs).
- - **mail-coisas**: envia um email com o status do seu job Com o type ALL é enviado um email quando o seu job começa a executar e quando termina de executar (independentemente do motivo, e.g., acabou, timeout, foi cancelado, nó caiu).
-
-Existe outra vantagem de usar o sbatch: os logs de saída. Todo job submetido via sbatch gera um arquivo ‘slurm-1707.out’ (sendo 1707 o ID do job) com o stdout e stderr do script executado. Esse arquivo .out é gerado no mesmo local de onde o comando sbatch foi invocado. Uma dica é usar o comando ‘set -x’ em seus scripts. Esse comando faz com que todos os comandos executados saiam no stdout. Exemplo, a primeira linha de ‘slurm-1707.out’ do script exemplo será ‘+ cd /path/of/my/code’.
-
-No script é carregado um python de versão específica usando environment modules, visto em detalhes em [Dependências](gerencia-de-deps.md).
-
-## Gerenciando jobs
-
-É possível acompanhar seus jobs submetidos por meio do comando squeue:
-
-```command
-username@phocus4:/home_cerberus/speed/username$ squeue
-             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
-              1711  gorgonas my_littl willianj PD       0:00      1 (Resources)
-              1686  gorgonas  dada_al rodrigo.  R   15:04:33      1 gorgona6
-              1699  gorgonas     bash gabriel.  R    1:06:42      1 gorgona2
-              1678  gorgonas  ecg_job pedrorob  R   20:29:10      1 gorgona7
-              1669  gorgonas  ecg_job pedrorob  R 1-01:00:36      1 gorgona4
-```
-
-O comando squeue retorna a fila do cluster inteiro, com o status dos jobs, tempo que estão em execução, recursos usados e o ID do job. Esse ID é único no cluster, independente da fila ou usuário. É recomendado usar ‘squeue | grep username’ para filtrar apenas os seus jobs. O campo de state (ST) representa o estado do job, sendo os mais comuns PD (pending) e R (running). É recomendado ler guias online sobre squeue para verificar outras informações pertinentes desses campos. Outro estado que pode aparecer é CG (completing). Caso haja algum job nesse estado por um período prolongado de tempo notifique no grupo do telegram, pois pode ser um problema no slurm.
-
-Caso necessário é possível cancelar um job manualmente. Por exemplo, um usuário pode ter submetido um job com os parâmetros errados, ou ter verificado que o resultado já está errado antes do fim do experimento. Nesse caso basta rodar o seguinte comando com o ID do seu job:
-
-```command
-username@phocus4:/home_cerberus/speed/username$ scancel 524
-username@phocus4:/home_cerberus/speed/username$
-```
-
-Outro comando interessante é o sinfo, que mostra o status do cluster com todos os nós disponíveis. Novamente, este é um cluster Slurm, então os comandos, parâmetros e saídas são padronizados, tendo muita informação online de como usa e o que significa cada campo:
-
-```command
-username@phocus4:/home_cerberus/speed/username$ sinfo
-PARTITION AVAIL  TIMELIMIT  NODES  STATE NODELIST
-gorgonas*    up   infinite      2  drain gorgona[1,5]
-gorgonas*    up   infinite      4  alloc gorgona[2,4,6-7]
-gorgonas*    up   infinite      2   idle gorgona[3,10]
-username@phocus4:/home_cerberus/speed/username$
-```
-
-Os STATEs mais importantes são: idle (livre para uso), alloc (alocado para um job), drain (removido da fila para manutenção), down (fora da fila por problema no nó, reporte se vir isso) e comp (mesmo que CG). Outra coisa que pode aparecer no STATE é um asterisco, significando que a máquina está inacessível, mesmo para o slurm (e.g., down* significa que a máquina pode estar desligada).
 ___
 
 ## TLDR
- - Alocação interativa:  srun -p gorgonas --time 00:20:00 --pty bash
- - Batch job: sbatch job.sh
+ - Alocação interativa:  `srun -p gorgonas --time 00:20:00 --pty bash`
+ - Batch job: `sbatch job.sh`
  - Usar alocações interativas para preparar os experimentos e depois montar scripts para automatizar os experimentos com batch jobs.
  - Usar exemplo de batch job acima.
  - Batch jobs sempre deixam um log da execução em um arquivo slurm-ID.out no local de onde foi submetido.
@@ -312,6 +319,7 @@ ___
  - Não esquecer de encerrar alocações interativas.
  - Usar scancel para cancelar jobs.
  - Usar sinfo para ver o status do cluster.
+ - Ao usar partições `_shr` lembrem-se de usar `--gres=gpu:<NUM_GPUS>`.
 
  ___
 
@@ -325,13 +333,22 @@ Comandos Slurm (Sem risco):<br>
  <br>
 
 Comandos Terminal (Sem risco):<br>
-  cd, cp, ls, pwd,
+  `cd`, `cp`, `ls`, `pwd`,
 
 Comandos Terminal (Pouco risco, reversível):<br>
-  mv, chmod
+  `mv`, `chmod`
 
 Comandos Terminal (Muito risco , irreversível, tem que tomar cuidado):<br>
-  rm
+  `rm`
 
 Comandos Git (sem risco):<br>
- git clone
+ `git clone`
+
+Sobre "riscos": 
+ - Não tem como você danificar o cluster ou alguma parte dele permanentemente. No pior dos casos você dará um tiro no próprio pé.
+ - Não tem como você apagar ou destruir arquivos dos seus colegas, a não ser que lhe for dado explicitamente permissão de arquivos para isso (via `chmod`).
+ - O uso do vscode sem controle na `phocus4` pode deixar ela muito devagar (vscode é muito guloso de recursos e desrespeitoso com outros processos em máquinas compartilhadas), mas isso não é suficiente para danificar ela. No pior dos casos, sua conexão do vscode poderá ser fechada forçosamente pelo cluster.
+ - Qual o maior risco que você pode correr? Perder algum arquivo seu por ter apagado ele.
+
+
+
