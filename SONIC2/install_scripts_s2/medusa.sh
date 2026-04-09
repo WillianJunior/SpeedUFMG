@@ -26,6 +26,8 @@ echo "UsePAM yes" >> /etc/ssh/sshd_config
 echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
 systemctl restart sshd.service
 
+# ===================== medusa3 here
+
 
 # Base ===================================================================
 dnf install -y epel-release
