@@ -142,7 +142,6 @@ export MODULEPATH=/sonic_modules/dcc-sonic-modules/modulefiles
 EOF
 
 
-# ===================== medusa3 here
 
 
 # modules to install from ansible:
@@ -151,6 +150,9 @@ EOF
 # uv
 # python
 # driver
+
+# ===================== medusa3 here
+# só instalar o no arquivo
 # cuda
 
 
