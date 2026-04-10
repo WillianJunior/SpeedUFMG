@@ -26,9 +26,6 @@ echo "UsePAM yes" >> /etc/ssh/sshd_config
 echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
 systemctl restart sshd.service
 
-# ===================== medusa3 here
-
-
 # Base ===================================================================
 dnf install -y epel-release
 dnf update -y
@@ -37,18 +34,10 @@ dnf groupinstall -y "Development Tools"
 dnf install -y htop cmake
 dnf install -y ansible
 
-# Load htop config from cluster, apply to root, and set skeleton
-cp /sonic_etc/skel/.config/htop/htoprc ~/.config/htop/htoprc 
-mkdir -p /etc/skel/.config/htop
-cp ~/.config/htop/htoprc /etc/skel/.config/htop/
-chmod 644 /etc/skel/.config/htop/htoprc
-
-
 # TODO ===============> use the speed DHCP
 
 
 # TODO ============== copy host files
-
 
 # LDAP ===================================================================
 dnf install -y openldap-clients sssd sssd-ldap oddjob-mkhomedir
@@ -85,21 +74,43 @@ mkdir /sonic_modules
 mkdir /sonic_home
 mkdir /snfs1
 
+echo "192.168.62.100  tails1" >> /etc/hosts
 echo "tails1:/nfs/exports/sonic_etc /sonic_etc nfs defaults,_netdev 0 0" >> /etc/fstab
 echo "tails1:/nfs/exports/sonic_modules /sonic_modules nfs defaults,_netdev 0 0" >> /etc/fstab
 echo "tails1:/nfs/exports/sonic_home /sonic_home nfs defaults,_netdev 0 0" >> /etc/fstab
+
+systemctl daemon-reload
+mount -a
+
+# add all other hosts, except itself
+grep -v $(hostname) /sonic_etc/hosts >> /etc/hosts
+
 echo "sonik2:/nfs/exports/snfs1 /snfs1 nfs defaults,acl,_netdev 0 0" >> /etc/fstab
 
 systemctl daemon-reload
 mount -a
 
 
+# htop ===================================================================
+
+# Enable PSI
+grubby --update-kernel=ALL --args="systemd.unified_cgroup_hierarchy=1 psi=1"
+
+# Load htop config from cluster, apply to root, and set skeleton for all other users
+mkdir -p ~/.config/htop/
+cp /sonic_etc/skel/.config/htop/htoprc ~/.config/htop/htoprc 
+mkdir -p /etc/skel/.config/htop
+cp ~/.config/htop/htoprc /etc/skel/.config/htop/
+chmod 644 /etc/skel/.config/htop/htoprc
+
 # Rework local storage ===================================================
 umount /home
 vim /etc/fstab # remove /home mount line
 lvdisplay # to find the name of the home logical volume
-export VOLUME=rl
+export VOLUME=rl_medusa3
 export VOLUME_OLD=/dev/$VOLUME/home
+
+# After checking the correct VOLUME from lvdisplay VG
 lvchange -an $VOLUME_OLD # deactivate volume
 lvremove $VOLUME_OLD # kill volume
 lvcreate -n scratch -L 1T $VOLUME
@@ -117,6 +128,8 @@ echo "/dev/$VOLUME/storage   /storage   xfs   defaults   0 0" >> /etc/fstab
 systemctl daemon-reload
 mount -a
 
+
+
 # Modules ================================================================
 # Install and source module across all users
 dnf install -y environment-modules
@@ -129,9 +142,17 @@ export MODULEPATH=/sonic_modules/dcc-sonic-modules/modulefiles
 EOF
 
 
-modules
- - install modules from ansible
- - test
+# ===================== medusa3 here
+
+
+# modules to install from ansible:
+# apptainer
+# conda
+# uv
+# python
+# driver
+# cuda
+
 
 
 # Slurm ==================================================================
