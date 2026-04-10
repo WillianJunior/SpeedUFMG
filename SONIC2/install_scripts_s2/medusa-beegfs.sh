@@ -1,6 +1,9 @@
 # tested on medusa[4,6]
 beegfs configuration
 
+!!!!!!!!!!! DISABLE SECURE BOOT!!!!!!!!!!!!
+
+
 # Network ================================================================
 # export ME=medusa5
 export MY_IP_SPEED=192.168.62.101
@@ -111,11 +114,11 @@ sed -i 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/selinux/config
 
 # === BeeGFS =================================================
 
-# Full server with management, metadata, storage, and client =====================
 # Install deps
 curl -fsSL https://www.beegfs.io/release/beegfs_8.2/dists/beegfs-rhel9.repo | tee /etc/yum.repos.d/beegfs.repo
 dnf install -y beegfs-mgmtd beegfs-meta beegfs-storage beegfs-client beegfs-tools
 
+# Full server with management, metadata, storage, and client =====================
 # Generate auth key. Use same for other nodes...
 dd if=/dev/random of=/etc/beegfs/conn.auth bs=128 count=1
 chown root:root /etc/beegfs/conn.auth
@@ -185,14 +188,25 @@ dnf install beegfs-storage -y
 firewall-cmd --add-port=8003/udp --permanent
 firewall-cmd --add-port=8003/tcp --permanent
 firewall-cmd --reload
-/opt/beegfs/sbin/beegfs-setup-storage -p /storage/beegfs/storage -s 4 -m medusa4 -f
+
+# Copy conn.auth file to /etc/beegfs
+
+# Don't change the medusa4: it is the manager... but change the -s to the medusa number
+/opt/beegfs/sbin/beegfs-setup-storage -p /storage/beegfs/storage -s 3 -m medusa4 -f
 systemctl enable --now beegfs-storage
+
+# On manager (medusa4) ----------------
+export BEEGFS_TLS_DISABLE='true'
+export BEEGFS_MGMTD_ADDR=medusa4:8010
+beegfs target list # Get the target ID
+beegfs target set-alias target_0-69A244A0-4 target_medusa3_storage
 
 # Just client (rocky) =================
 curl -fsSL https://www.beegfs.io/release/beegfs_8.2/dists/beegfs-rhel9.repo | tee /etc/yum.repos.d/beegfs.repo
+dnf install -y kernel-devel kernel-headers gcc make perl elfutils-libelf-devel
 dnf install -y beegfs-client
-echo "/snfs2 /etc/beegfs/beegfs-client.conf" > /etc/beegfs/beegfs-mounts.conf
 /opt/beegfs/sbin/beegfs-setup-client -m medusa4
+echo "/snfs2 /etc/beegfs/beegfs-client.conf" > /etc/beegfs/beegfs-mounts.conf
 # COPY AUTH KEY
 systemctl enable --now beegfs-client
 
