@@ -1,4 +1,4 @@
-# tested on medusa[4-6]
+# tested on medusa[3-6]
 # BAD:
 # 1. using static IP on SPEED
 # 2. using CRC IP for internet
@@ -150,9 +150,6 @@ EOF
 # uv
 # python
 # driver
-
-# ===================== medusa3 here
-# só instalar o no arquivo
 # cuda
 
 
