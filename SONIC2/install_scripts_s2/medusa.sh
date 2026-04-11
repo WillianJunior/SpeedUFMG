@@ -240,8 +240,24 @@ ln -s /usr/lib/security/pam_*slurm* /usr/lib64/security/
 
 systemctl restart sshd
 
+==================================== funcionou na medusa5, mas não na 3... problemas??
+#%PAM-1.0
 
+# Root can always login
+account [success=ok default=ignore] pam_succeed_if.so uid = 0
+account required pam_permit.so
 
-# TODO: resolver gres 1gpu 32cores
+# PAM Slurm adopt - enforces session is tied to Slurm job
+# "deny" prevents login if there is no allocated job
+account required pam_slurm_adopt.so
 
-GRES 1 GPU
+# === auth ======================================
+# Root can auth with public key
+
+# speed users can bypass auth
+auth required pam_succeed_if.so user ingroup speed
+auth sufficient pam_permit.so
+
+session optional pam_keyinit.so force revoke
+====================================
+
