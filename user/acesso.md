@@ -64,7 +64,7 @@ A phocus4 é a máquina de login do cluster Sonic. Somente a partir dela é poss
 Para logar na phocus4 basta:
 
 ```console
-username@login:~$ ssh phocus4
+username@login:~$ ssh phocus4.speed.dcc.ufmg.br
 username@phocus4's password: 
 username@phocus4:~$ 
 ```
@@ -144,7 +144,7 @@ Host phocus4
 No script acima está descrito que: para se conectar à phocus4 com um usuário username é necessário fazer um tunelamento via o host dcc. Este host dcc é acessível pelo hostname login.dcc.ufmg.br assim como a phocus4 é conhecida pelo host dcc pelo nome phocus4.speed.dcc.ufmg.br. Dessa forma, ao rodar o comando 'ssh phocus4', todo esse processo será automatizado. O cliente ssh também assume que pode existir um par de chaves em '~/.ssh' e tentará enviar essas chaves para o host remoto, evitando o pedido de senha. O script acima deve estar presente na sua máquina pessoal, não sendo necessário colocá-lo em outra máquinas. Abaixo o resultado após a criação do arquivo de configuração:
 
 ```console
-user@host:~$ ssh phocus4
+user@host:~$ ssh phocus4.speed.dcc.ufmg.br
 Last login: Sat Mar  2 06:37:21 2024 from 192.168.99.100
 user@phocus4:~$
 ```
