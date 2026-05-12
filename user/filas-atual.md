@@ -1,7 +1,5 @@
 # Filas
 
-# OBS: FILAS AINDA NÃO IMPLEMENTADAS. TODOS OS NÓS ESTÃO NA FILA gorgonas DESCONSIDERAR o abaixo. Isso é apenas um planejamento para o futuro.
-
 O cluster foi pensado para atender algumas demandas específicas como:
  - Preciso poder treinar meus modelos por vários dias, senão semanas.
  - Quero poder ter uma sessão interativa rapidamente para pequenos testes no meu código.
