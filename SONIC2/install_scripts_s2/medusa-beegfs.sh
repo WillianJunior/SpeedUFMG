@@ -154,6 +154,7 @@ beegfs target set-alias target_0-69A25721-6 target_medusa6_storage
 
 # Mount client locally for testing
 echo "/snfs2 /etc/beegfs/beegfs-client.conf" > /etc/beegfs/beegfs-mounts.conf
+sed -i 's/^connCommRetrySecs[[:space:]]*=[[:space:]]*600$/connCommRetrySecs             = 60000/' /etc/beegfs/beegfs-client.conf
 /opt/beegfs/sbin/beegfs-setup-client -m medusa4
 systemctl enable --now beegfs-client
 
@@ -207,6 +208,7 @@ dnf install -y kernel-devel kernel-headers gcc make perl elfutils-libelf-devel
 dnf install -y beegfs-client
 /opt/beegfs/sbin/beegfs-setup-client -m medusa4
 echo "/snfs2 /etc/beegfs/beegfs-client.conf" > /etc/beegfs/beegfs-mounts.conf
+sed -i 's/^connCommRetrySecs[[:space:]]*=[[:space:]]*600$/connCommRetrySecs             = 60000/' /etc/beegfs/beegfs-client.conf
 # COPY AUTH KEY
 systemctl enable --now beegfs-client
 
@@ -217,6 +219,7 @@ wget https://www.beegfs.io/release/beegfs_8.2/dists/beegfs-noble.list -O /etc/ap
 apt update
 apt install beegfs-client -y
 /opt/beegfs/sbin/beegfs-setup-client -m medusa4
+sed -i 's/^connCommRetrySecs[[:space:]]*=[[:space:]]*600$/connCommRetrySecs             = 60000/' /etc/beegfs/beegfs-client.conf
 echo "/snfs2 /etc/beegfs/beegfs-client.conf" > /etc/beegfs/beegfs-mounts.conf
 # COPY AUTH KEY
 # ADD HOSTS
