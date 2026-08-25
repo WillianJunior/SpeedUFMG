@@ -1,11 +1,13 @@
 Histórico de eventos com o cluster, e suas soluções
 
+<!--
 Padrão:
 ## AAAA-MM-DD
 **Evento:** 
 **Maquinas afetadas:** 
 **Causa:** 
 **Resolução:** 
+-->
 
 ## 2026-08-25
 **Evento:** `gorgona6` inacessível
