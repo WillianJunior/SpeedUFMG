@@ -14,6 +14,15 @@ Padrão:
 **Obsservações:** 
 -->
 
+## 2026-09-01
+**Evento:** Queda de luz no DCC.
+
+**Maquinas afetadas:** `medusa3`
+
+**Resolução:** `medusa3` precisou `mount -a` e reiniciar os serviços slurmd e beegfs-storage e beegfs-client.
+
+**Obsservações:** Problema recorrente na falta de rede. TODO: organizar os serviços de mounting, slurmd, e beegfs para esperarem a rede estar pronta antes de iniciar. Não colocar isso como algo que para o boot (devo conseguir boot/ssh msm se não tiver iniciado esses serviços.)
+
 ## 2026-08-26
 **Evento:** `snfs2` inacessível às `medusas`
 
