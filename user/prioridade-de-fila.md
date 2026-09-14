@@ -1,22 +1,43 @@
 # Prioridade de Fila
 
-Como dito antes, não existe limite de uso por pessoa. Exemplo, se houver apenas uma pessoa usando o cluster de 100 usuários totais (99 inativos), essa pessoa consegue usar todos os nós do cluster sem nenhuma limitação. Porém, entrando outras pessoas para usar o cluster, essas terão mais prioridade na fila. É possível ter vários jobs na fila por usuário.
+Não existe limite de tempo de uso do cluster, ou seja, havendo recursos livres você poderá usá-los. Porém, existem mais usuários do que máquinas no cluster. Dessa forma, o cluster precisa ordenar o uso das máquinas pelos usuários. Para isso, todo job possui uma prioridade, e a partir desse valor, seu job irá executar mais cedo ou mais tarde. A prioridade do job é influenciada majoritariamente por uma métrica de *fairshare*. Ou seja, quanto mais você usa tempo de alocação, menor é a sua prioridade. Notem que isso só importa quando há mais jobs na fila. Se apenas você está na fila, seu job irá executar. A prioridade perdida por tempo de uso é automaticamente recuperada com tempo passado. Dessa forma, fica mais difícil de termos apenas um usuário usando o cluster sozinho. Outro detalhe: as métricas de prioridade (fairshare incluso) são atualizadas a cada 5 min. Ou seja, um usuário com 100 jobs e 2 em execução não ficará no topo da fila indefinidamente. Seu job novo pode ser o próximo a ser executado, dado que você tenha uma prioridade mais alta.
+alocados, apenas você poderá acessá-los até o fim da alocação.
 
-## Fairshare
+# Como Descobrir Prioridades?
 
-O sistema Slurm tem o conceito de *fairshare usage*, onde ele vai tentar ao máximo dividir igualmente o tempo total de uso entre usuários. Isso é feito por meio de uma fila dinâmica. Todo job tem um valor de prioridade. Este valor é proporcional aos recursos pedidos (quantidade de nós e tempo) e a uma métrica fairshare individual do usuário. Ao se usar o cluster esse valor fairshare diminui, representando que um usuário que estava usando muito o cluster antes está dando prioridade a quem não estava usando. Esse valor tem uma meia vida de uma semana, i.e., após uma semana, metade de todo fairshare que foi perdido é retornado.
+Prioridade para o meu job (pelo job ID):
+```command
+username@phocus4:~# sprio -j 41527
+          JOBID PARTITION   PRIORITY       SITE        AGE  FAIRSHARE    JOBSIZE
+          41527 gorgonas          86          0          2         85          0
+```
 
- - **O que acontece se eu perder/zerar todo o meu fairshare?** Nada... Seus jobs ficarão no fim da fila. Se existem recursos disponíveis, esses serão alocados ao primeiro job da fila. Se não tiver mais gente usando (fila vazia) você será o último, mas também o primeiro na fila. Além disso, seu fairshare aumenta com tempo e o fairshare dos outros usuários também é reduzido com uso do cluster.
- - **Como o Slurm prioriza jobs baseado nos recursos pedidos?** Mais nós, menor prioridade. Mais tempo, **maior** a prioridade até um certo ponto (bell curve). Mais tempo esperando na fila, maior a prioridade.
+Prioridade para o meu (ou outro) usuário. Quão maior o seu FairShare, maior a prioridade dos seus jobs:
+```command
+username@phocus4:~# sshare -U -u pedroroblesduten
+Account               User  RawShares  NormShares    RawUsage  EffectvUsage  FairShare
+--------------- ---------- ---------- ----------- ----------- ------------- ----------
+username_acc    username+          1    1.000000    35615192      1.000000   0.003521
+```
 
-O valor de prioridade de um job é atualizado periodicamente, podendo ter sua prioridade aumentada pois está muito tempo na fila, ou reduzida caso o dono desse job esteja usando muito o cluster (fairshare de usuário reduzido). Por fim, o Slurm penaliza o fairshare quando há uma discrepância muito grande entre tempo pedido e tempo usado pelo job. Porém, o pior que pode ocorrer é ter um job é tê-lo cancelado por limite de tempo e ter que executar de novo. Assim, é melhor colocar mais tempo, ~1 ordem de grandeza a mais do tempo esperado. Exemplo, acho que minha aplicação vai demorar uns 20 min, então vou pedir 1 hora de tempo.
+Como está o uso do cluster para todos os usuários em horas por job (note o parâmetro de start time)? 
+```command
+username@phocus4:~# sacct -a -X --starttime 2026-08-01   --format=User,ElapsedRaw -n -P | awk -F'|' '{t[$1]+=$2} END {for (u in t) print u, t[u]/3600}' | sort -k2,2nr
+username 1325
+username 1134.568
+username 1001.123
+username 995.236
+```
 
-Um último detalhe é que todos os jobs não são preemptivos. Uma vez que um job começa sua execução ele só será encerrado caso termine, seja cancelado pelo usuário que o submeteu ou com timeout. Jobs também usam recursos de maneira exclusiva, ou seja, se você tiver recursos alocados, apenas você poderá acessá-los até o fim da alocação.
+Observações:
+ - Jobs com dependências não podem ser escalonados, dessa forma não tem prioridade. Para todos os efeitos, jobs que não estejam com o reason (Priority) ou (Resources) **não estão na fila**.
+ - Maior FairShare, maior a prioridade dos seus jobs.
+ - Mais tempo de uso, menor o seu FairShare.
+ - Evitem gastar tempo à toa. Tempo gasto hoje pode ser tempo que será priorizado para outro usuário amanhã.
 
 # TLDR
  - Não se preocupe muito com prioridade, todos jobs submetidos são eventualmente executados
  - Peça 1 ordem de grandeza mais tempo do que você estimou, e.g., 1 hora para uma aplicação que espero rodar em 20 min. É sempre melhor pedir um pouco de tempo a mais do que ter que re-executar o experimento.
- - Pode colocar um tempo absurdamente grande (e.g., 2000 Hrs), porém a sua prioridade vai ser baixa, então vai demorar mais para rodar.
  - Quanto mais você usar o cluster, menor vai se a prioridade dos seus próximos jobs.
  - Jobs são não-preemptivos: começou a rodar, vai terminar sem interrupções.
  - Se você tiver uma prioridade “zero”, mas não houver mais ninguém na fila, os seu jobs são executados mesmo assim.
