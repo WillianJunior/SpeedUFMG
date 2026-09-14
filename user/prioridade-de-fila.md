@@ -14,7 +14,7 @@ username@phocus4:~# sprio -j 41527
 
 Prioridade para o meu (ou outro) usuário. Quão maior o seu FairShare, maior a prioridade dos seus jobs:
 ```command
-username@phocus4:~# sshare -U -u pedroroblesduten
+username@phocus4:~# sshare -U -u username
 Account               User  RawShares  NormShares    RawUsage  EffectvUsage  FairShare
 --------------- ---------- ---------- ----------- ----------- ------------- ----------
 username_acc    username+          1    1.000000    35615192      1.000000   0.003521
