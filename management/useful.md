@@ -36,3 +36,9 @@ MemorySwapMax=2G
 ```command
 systemctl daemon-reload
 ```
+
+
+# Vendo allocation hrs por usuário
+```command
+sacct -a -X --starttime 2026-01-01 --format=User,ElapsedRaw -n -P | awk -F'|' '{t[$1]+=$2} END {for (u in t) print u, t[u]/3600}' | sort -k2,2nr
+```
