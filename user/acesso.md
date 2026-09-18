@@ -138,6 +138,7 @@ Host dcc
 Host phocus4
   ProxyCommand ssh dcc -W %h:%p
   Hostname phocus4.speed.dcc.ufmg.br
+  # Hostname 150.164.203.238   # use caso o hostname acima não esteja sendo resolvido pelo DNS
   User username
 ```
 
