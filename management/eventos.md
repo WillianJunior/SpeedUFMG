@@ -14,6 +14,17 @@ Padrão:
 **Obsservações:** 
 -->
 
+## 2026-09-18
+**Evento:** Uma das gpus da `medusa4` falhou.
+
+**Maquinas afetadas:** `medusa4`
+
+**Causa:** GPU caiu do bus. Falha de hardware.
+
+**Resolução:** Reboot.
+
+**Obsservações:** Reboot via slurm falhou. A `medusa4` permaneceu ligada sem reiniciar completamente. Precisou de um hard reset.
+
 ## 2026-09-01
 **Evento:** Queda de luz no DCC.
 
