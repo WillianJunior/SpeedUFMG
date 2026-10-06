@@ -6,6 +6,7 @@ Campos:
  - Down: Tempo de máquinas fora da fila de execução por qualquer motivo (falha de nó, manutenção, testes, ...).
  - Reported: Quantidade de tempo observada no período. Sendo menos que 100% significa que o cluser inteiro (ou o nó HEAD) estava fora do ar.
 
+Obs: Tem mais uma classe de tempo: Planned. Isso significa, alocado mas ainda sem uso, esperando o resto dos recursos. Nós Planned podem ser alocados via backfill. Caso o somatório das porcentagens resulte em menos que 100%, o que está faltando é o tempo em Planned.
 
 ## 2026
 | Month | Alloc. | Idle   | Down   | Reported |
