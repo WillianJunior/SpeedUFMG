@@ -14,6 +14,25 @@ Padrão:
 **Obsservações:** 
 -->
 
+## 2026-10-12
+**Evento:** Slurm sem acesso via `phocus4`
+
+**Maquinas afetadas:** Todo o slurm.
+
+**Causa:** `foreman` falhou dia 2026-10-11 às 6h45. Possível falha de hardware já que o syslog registrou lixo.
+
+**Resolução:** Hard reset na `foreman`.
+
+## 2026-10-12
+**Evento:** `medusa5` parou de responder.
+
+**Maquinas afetadas:** `medusa5`
+
+**Causa:** `medusa5` falhou dia 2026-10-11 após as 06h43. Possível falha de hardware já que o messages parou de logar mensagens. Tendo em vista a falha na mesma hora da `foreman` e que essas máquinas estão em salas diferentes, pode ser um indicativo de problemas no abastecimento elétrico.
+
+**Resolução:** Hard reset na `medusa5`.
+
+
 ## 2026-10-09
 **Evento:** `gorgona6` foi desligada na mão.
 
