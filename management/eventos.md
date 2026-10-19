@@ -14,6 +14,20 @@ Padrão:
 **Obsservações:** 
 -->
 
+## 2026-10-14
+**Evento:** Uma das GPUs da `medusa5` caiu do bus.
+
+**Maquinas afetadas:** `medusa5`
+
+**Causa:** GPU caiu do bus.
+
+**Resolução:** Hard reset.
+
+**Obsservações:** Problema recorrente na `medusa5`
+
+Oct 14 17:45:31 medusa5 kernel: NVRM: Xid (PCI:0000:83:00): 79, GPU has fallen off the bus.
+
+
 ## 2026-10-12
 **Evento:** Slurm sem acesso via `phocus4`
 
