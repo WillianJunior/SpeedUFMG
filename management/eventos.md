@@ -23,7 +23,7 @@ Padrão:
 
 **Resolução:** Hard reset.
 
-**Obsservações:** Problema recorrente na `medusa5`
+**Obsservações:** Problema recorrente na `medusa5`. Da última vez caiu o bus PCI:0000:41:00, e agora o PCI:0000:83:00. Ou seja, o problema não é com uma GPU ou PCI específico.
 
 Oct 14 17:45:31 medusa5 kernel: NVRM: Xid (PCI:0000:83:00): 79, GPU has fallen off the bus.
 
