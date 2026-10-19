@@ -14,6 +14,18 @@ Padrão:
 **Obsservações:** 
 -->
 
+## 2026-10-19
+**Evento:** GPUs da `gorgona3` caiu do bus.
+
+**Maquinas afetadas:** `gorgona3`
+
+**Causa:** GPU caiu do bus.
+
+**Resolução:** Hard reset.
+
+**Obsservações:** Chamada de reboot também não funcionou. Precisou de um hard reset.
+
+
 ## 2026-10-14
 **Evento:** Uma das GPUs da `medusa5` caiu do bus.
 
