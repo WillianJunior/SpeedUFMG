@@ -14,6 +14,19 @@ Padrão:
 **Obsservações:** 
 -->
 
+## 2026-10-20
+**Evento:** Uma das GPUs da `medusa5` caiu do bus.
+
+**Maquinas afetadas:** `medusa5`
+
+**Causa:** GPU caiu do bus.
+
+**Resolução:** Slurm reset. Máquina não conseguiu realizar o reboot corretamente. Necessário hard reset.
+
+**Obsservações:** Problema recorrente na `medusa5`. Da última vez caiu o bus PCI:0000:41:00, e agora o PCI:0000:83:00. Ou seja, o problema não é com uma GPU ou PCI específico.
+
+Oct 19 16:46:14 medusa5 kernel: NVRM: GPU 0000:83:00.0: GPU has fallen off the bus.
+
 ## 2026-10-19
 **Evento:** GPUs da `gorgona3` caiu do bus.
 
