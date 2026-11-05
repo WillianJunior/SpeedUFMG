@@ -11,8 +11,73 @@ Padrão:
 
 **Resolução:** 
 
-**Obsservações:** 
+**Observações:** 
 -->
+
+## 2026-11-03
+**Evento:** `gorgona3` sem GPU.
+
+**Maquinas afetadas:** `gorgona3`
+
+**Causa:** GPU caiu do bus.
+
+**Resolução:** Reboot.
+
+**Observações:** Reboot via slurm não funcionou. Reboot via `reboot now` não funcionou. Necessário hard reset.
+
+<details> 
+ 
+```text
+Nov  3 16:06:51 gorgona3 kernel: [678066.275194] NVRM: GPU at PCI:0000:08:00: GPU-1318e30d-b328-6d88-6c03-4394fe980b0f
+Nov  3 16:06:51 gorgona3 kernel: [678066.275207] NVRM: Xid (PCI:0000:08:00): 79, GPU has fallenoff the bus.
+Nov  3 16:06:51 gorgona3 kernel: [678066.275220] NVRM: GPU 0000:08:00.0: GPU has fallen off thebus.
+Nov  3 16:06:51 gorgona3 kernel: [678066.275429] NVRM: A GPU crash dump has been created. If possible, please run
+Nov  3 16:06:51 gorgona3 kernel: [678066.275429] NVRM: nvidia-bug-report.sh as root to collect this data before
+Nov  3 16:06:51 gorgona3 kernel: [678066.275429] NVRM: the NVIDIA kernel module is unloaded.
+Nov  3 16:06:51 gorgona3 kernel: [678066.275473] NVRM: Xid (PCI:0000:08:00): 154, GPU recovery action changed from 0x0 (None) to 0x2 (Node Reboot Required)
+
+[...]
+
+Nov  5 07:57:45 gorgona3 slurmd[1470]: slurmd: Node reboot request being processed
+Nov  5 07:57:46 gorgona3 slurmd[174918]: Rebooting.
+Nov  5 07:57:46 gorgona3 kernel: [821521.929430] sd 3:0:0:0: [sda] Synchronizing SCSI cache
+Nov  5 07:57:46 gorgona3 kernel: [821522.205573] [drm] [nvidia-drm] [GPU ID 0x00000800] Removing device
+Nov  5 07:57:46 gorgona3 kernel: [821522.205993] [drm] [nvidia-drm] [GPU ID 0x00000800] Unloading driver
+Nov  5 07:57:46 gorgona3 kernel: [821522.206147] nvidia-modeset: ERROR: GPU:0: Failed to query display engine channel state: 0x0000c67e:0:0:0x0000000f
+```
+
+</details>
+
+
+## 2026-10-25
+**Evento:** `gorgona3` sem GPU.
+
+**Maquinas afetadas:** `gorgona3`
+
+**Causa:** GPU caiu do bus.
+
+**Resolução:** Reboot.
+
+**Observações:** Reboot via slurm não funcionou. Reboot via `reboot now` não funcionou. Necessário hard reset.
+
+<details> 
+
+```text
+Oct 11 21:23:15 gorgona3 kernel: [639841.223134] NVRM: GPU at PCI:0000:08:00: GPU-1318e30d-b328-6d88-6c03-4394fe980b0f
+Oct 11 21:23:15 gorgona3 kernel: [639841.223149] NVRM: Xid (PCI:0000:08:00): 79, GPU has fallen off the bus.
+Oct 11 21:23:15 gorgona3 kernel: [639841.223162] NVRM: GPU 0000:08:00.0: GPU has fallen off the bus.
+
+[...]
+
+Oct 19 13:39:29 gorgona3 slurmd[1655]: slurmd: Node reboot request being processed
+Oct 19 13:39:29 gorgona3 slurmd[329905]: Rebooting.
+Oct 19 13:39:29 gorgona3 kernel: [1303218.123602] sd 3:0:0:0: [sda] Synchronizing SCSI cache
+Oct 19 13:39:30 gorgona3 kernel: [1303218.400092] [drm] [nvidia-drm] [GPU ID 0x00000800] Removing device
+Oct 19 13:39:30 gorgona3 kernel: [1303218.400845] [drm] [nvidia-drm] [GPU ID 0x00000800] Unloading driver
+Oct 19 13:39:30 gorgona3 kernel: [1303218.401018] nvidia-modeset: ERROR: GPU:0: Failed to query display engine channel state: 0x0000c67e:0:0:0x0000000f
+```
+
+</details> 
 
 ## 2026-10-20
 **Evento:** Uma das GPUs da `medusa5` caiu do bus.
@@ -23,7 +88,7 @@ Padrão:
 
 **Resolução:** Slurm reset. Máquina não conseguiu realizar o reboot corretamente. Necessário hard reset.
 
-**Obsservações:** Problema recorrente na `medusa5`. Da última vez caiu o bus PCI:0000:41:00, e agora o PCI:0000:83:00. Ou seja, o problema não é com uma GPU ou PCI específico.
+**Observações:** Problema recorrente na `medusa5`. Da última vez caiu o bus PCI:0000:41:00, e agora o PCI:0000:83:00. Ou seja, o problema não é com uma GPU ou PCI específico.
 
 Oct 19 16:46:14 medusa5 kernel: NVRM: GPU 0000:83:00.0: GPU has fallen off the bus.
 
@@ -36,7 +101,7 @@ Oct 19 16:46:14 medusa5 kernel: NVRM: GPU 0000:83:00.0: GPU has fallen off the b
 
 **Resolução:** Hard reset.
 
-**Obsservações:** Chamada de reboot também não funcionou. Precisou de um hard reset.
+**Observações:** Chamada de reboot também não funcionou. Precisou de um hard reset.
 
 
 ## 2026-10-14
@@ -48,7 +113,7 @@ Oct 19 16:46:14 medusa5 kernel: NVRM: GPU 0000:83:00.0: GPU has fallen off the b
 
 **Resolução:** Hard reset.
 
-**Obsservações:** Problema recorrente na `medusa5`. Da última vez caiu o bus PCI:0000:41:00, e agora o PCI:0000:83:00. Ou seja, o problema não é com uma GPU ou PCI específico.
+**Observações:** Problema recorrente na `medusa5`. Da última vez caiu o bus PCI:0000:41:00, e agora o PCI:0000:83:00. Ou seja, o problema não é com uma GPU ou PCI específico.
 
 Oct 14 17:45:31 medusa5 kernel: NVRM: Xid (PCI:0000:83:00): 79, GPU has fallen off the bus.
 
@@ -99,7 +164,7 @@ Oct 08 15:09:29.416786 gorgona6 systemd[1]: Shutting down.
 
 **Resolução:** Máquina reiniciada.
 
-**Obsservações:** Foi chamada a atenção dos usuários da sala 3222 no telegram.
+**Observações:** Foi chamada a atenção dos usuários da sala 3222 no telegram.
 
 
 ## 2026-10-09
@@ -219,7 +284,7 @@ Oct  6 04:30:32 medusa5 kernel: NVRM: GPU0 rpcRmApiFree_GSP: GspRmFree failed: h
 
 **Resolução:** Reboot.
 
-**Obsservações:** Reboot via slurm falhou anteriormente. Tentou-se `sync && reboot -f now`. Mesmo problema de hanging, sendo necessário um hard reset.
+**Observações:** Reboot via slurm falhou anteriormente. Tentou-se `sync && reboot -f now`. Mesmo problema de hanging, sendo necessário um hard reset.
 
 
 ## 2026-09-18
@@ -231,7 +296,7 @@ Oct  6 04:30:32 medusa5 kernel: NVRM: GPU0 rpcRmApiFree_GSP: GspRmFree failed: h
 
 **Resolução:** Reboot.
 
-**Obsservações:** Reboot via slurm falhou. A `medusa4` permaneceu ligada sem reiniciar completamente. Precisou de um hard reset.
+**Observações:** Reboot via slurm falhou. A `medusa4` permaneceu ligada sem reiniciar completamente. Precisou de um hard reset.
 
 ## 2026-09-01
 **Evento:** Queda de luz no DCC.
@@ -240,7 +305,7 @@ Oct  6 04:30:32 medusa5 kernel: NVRM: GPU0 rpcRmApiFree_GSP: GspRmFree failed: h
 
 **Resolução:** `medusa3` precisou `mount -a` e reiniciar os serviços slurmd e beegfs-storage e beegfs-client.
 
-**Obsservações:** Problema recorrente na falta de rede. TODO: organizar os serviços de mounting, slurmd, e beegfs para esperarem a rede estar pronta antes de iniciar. Não colocar isso como algo que para o boot (devo conseguir boot/ssh msm se não tiver iniciado esses serviços.)
+**Observações:** Problema recorrente na falta de rede. TODO: organizar os serviços de mounting, slurmd, e beegfs para esperarem a rede estar pronta antes de iniciar. Não colocar isso como algo que para o boot (devo conseguir boot/ssh msm se não tiver iniciado esses serviços.)
 
 ## 2026-08-26
 **Evento:** `snfs2` inacessível às `medusas`
