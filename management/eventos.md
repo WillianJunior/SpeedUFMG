@@ -14,6 +14,70 @@ Padrão:
 **Observações:** 
 -->
 
+## 2026-11-17
+**Evento:** Várias GPUs cairam do bus.
+
+**Maquinas afetadas:** `medusa[3-6]` e `gorgona3`
+
+**Causa:** Possível falha de comunicação da GPU com PCI.
+
+**Resolução:** Hard reset em todas as máquinas já que um `reboot now` não funciona.
+
+**Observações:** Problema recorrente, principalmente nas medusas (5090) e às vezes na gorgona3 (4090). 
+Problema possivelmente relacionado a instabilidades na conexão entre GPUs e o PCI:
+https://github.com/NVIDIA/open-gpu-kernel-modules/issues/1495
+
+```text
+Nov 17 10:29:49 medusa5 kernel: NVRM: GPU1 rpcRmApiFree_GSP: GspRmFree failed: hClient=0xc1d00d0f; hObject=0x5c000004; paramsStatus=0x00000000; status=0x0000000f
+```
+Abaixo um comparativo de uma máquina em produção a 255 dias. Usado o `nvidia-smi pci -gErrCnt` para verificar sinais de erros:
+
+```text
+DGX com 8xH200: 255 dias com atividade semiconstante
+GPU 7: NVIDIA H200 (UUID: GPU-de8affa5-31c8-8b8a-b8c3-0c0f586e4105)
+    REPLAY_COUNTER:          0
+    REPLAY_ROLLOVER_COUNTER: 0
+    L0_TO_RECOVERY_COUNTER:  128
+    CORRECTABLE_ERRORS:      0
+    NAKS_RECEIVED:           4
+    RECEIVER_ERROR:          118
+    BAD_TLP:                 132
+    NAKS_SENT:               104
+    BAD_DLLP:                3
+    NON_FATAL_ERROR:         0
+    FATAL_ERROR:             0
+    UNSUPPORTED_REQ:         0
+    LCRC_ERROR:              122
+    LANE_ERROR:
+	 lane  0: 99
+	 lane  1: 90
+	 lane  2: 227
+	 lane  3: 202
+	 lane  4: 255
+	 lane  5: 139
+	 lane  6: 170
+	 lane  7: 87
+	 lane  8: 160
+	 lane  9: 204
+	 lane 10: 108
+	 lane 11: 32
+	 lane 12: 140
+
+gorgona10 (3090): 11 dias
+    L0_TO_RECOVERY_COUNTER:  7703
+
+medusa5 (5090): 22 hrs
+    L0_TO_RECOVERY_COUNTER:  855
+
+medusa3 (5090): 37 dias
+    L0_TO_RECOVERY_COUNTER:  4262
+```
+
+Possíveis soluções futuras:
+ - Desabilitar pcie_aspm (faz do SO/grub). Pode testar em apenas 1 medusa e verificar o L0_TO_RECOVERY_COUNTER.
+ - Reduzir a geração do PCIe (apenas da bios, então só poderia testar com a gorgona3).
+
+
 ## 2026-11-03
 **Evento:** `gorgona3` sem GPU.
 
