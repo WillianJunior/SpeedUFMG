@@ -1,7 +1,6 @@
 Histórico de eventos com o cluster, e suas soluções
 
 <!--
-Padrão:
 ## AAAA-MM-DD
 **Evento:** 
 
@@ -13,6 +12,24 @@ Padrão:
 
 **Observações:** 
 -->
+
+## 2026-11-24
+**Evento:** Várias GPUs continuam caindo do bus: NVRM: Xid 79
+
+**Maquinas afetadas:** `medusa[3-6]` e `gorgona3`
+
+**Causa:** Ainda não identificada. Possivelmente negociação de velocidade do PCIe.
+
+**Resolução:** Nope...
+
+**Observações:** 
+Esse problema ocorre com a `gorgona3` mas não com as demais. A única diferença: 3090 Ti nas demais, 4090 na `gorgona3`.
+
+Testes feitos na `gorgona3`:
+ - Desabilitação do pcie_aspm. Resultado: nada. GPU ainda muda de velocidade no PCIe quando ociosa.
+ - Redução da velocidade de gen4 para gen3 pela bios. Resultado: nada. GPU troca de velocidade quando ociosa. Após ~5 dias, Xid 79.
+ - Redução definitiva da velocidade para gen1 pela bios. Resultado: L0_TO_RECOVERY_COUNTER estabilizado em 3 após boot. Carga testada com servidor vllm subindo algumas vezes e executando inferência. Testado com intervalos de ociosidade. Esperar para ver...
+
 
 ## 2026-11-17
 **Evento:** Várias GPUs cairam do bus.
